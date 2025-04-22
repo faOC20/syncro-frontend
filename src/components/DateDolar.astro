@@ -1,0 +1,42 @@
+<div class="flex gap-10">
+    <strong id="live-date">
+
+    </strong>
+    <div class="flex">
+        <span>
+            Dólar BCV: &nbsp;
+        </span>
+        <div>
+            <strong id="dolar-bcv">
+                
+            </strong>
+        </div>
+    </div>
+</div>
+
+<script>
+    import { fetchBcvRate } from "@lib/fetchBcvRate"
+    import { registerUpdate } from '@lib/updateManager';
+
+    async function updateDolarRate() {
+        try {
+            const {dolar_rate, last_update} = await fetchBcvRate()
+            const dolar = document.getElementById("dolar-bcv")
+            const date = document.getElementById("live-date")
+
+            if (dolar) {
+                dolar.innerHTML = dolar_rate;
+            }
+
+            if(date){
+                date.innerHTML = last_update;
+            }
+
+        } catch (error) {
+            console.error("Error al obtener la tasa del dólar:", error)
+        }
+    }
+
+    // Registrar la función de actualización
+    registerUpdate(updateDolarRate);
+</script>
