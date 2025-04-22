@@ -1,7 +1,6 @@
 ---
 import MileniumLogo from '../assets/logos/milenium.svg'
-import CurrentDay from './CurrentDay.astro'
-import DolarBcv from './DolarBcv.astro'
+import DateDolar from '@components/DateDolar.astro'
 // Usando Temporal (experimental
 
 ---
@@ -17,9 +16,11 @@ import DolarBcv from './DolarBcv.astro'
         <div class="flex items-center justify-end grow gap-8">
             <input type="search" placeholder="número de orden" class="border rounded-2xl py-1 px-2 text-sm">
             
-            <CurrentDay server:defer/>
-
-            <DolarBcv server:defer/>
+            <DateDolar server:defer>
+                <span slot="fallback">
+                    Loading date and dollar information...
+                </span>
+            </DateDolar> 
          
             
         </div>
