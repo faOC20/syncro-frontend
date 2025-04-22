@@ -1,0 +1,27 @@
+---
+
+---
+
+<div class="flex">
+    <span>
+        Dólar BCV: &nbsp;
+    </span>
+    <div>
+        <strong id="dolar-bcv">
+            
+        </strong>
+    </div>
+</div>
+
+<script>
+    import { fetchBcvRate } from "src/lib/fetchBcvRate"
+    
+    
+    const fetchData = async ()=>{
+        const dolarRate = await fetchBcvRate()
+        dolar.innerHTML = dolarRate
+    }
+
+    
+    
+</script>

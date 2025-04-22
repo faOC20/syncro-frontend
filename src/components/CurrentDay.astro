@@ -1,0 +1,39 @@
+---
+// const getLiveDate = () => {
+//   // ¡Se ejecuta en CADA REQUEST! (SSR)
+//   const now = new Date();
+//   return {
+//     date: now.toLocaleDateString('es-VE', {
+//       weekday: 'long',
+//       day: 'numeric',
+//       month: 'long',
+//       year: 'numeric',
+//       timeZone: 'America/Caracas'
+//     }),
+//     hour: now.getHours() // Para sincronización
+//   };
+// }
+// const { date, hour } = getLiveDate();
+---
+
+<b id="live-date"></b>
+
+<script>
+  // Sistema de actualización ultra-preciso
+  const updateDate = () => {
+    console.log('hola')
+    document.getElementById('live-date').textContent = 
+      new Date().toLocaleDateString('es-VE', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'America/Caracas'
+      });
+  };
+
+  // Chequeo cada minuto + al cambiar de hora
+  updateDate()
+  setInterval(updateDate, 60000);
+  
+</script>

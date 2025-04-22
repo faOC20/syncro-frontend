@@ -1,0 +1,29 @@
+---
+import MileniumLogo from '../assets/logos/milenium.svg'
+import CurrentDay from './CurrentDay.astro'
+import DolarBcv from './DolarBcv.astro'
+// Usando Temporal (experimental
+
+---
+<header class="flex justify-center text-theme-light-gray text-md w-full">
+    <section class="flex w-full max-w-4xl">
+        <div class="flex items-center justify-start grow gap-8">
+            <picture class="h-12">
+                <MileniumLogo/>
+            </picture>
+            
+        </div>
+    
+        <div class="flex items-center justify-end grow gap-8">
+            <input type="search" placeholder="número de orden" class="border rounded-2xl py-1 px-2 text-sm">
+            
+            <CurrentDay server:defer/>
+
+            <DolarBcv server:defer/>
+         
+            
+        </div>
+    </section>
+    
+</header>
+
