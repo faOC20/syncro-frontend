@@ -17,6 +17,7 @@
 @theme {
     --color-theme-black : #1B1B1B;
     --color-theme-light-gray: #f5f5f5;
+    --color-theme-ocean-blue: #007AFF
 }
 
 body{

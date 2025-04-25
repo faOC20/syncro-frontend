@@ -1,8 +1,8 @@
-<div class="flex gap-10">
+<div class="flex items-center gap-10">
     <strong id="live-date">
 
     </strong>
-    <div class="flex">
+    <div class="flex  items-center">
         <span>
             Dólar BCV: &nbsp;
         </span>
@@ -11,7 +11,13 @@
                 
             </strong>
         </div>
+
+        <button id="sync-dolar-button" class="ml-5 px-3 py-1 rounded bg-the bg-theme-ocean-blue font-semibold hover:opacity-60 transition-opacity">
+            Actualizar dolar
+        </button>
     </div>
+
+    
 </div>
 
 <script>
@@ -39,4 +45,12 @@
 
     // Registrar la función de actualización
     registerUpdate(updateDolarRate);
+</script>
+
+<script>
+    import {manualRateSync} from '@lib/manualRateSync'
+    const syncButton = document.getElementById('sync-dolar-button')
+    syncButton?.addEventListener('click', ()=>{
+        manualRateSync()
+    })
 </script>
