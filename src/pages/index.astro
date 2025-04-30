@@ -1,6 +1,6 @@
 ---
-import Header from '@components/Header.astro';
 import Layout from '../layouts/Layout.astro';
+import OperationForm from '@components/OperationForm.astro';
 
 export const prerender = true
 
@@ -9,7 +9,7 @@ export const prerender = true
 ---
 
 <Layout>
-	<section class="w-full h-full justify-center items-center flex">
-        holaasdadsa
+	<section class="w-full min-h-full justify-center flex">
+        <OperationForm />
     </section>
 </Layout>

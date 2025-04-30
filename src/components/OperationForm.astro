@@ -1,0 +1,259 @@
+---
+
+---
+<section class="flex flex-col gap-10 mt-20">
+
+
+    <h1 class="text-theme-black">
+        Agregar operación
+    </h1>
+    
+    <form id="operation-form" class="bg-white rounded-lg shadow-md p-6 max-w-2xl relative">
+        <!-- Diálogo modal -->
+        <dialog id="additional-info-dialog" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Nuevo cliente</h3>
+            <div id="error-info" class="text-red-600 invisible min-h-[24px] text-sm font-medium">
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="additionalName" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    >
+                </div>
+                
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="additionalPhone" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    >
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 mt-6">
+                <button 
+                    type="button" 
+                    onclick="document.getElementById('additional-info-dialog').close()"
+                    class="px-4 py-2 text-gray-700 rounded-md border hover:bg-gray-50"
+                >
+                    Cancelar
+                </button>
+                <button 
+                    id="save-additional-info"
+                    type="button" 
+                    class="px-4 py-2 bg-theme-ocean-blue text-white rounded-md hover:bg-opacity-90"
+                >
+                    Enviar
+                </button>
+            </div>
+        </dialog>
+      
+        <!-- Diálogo para nuevo cliente -->
+       
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <!-- <div>
+          <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+          <input 
+            type="text" 
+            id="nombre" 
+            name="nombre" 
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+          >
+        </div> -->
+        
+        <div>
+          <label for="cedula" class="block text-sm font-medium text-gray-700 mb-1">Cédula</label>
+          <input 
+            type="number" 
+            id="cedula" 
+            name="dni" 
+            required
+            title="No se permiten espacios en este campo"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+          >
+        </div>
+      </div>
+    
+      <div class="mb-6">
+        <label for="productos" class="block text-sm font-medium text-gray-700 mb-1">Productos</label>
+        <textarea 
+          id="productos" 
+          name="products" 
+          rows="3"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+          required
+          
+        ></textarea>
+      </div>
+    
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div>
+          <label for="total" class="block text-sm font-medium text-gray-700 mb-1">Total ($)</label>
+          <input 
+            type="number" 
+            id="total" 
+            name="total" 
+            step="0.01"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+          >
+        </div>
+        
+        <div>
+          <label for="inicial" class="block text-sm font-medium text-gray-700 mb-1">Inicial ($)</label>
+          <input 
+            type="number" 
+            id="inicial" 
+            name="initial" 
+            step="0.01"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+          >
+        </div>
+    
+        <div>
+          <label for="fecha" class="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
+          <input 
+            type="date" 
+            id="fecha" 
+            name="date" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+            max={new Date().toISOString().split('T')[0]}
+          >
+        </div>
+      </div>
+    
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div>
+          <label for="metodo" class="block text-sm font-medium text-gray-700 mb-1">Método de pago</label>
+          <select 
+            id="metodo" 
+            name="paymentMethod"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+          >
+            <option value="" selected disabled>Seleccione...</option>
+            <option value="1">Transferencia</option>
+            <option value="2">Efectivo (bs)</option>
+            <option value="3">Efectivo (divisas)</option>
+            <option value="4">Tarjeta</option>
+            <option value="5">Pago Móvil</option>
+            <option value="6">Zelle</option>
+          </select>
+        </div>
+        
+        <div>
+          <label for="orden" class="block text-sm font-medium text-gray-700 mb-1">Número de orden</label>
+          <input 
+            type="number" 
+            id="orden" 
+            name="order" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+          >
+        </div>
+      </div>
+
+      
+    
+      <div class="flex">
+        <span id="error-form-info" class="flex items-center invisible text-red-600">
+          
+        </span>
+        <div class="flex justify-end grow">
+          <button 
+          type="submit" 
+          class="px-6 py-2 bg-theme-ocean-blue text-white rounded-md hover:bg-opacity-90 transition-colors"
+        >
+          Guardar Operación
+        </button>
+        </div>
+      </div>
+    </form>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const fechaInput = document.getElementById('fecha');
+    const today = new Date().toISOString().split('T')[0];
+    (fechaInput as HTMLInputElement).value = today;
+  });
+
+  
+</script>
+
+<script>
+import { newOperation } from "@lib/newOperation";
+
+    const saveAditionalInfo = async (data:any) => {
+      try{
+        //Evento para guardar la info adicional
+                        
+        document.getElementById('save-additional-info')?.addEventListener('click', async () => {
+              const nameInput = document.getElementById('name') as HTMLInputElement;
+                const phoneInput = document.getElementById('phone') as HTMLInputElement;
+                
+                const additionalData = {
+                    name: nameInput.value,
+                    phone: phoneInput.value
+                };
+                
+                await newOperation(JSON.stringify({...data, ...additionalData}));
+                
+               
+                
+              })
+      }
+
+      catch(e){
+        console.log(e);
+      }
+    }
+
+    const newCustomer = async () => {
+      try{
+        document.getElementById('operation-form')?.addEventListener('submit', async (e) => {
+          e.preventDefault(); // Esto detiene el envío predeterminado
+          const data = Object.fromEntries(new FormData(e.target as HTMLFormElement));
+          const status = await newOperation(JSON.stringify(data)); 
+          
+          if(status == 'customer_not_found'){
+            //Muestra el dialogo
+            const dialog = document.getElementById('additional-info-dialog');
+              if (dialog) {
+                  (dialog as HTMLDialogElement).showModal();
+            }
+
+            saveAditionalInfo(data);
+          } 
+          
+        });
+      }
+
+      catch(e){
+        console.log(e);
+      }
+    }
+
+    newCustomer();
+
+ 
+</script>
+
+
+<style>
+  /* Ocultar flechas para inputs de tipo number */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+  }
+</style>
