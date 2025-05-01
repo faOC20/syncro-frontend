@@ -8,8 +8,8 @@ const getNextUpdateTime = () => {
         now.getFullYear(),
         now.getMonth(),
         // Si es después de las 22:00 (10 PM), programar para mañana a las 22:00
-        now.getHours() >= 6 ? now.getDate() + 1 : now.getDate(),
-        6, // 10pm (22:00)
+        now.getHours() >= 0 ? now.getDate() + 1 : now.getDate(),
+        0, // 10pm (22:00)
         0,  // 0 minutos
         0   // 0 segundos
     );

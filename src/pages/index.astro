@@ -1,6 +1,8 @@
 ---
+import OperationsTable from '@components/OperationsTable.astro';
 import Layout from '../layouts/Layout.astro';
 import OperationForm from '@components/OperationForm.astro';
+import ReactVirtualizedTable from '@components/OperationsTable';
 
 export const prerender = true
 
@@ -9,7 +11,12 @@ export const prerender = true
 ---
 
 <Layout>
-	<section class="w-full min-h-full justify-center flex">
-        <OperationForm />
+	
+    <OperationForm />
+    
+    <section class="w-xs lg:w-7xl md:w-3xl">
+        <ReactVirtualizedTable client:visible/>
     </section>
+    
+    
 </Layout>

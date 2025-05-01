@@ -1,14 +1,14 @@
 ---
 
 ---
-<section class="flex flex-col gap-10 mt-20">
+<section class="flex flex-col max-w-3xl">
 
 
-    <h1 class="text-theme-black">
-        Agregar operación
-    </h1>
+    <div class='w-full text-theme-light-gray text-lg bg-theme-black rounded-t-2xl'>
+      <h2 class='font-bold py-2 pl-8'>Nueva operación</h2>
+    </div>
     
-    <form id="operation-form" class="bg-white rounded-lg shadow-md p-6 max-w-2xl relative">
+    <form id="operation-form" class="bg-white rounded-b-lg shadow-md p-6 w-full relative">
         <!-- Diálogo modal -->
         <dialog id="additional-info-dialog" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Nuevo cliente</h3>
@@ -58,6 +58,7 @@
        
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        
         <!-- <div>
           <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
           <input 
@@ -214,7 +215,7 @@ import { newOperation } from "@lib/newOperation";
       }
     }
 
-    const newCustomer = async () => {
+    const sendNewOperation = async () => {
       try{
         document.getElementById('operation-form')?.addEventListener('submit', async (e) => {
           e.preventDefault(); // Esto detiene el envío predeterminado
@@ -239,7 +240,7 @@ import { newOperation } from "@lib/newOperation";
       }
     }
 
-    newCustomer();
+    sendNewOperation();
 
  
 </script>
