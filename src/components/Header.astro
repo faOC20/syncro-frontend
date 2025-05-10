@@ -6,17 +6,17 @@ import DateDolar from '@components/DateDolar.astro'
 ---
 <header class="flex justify-center text-theme-light-gray text-md w-full">
     <section class="flex w-full max-w-4xl">
-        <div class="flex items-center justify-start grow gap-8">
+        <a href="/" class="flex items-center justify-start grow gap-8">
             <picture class="h-12">
                 <MileniumLogo/>
             </picture>
             
-        </div>
+        </a>
     
         <div class="flex items-center justify-end grow gap-8">
             <input type="search" placeholder="número de orden" class="border rounded-2xl py-1 px-2 text-sm">
             
-            <DateDolar server:defer>
+            <DateDolar>
                 <span slot="fallback">
                     Loading date and dollar information...
                 </span>

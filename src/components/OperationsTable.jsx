@@ -15,12 +15,12 @@ import { operationDateFilter } from '@lib/operationDateFilter';
 
 // Columnas de ejemplo - REEMPLAZAR con tus columnas reales
 const columns = [
-  { id: 'order_number', label: 'Nro Operación', minWidth: 120 },
+  { id: 'order_number', label: 'Nro de orden', minWidth: 120 },
   { id: 'creation_date', label: 'Fecha de creación', minWidth: 150 },
   { id: 'name', label: 'Cliente', minWidth: 150 },
   { id: 'dni', label: 'Cédula', minWidth: 120 },
-  { id: 'products', label: 'Producto/s', minWidth: 200 },
-  { id: 'operation_amount', label: 'Monto', minWidth: 120, align: 'right' },
+  { id: 'products', label: 'Producto/s', minWidth: 150 },
+  { id: 'operation_amount', label: 'Monto', minWidth: 120 },
   { id: 'state', label: 'Estado', minWidth: 120 }
 ];
 
@@ -29,8 +29,7 @@ const columns = [
 
 
 export default function OperationsTable() {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+
   const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0]);
   const [filteredRows, setRows] = useState([]); // Inicializado como array vacío
   const [isLoading, setIsLoading] = useState(true); // Estado para manejar carga
@@ -53,18 +52,11 @@ export default function OperationsTable() {
 
 
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
   const handleRowClick = (rowData) => {
     // Aquí puedes manejar el click en la fila
     console.log('Fila clickeada:', rowData);
+    window.location.href = `operation/${rowData.order_number}`
+
     // Ejemplo: abrir un modal con detalles
     // setSelectedOperation(rowData);
     // setOpenModal(true);
@@ -72,31 +64,35 @@ export default function OperationsTable() {
 
   return (
     <section className='w-full flex flex-col'>
-      <div className='w-full text-theme-light-gray bg-theme-black rounded-t-2xl text-lg flex justify-between'>
-        <h2 className='font-bold py-2 pl-8'>Operaciones</h2>
+      <div className='w-full text-theme-black text-lg flex justify-between bg-white rounded-t-lg shadow-md px-6 py-7'>
+        <h2 className='font-bold text-theme-light-blue text-xl'>Operaciones</h2>
+        
         <input 
           max={new Date().toISOString().split('T')[0]}
-          className='pr-5 scheme-dark' 
+          className='px-4 py-2.5 scheme-light text-theme-black  rounded-lg shadow-md border border-theme-ocean-blue focus:outline-none focus:ring-2 focus:ring-blue-300  duration-200 ease-in-out hover:bg-theme-ocean-blue hover:scheme-dark hover:text-theme-light-gray  cursor-pointer font-medium text-sm' 
           type="date" 
           value={currentDate}
           onChange={(e) => setCurrentDate(e.target.value)}
+          onClick={(e) => e.target.showPicker()}
         />
       </div>
+   
       <Paper sx={{ 
         width: '100%', 
         overflow: 'hidden',
         borderRadius: '0 0 10px 10px',
-        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
+        fontFamily: 'PoppinsRegular'
       }}>
         <TableContainer sx={{ 
           maxHeight: 440,
          
         }}>
-          <Table stickyHeader aria-label="sticky table" sx={{ width: '100%' }}>
+          <Table  stickyHeader aria-label="sticky table" sx={{ width: '100%', paddingX: '24px', paddingY:'20px' }}>
             <TableHead>
               <TableRow>
                 {columns.map((column) => (
                   <TableCell
+                    
                     key={column.id}
                     align={column.align}
                     style={{ minWidth: column.minWidth }}
@@ -121,7 +117,7 @@ export default function OperationsTable() {
                         tabIndex={-1} 
                         key={row.operationNumber}
                         onClick={() => handleRowClick(row)}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: 'pointer'}}
                       >
                         {columns.map((column) => {
                           const value = row[column.id];
@@ -141,17 +137,9 @@ export default function OperationsTable() {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={filteredRows.length}  // Cambiado de rows a filteredRows
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+    
       </Paper>
+      
     </section>
   );
 }
-

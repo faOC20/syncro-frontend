@@ -1,14 +1,20 @@
 ---
-
+import Bookmark from "./decoration/Bookmark.astro"
 ---
-<section class="flex flex-col max-w-3xl">
+<section class="flex flex-col w-full max-w-2xl gap-3">
 
-
-    <div class='w-full text-theme-light-gray text-lg bg-theme-black rounded-t-2xl'>
-      <h2 class='font-bold py-2 pl-8'>Nueva operación</h2>
-    </div>
     
-    <form id="operation-form" class="bg-white rounded-b-lg shadow-md p-6 w-full relative">
+    <form id="operation-form" class="rounded-lg overflow-hidden shadow-md px-6 py-5 min-w-[672px] relative bg-white text-theme-black grow">
+
+      <!-- <div class="absolute top-0 left-0 z-[-10] h-full w-full rotate-180 transform bg-[radial-gradient(100%_120%_at_80%_50%,hsla(0,0%,0%,0)_0,rgba(0,85,179,.1)_100%)]"></div> -->
+      <div class='w-full text-theme-light-blue text-xl'>
+        <Bookmark>
+            Nueva operación
+        </Bookmark>
+      </div>
+
+      <hr class="my-5 text-theme-black/10">
+      
         <!-- Diálogo modal -->
         <dialog id="additional-info-dialog" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Nuevo cliente</h3>
@@ -16,7 +22,7 @@
             </div>
             <div class="space-y-4">
                 <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                    <label for="name" class="block text-sm font-medium  mb-1">Nombre</label>
                     <input 
                         type="text" 
                         id="name" 
@@ -26,7 +32,7 @@
                 </div>
                 
                 <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                    <label for="phone" class="block text-sm font-medium  mb-1">Teléfono</label>
                     <input 
                         type="tel" 
                         id="phone" 
@@ -40,7 +46,7 @@
                 <button 
                     type="button" 
                     onclick="document.getElementById('additional-info-dialog').close()"
-                    class="px-4 py-2 text-gray-700 rounded-md border hover:bg-gray-50"
+                    class="px-4 py-2  rounded-md border hover:bg-gray-50"
                 >
                     Cancelar
                 </button>
@@ -57,22 +63,12 @@
         <!-- Diálogo para nuevo cliente -->
        
       
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        
-        <!-- <div>
-          <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
-          <input 
-            type="text" 
-            id="nombre" 
-            name="nombre" 
-            required
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
-          >
-        </div> -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 relative">
         
         <div>
-          <label for="cedula" class="block text-sm font-medium text-gray-700 mb-1">Cédula</label>
+          <label for="cedula" class="block text-sm font-medium  mb-1">Cédula</label>
           <input 
+            placeholder="Ej: 29602387"
             type="number" 
             id="cedula" 
             name="dni" 
@@ -81,23 +77,25 @@
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
           >
         </div>
+
+        <div class="mb-6">
+          <label for="productos" class="block text-sm font-medium  mb-1">Productos</label>
+          <textarea 
+            id="productos" 
+            name="products" 
+            rows="1"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+            required
+            
+          ></textarea>
+        </div>
       </div>
     
-      <div class="mb-6">
-        <label for="productos" class="block text-sm font-medium text-gray-700 mb-1">Productos</label>
-        <textarea 
-          id="productos" 
-          name="products" 
-          rows="3"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
-          required
-          
-        ></textarea>
-      </div>
+      
     
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div>
-          <label for="total" class="block text-sm font-medium text-gray-700 mb-1">Total ($)</label>
+          <label for="total" class="block text-sm font-medium  mb-1">Total ($)</label>
           <input 
             type="number" 
             id="total" 
@@ -108,7 +106,7 @@
         </div>
         
         <div>
-          <label for="inicial" class="block text-sm font-medium text-gray-700 mb-1">Inicial ($)</label>
+          <label for="inicial" class="block text-sm font-medium  mb-1">Inicial ($)</label>
           <input 
             type="number" 
             id="inicial" 
@@ -119,12 +117,12 @@
         </div>
     
         <div>
-          <label for="fecha" class="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
+          <label for="fecha" class="block text-sm font-medium  mb-1">Fecha</label>
           <input 
             type="date" 
             id="fecha" 
             name="date" 
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+            class=" cursor-pointer  w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
             max={new Date().toISOString().split('T')[0]}
           >
         </div>
@@ -132,7 +130,7 @@
     
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
-          <label for="metodo" class="block text-sm font-medium text-gray-700 mb-1">Método de pago</label>
+          <label for="metodo" class="block text-sm font-medium  mb-1">Método de pago</label>
           <select 
             id="metodo" 
             name="paymentMethod"
@@ -149,7 +147,7 @@
         </div>
         
         <div>
-          <label for="orden" class="block text-sm font-medium text-gray-700 mb-1">Número de orden</label>
+          <label for="orden" class="block text-sm font-medium  mb-1">Número de orden</label>
           <input 
             type="number" 
             id="orden" 
@@ -165,10 +163,10 @@
         <span id="error-form-info" class="flex items-center invisible text-red-600">
           
         </span>
-        <div class="flex justify-end grow">
+        <div class="flex justify-end grow my-2">
           <button 
           type="submit" 
-          class="px-6 py-2 bg-theme-ocean-blue text-white rounded-md hover:bg-opacity-90 transition-colors"
+          class="px-4 py-2.5 scheme-dark text-theme-light-gray bg-theme-ocean-blue rounded-lg shadow-md border border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-300 ease-in-out hover:bg-blue-700 cursor-pointer font-medium text-sm"
         >
           Guardar Operación
         </button>
@@ -185,6 +183,15 @@
   });
 
   
+</script>
+
+<script>
+  
+  const fechaInput = document.getElementById('fecha') as HTMLInputElement;
+  fechaInput.addEventListener('click', ()=>{
+    fechaInput.showPicker()
+  })
+ 
 </script>
 
 <script>
@@ -231,6 +238,7 @@ import { newOperation } from "@lib/newOperation";
 
             saveAditionalInfo(data);
           } 
+
           
         });
       }

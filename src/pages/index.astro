@@ -3,8 +3,9 @@ import OperationsTable from '@components/OperationsTable.astro';
 import Layout from '../layouts/Layout.astro';
 import OperationForm from '@components/OperationForm.astro';
 import ReactVirtualizedTable from '@components/OperationsTable';
-
+import {Notifications} from '@components/Notifications';
 export const prerender = true
+
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
@@ -12,11 +13,18 @@ export const prerender = true
 
 <Layout>
 	
-    <OperationForm />
-    
-    <section class="w-xs lg:w-7xl md:w-3xl">
-        <ReactVirtualizedTable client:visible/>
+    <section class="flex justify-center w-full gap-[3rem]">
+        <OperationForm />
+        <Notifications client:visible />
     </section>
+    
+    <section class="w-xs lg:w-full md:w-2xl">
+        
+            <ReactVirtualizedTable client:visible/>
+        
+    </section>
+
+    
     
     
 </Layout>

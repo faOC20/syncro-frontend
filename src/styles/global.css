@@ -17,10 +17,12 @@
 @theme {
     --color-theme-black : #242424;
     --color-theme-light-gray: #F7F8FD;
-    --color-theme-ocean-blue: #007AFF
+    --color-theme-ocean-blue: #0055b3;
+    --color-theme-light-blue: #007AFF;
 }
 
 body{
     font-family: 'poppins-regular';
     background-color: var(--color-theme-light-gray);
 }
+

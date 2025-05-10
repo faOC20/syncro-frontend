@@ -1,0 +1,14 @@
+---
+import Installments from '@components/operationPage/Installments.astro'
+import Legend from '@components/operationPage/Legend.astro'
+import OperationInfo from '@components/operationPage/OperationInfo.astro'
+import Layout from '@layouts/Layout.astro'
+const {id} = Astro.params
+
+---
+
+<Layout>
+    <OperationInfo server:defer orderNumber={id ?? ''}/>
+    <Installments server:defer orderNumber={id ?? ''}/>
+    <Legend/>
+</Layout>

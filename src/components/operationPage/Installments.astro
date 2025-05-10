@@ -1,0 +1,81 @@
+---
+import {getInstallments} from '@lib/getInstallments'
+import {InstallmentModal} from '@components/operationPage/InstallmentModal'
+interface Installment {
+  change_date: string | null
+  date_to_pay: string
+  installment_amount: number
+  id_state: number
+  state: 'pagado' | 'pendiente' | 'no_pagado' | 'errado'
+  type: string
+  id_type: number
+}
+
+
+const statusColors = {
+  pendiente: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+  pagado: 'bg-green-100 text-green-800 border-green-200',
+  no_pagado: 'bg-red-100 text-red-800 border-red-200',
+  errado: 'bg-orange-100 text-orange-800 border-orange-200'
+}
+
+const statusLabels = {
+  pendiente: 'Pendiente',
+  pagado: 'Pagado',
+  no_pagado: 'No pagado',
+  errado: 'Error bancario'
+}
+
+interface Props {
+  orderNumber: string
+}
+
+const { orderNumber } = Astro.props
+const installments: Installment[] = await getInstallments(orderNumber)
+console.log(installments)
+
+---
+
+<section class="bg-white rounded-lg shadow-md p-6 md:w-2xl w-md flex flex-col">
+  <h2 class="text-lg font-semibold text-gray-800 mb-4">Cuotas</h2>
+  
+  <ul class="space-y-4">
+    {installments.map((installment, index) => (
+      <li class="list-none">
+        <button 
+          onclick={`document.getElementById('installment-modal-${index}').showModal()`}
+          class="w-full items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer  grid grid-cols-7 text-start"
+        >
+          
+            <span class="font-medium text-gray-700">{installment.type}</span>
+            <span class="text-xs text-red-800 col-span-2">
+              vence: {installment.date_to_pay}
+            </span>
+            {
+              installment.change_date?(
+                <span class="text-xs col-span-2 text-green-800">
+                cambio: {installment.change_date}
+              </span>
+              ):(<span class="w-full h-full col-span-2">
+
+              </span>)
+            }
+          
+          
+          
+            <span class="font-medium text-gray-900 text-start">${installment.installment_amount.toFixed(2)}</span>
+            <span class={`text-[10px] font-medium px-3 py-1 w-full rounded-full text-center ${statusColors[installment.state]}`}>
+              {statusLabels[installment.state]}
+            </span>
+         
+        </button>
+      </li>
+
+      <InstallmentModal client:only installment = {installment} index={index} orderNumber={orderNumber} installmentType = {installment.id_type}/>
+    ))}
+  </ul>
+</section>
+
+
+
+

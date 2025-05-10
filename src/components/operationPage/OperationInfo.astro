@@ -1,0 +1,54 @@
+---
+import { getOperation } from '@lib/getOperation'
+import { number } from 'astro:schema'
+
+interface Props {
+    orderNumber: string
+}
+const { orderNumber} = Astro.props
+
+export const getOperationInfo = async (orderNumber:string) =>{
+    return await getOperation(parseInt(orderNumber))
+}
+
+// Usa await para manejar la promesa
+const {creation_date: creationDate, name: customerName, operation_amount: amount, order_number, products, state}= await getOperationInfo(orderNumber)
+---
+<section class="bg-white rounded-lg shadow-md p-6 md:w-2xl w-md">
+    <!-- Header con número de orden y cliente -->
+    <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-4">
+        <div class="flex items-center gap-4">
+            <h2 class="text-xl font-semibold text-gray-800">
+                Orden: <span class="text-theme-light-blue">#{orderNumber}</span>
+            </h2>
+            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                {state}
+            </span>
+        </div>
+        <div class="text-right">
+            <p class="text-sm text-gray-500">Cliente</p>
+            <p class="font-medium text-gray-900">{customerName}</p>
+        </div>
+    </div>
+
+    <!-- Detalles de la operación -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="bg-gray-50 p-4 rounded-lg">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Productos</h3>
+            <p class="text-gray-900">{products}</p>
+        </div>
+        
+        <div class="bg-gray-50 p-4 rounded-lg">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Monto</h3>
+            <p class="text-gray-900">${amount.toLocaleString('es-VE')}</p>
+        </div>
+        
+        <div class="bg-gray-50 p-4 rounded-lg">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Fecha</h3>
+            <p class="text-gray-900">{creationDate}</p>
+        </div>
+    </div>
+
+    <!-- Sección adicional para notas si es necesario -->
+   
+</section>
