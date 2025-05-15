@@ -25,6 +25,9 @@
       "@layouts/*": [
         "src/layouts/*"
       ],
+      "@context/*": [
+        "src/context/*"
+      ],
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react"

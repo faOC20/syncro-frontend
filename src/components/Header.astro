@@ -1,9 +1,13 @@
 ---
 import MileniumLogo from '../assets/logos/milenium.svg'
 import DateDolar from '@components/DateDolar.astro'
-// Usando Temporal (experimental
+import SummaryButton from './SummaryButton.astro'
+import { BACK_API } from 'astro:env/client'
 
+const result = await fetch(`${BACK_API}/api/get-all-orders`)
+const {data} = await result.json()
 ---
+
 <header class="flex justify-center text-theme-light-gray text-md w-full">
     <section class="flex w-full max-w-4xl">
         <a href="/" class="flex items-center justify-start grow gap-8">
@@ -14,17 +18,96 @@ import DateDolar from '@components/DateDolar.astro'
         </a>
     
         <div class="flex items-center justify-end grow gap-8">
-            <input type="search" placeholder="número de orden" class="border rounded-2xl py-1 px-2 text-sm">
+            <div class="relative">
+                <input 
+                    id="order-search" 
+                    type="search" 
+                    placeholder="número de orden" 
+                    class="border rounded-2xl py-1 px-2 text-sm"
+                >
+                <div id="search-results" class="absolute z-10 mt-1 w-full bg-white rounded-md shadow-lg hidden max-h-60 overflow-y-auto"></div>
+            </div>
             
             <DateDolar>
                 <span slot="fallback">
                     Loading date and dollar information...
                 </span>
             </DateDolar> 
-         
+            
+            <SummaryButton/>
             
         </div>
     </section>
-    
 </header>
+
+<script is:inline define:vars={{ data }}>
+    // Obtener referencias a los elementos del DOM
+    const searchInput = document.getElementById('order-search');
+    const searchResults = document.getElementById('search-results');
+    
+    // Función para filtrar órdenes según el texto ingresado
+    function filterOrders(searchText) {
+        if (!searchText) {
+            searchResults.classList.add('hidden');
+            return;
+        }
+        
+        // Filtrar las órdenes que coincidan con el texto de búsqueda
+        const filteredOrders = data.filter(order => 
+            order.order_number.toString().includes(searchText)
+        );
+        
+        // Mostrar resultados
+        displayResults(filteredOrders);
+    }
+    
+    // Función para mostrar los resultados filtrados
+    function displayResults(orders) {
+        // Limpiar resultados anteriores
+        searchResults.innerHTML = '';
+        
+        if (orders.length === 0) {
+            searchResults.innerHTML = '<div class="px-4 py-2 text-sm text-gray-500">No se encontraron órdenes</div>';
+            searchResults.classList.remove('hidden');
+            return;
+        }
+        
+        // Crear elementos para cada orden encontrada
+        orders.slice(0, 5).forEach(order => {
+            const resultItem = document.createElement('div');
+            resultItem.className = 'px-4 py-2 text-sm text-theme-ocean-blue hover:bg-gray-100 cursor-pointer';
+            resultItem.textContent = `#${order.order_number}`;
+            
+            // Agregar evento de clic para navegar a la orden
+            resultItem.addEventListener('click', () => {
+                window.location.href = `/operation/${order.order_number}`;
+            });
+            
+            searchResults.appendChild(resultItem);
+        });
+        
+        // Mostrar el contenedor de resultados
+        searchResults.classList.remove('hidden');
+    }
+    
+    // Escuchar eventos de entrada en el campo de búsqueda
+    searchInput.addEventListener('input', (e) => {
+        const searchText = e.target.value.trim();
+        filterOrders(searchText);
+    });
+    
+    // Ocultar resultados cuando se hace clic fuera del campo de búsqueda
+    document.addEventListener('click', (e) => {
+        if (e.target !== searchInput && !searchResults.contains(e.target)) {
+            searchResults.classList.add('hidden');
+        }
+    });
+    
+    // Mostrar resultados al hacer clic en el campo de búsqueda si hay texto
+    searchInput.addEventListener('focus', () => {
+        if (searchInput.value.trim()) {
+            filterOrders(searchInput.value.trim());
+        }
+    });
+</script>
 

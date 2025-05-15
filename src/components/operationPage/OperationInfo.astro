@@ -1,6 +1,8 @@
 ---
 import { getOperation } from '@lib/getOperation'
 import { number } from 'astro:schema'
+import TrashIcon from '@icons/TrashIcon.svg'
+import AlertIcon from '@icons/AlertIcon.svg'
 
 interface Props {
     orderNumber: string
@@ -13,21 +15,52 @@ export const getOperationInfo = async (orderNumber:string) =>{
 
 // Usa await para manejar la promesa
 const {creation_date: creationDate, name: customerName, operation_amount: amount, order_number, products, state}= await getOperationInfo(orderNumber)
+
+const bgColor = state?
+    (state === "pagado"? "bg-green-100 text-green-800" :
+     state === "pendiente"? "bg-blue-100 text-blue-800" :
+    "") : "";
 ---
-<section class="bg-white rounded-lg shadow-md p-6 md:w-2xl w-md">
+<section class="bg-white rounded-t-lg shadow-md p-6 md:w-2xl w-md relative">
+    
+    <dialog id="delete-dialog" class="w-md h-96 mx-auto my-auto rounded-lg">
+        <div class="w-full h-full flex flex-col gap-10 items-center justify-center">
+            <picture class="text-red-700 size-20">
+                <AlertIcon/>
+            </picture>
+            <p class="text-gray-500">¿Estás seguro de eliminar esta operación?</p>
+            <div class="flex gap-4">
+                <button id="cancel-dialog" class="cursor-pointer h-8 w-auto border px-3 py-1  text-gray-500  rounded-full">
+                    Cancelar
+                </button>
+                <button id="security-delete" class="cursor-pointer h-8 w-auto border px-3 py-1 text-red-700 rounded-full">
+                    Borrar
+                </button>
+            </div>
+        </div>
+    </dialog>
+
+
     <!-- Header con número de orden y cliente -->
     <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-4">
         <div class="flex items-center gap-4">
             <h2 class="text-xl font-semibold text-gray-800">
-                Orden: <span class="text-theme-light-blue">#{orderNumber}</span>
+                Orden: <span id="order-number" class="text-theme-light-blue">#{orderNumber}</span>
             </h2>
-            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                {state}
+            <span class=`bg-blue-100 text-xs font-medium px-2.5 py-0.5 rounded-full ${bgColor}`>
+                {state === "pagado"? ("finalizada"):(state)}
             </span>
         </div>
-        <div class="text-right">
-            <p class="text-sm text-gray-500">Cliente</p>
-            <p class="font-medium text-gray-900">{customerName}</p>
+        <div class="flex gap-6 items-center">
+            
+            <div class="text-right">
+                <p class="text-sm text-gray-500">Cliente</p>
+                <p class="font-medium text-gray-900">{customerName}</p>
+            </div>
+
+            <button id="delete_button" class="cursor-pointer h-8 w-auto border p-1 text-red-700 rounded-full">
+                <TrashIcon/>
+            </button>
         </div>
     </div>
 
@@ -52,3 +85,29 @@ const {creation_date: creationDate, name: customerName, operation_amount: amount
     <!-- Sección adicional para notas si es necesario -->
    
 </section>
+
+<script>
+    document.getElementById('delete_button')?.addEventListener('click', () => {
+        const dialog = document.getElementById('delete-dialog') as HTMLDialogElement;
+        dialog.showModal();
+    });
+
+    document.getElementById('cancel-dialog')?.addEventListener('click', () => {
+        const dialog = document.getElementById('delete-dialog') as HTMLDialogElement;
+        dialog.close();
+    });
+</script>
+
+<script>
+    import {deleteOperation} from "@lib/deleteOperation";
+    const delOperation = async () => {
+        const orderNumber = document.getElementById('order-number')?.textContent?.split('#')[1] as string;
+       const securityDelete = document.getElementById('security-delete') as HTMLButtonElement;
+       securityDelete.addEventListener('click', async () => {
+            console.log(orderNumber)
+            await deleteOperation(orderNumber);
+       })
+    }
+    
+    delOperation()
+</script>

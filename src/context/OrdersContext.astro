@@ -1,0 +1,17 @@
+---
+import { BACK_API } from 'astro:env/client'
+
+// Esta petición se ejecutará una sola vez cuando se importe el módulo
+let ordersData = [];
+
+try {
+  const result = await fetch(`${BACK_API}/api/get-all-orders`);
+  const { data } = await result.json();
+  ordersData = data;
+} catch (error) {
+  console.error("Error al cargar órdenes:", error);
+}
+
+// Exporta los datos para que otros componentes puedan usarlos
+export const orders = ordersData;
+---

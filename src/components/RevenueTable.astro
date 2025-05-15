@@ -1,0 +1,218 @@
+---
+import Bookmark from "./decoration/Bookmark.astro";
+import { BACK_API } from "astro:env/client";
+
+interface Props{
+    year: string | undefined
+}
+
+const {year} = Astro.props as Props
+const numberYear = parseInt(year!)
+
+const result = await fetch(`${BACK_API}/api/get-all-revenue`, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+        year: year
+    })
+})
+const {data} = await result.json()
+const operations = data.operations
+
+const months = [
+    { id_month: 1, name: "Enero" },
+    { id_month: 2, name: "Febrero" },
+    { id_month: 3, name: "Marzo" },
+    { id_month: 4, name: "Abril" },
+    { id_month: 5, name: "Mayo" },
+    { id_month: 6, name: "Junio" },
+    { id_month: 7, name: "Julio" },
+    { id_month: 8, name: "Agosto" },
+    { id_month: 9, name: "Septiembre" },
+    { id_month: 10, name: "Octubre" },
+    { id_month: 11, name: "Noviembre" },
+    { id_month: 12, name: "Diciembre" }
+];
+
+const installmentTypes = [
+    { id: 2, name: "C1" },
+    { id: 3, name: "C2" },
+    { id: 4, name: "C3" }
+];
+
+
+---
+
+<div>
+    <section id="year-revenue-table" class="w-full shadow-md">
+        <div class="bg-white rounded-t-lg p-4 shadow "> 
+            <div class='min-w-full text-theme-black text-lg flex rounded-t-lg px-5 py-7 gap-5 bg-white'>
+                <Bookmark>
+                    Resumen del año
+                </Bookmark>
+    
+                <div class="flex text-sm ">
+                    
+                    <select 
+                      id="year_select" 
+                      name="select-year"
+                      class="w-full border px-3 flex border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+                    >
+                      {[2023, 2024, 2025].map(yearOption => (
+                        <option value={yearOption} selected={numberYear === yearOption}>{yearOption}</option>
+                      ))}
+                    </select>
+                  </div>
+            </div>
+    
+            <hr class="py-5 text-theme-black/10">
+            <div class="overflow-x-auto custom-scrollbar">
+                <table class="min-w-full border-collapse">
+                
+                <thead>
+                    <tr class="bg-white">
+                        <th class="border px-4 py-2">Cliente</th>
+                        <th class="border px-4 py-2 ">Fecha de orden</th>
+                        <th class="border px-4 py-2 sticky left-0 bg-theme-ocean-blue z-10 text-gray-50">Orden</th>
+                        <th class="border px-4 py-2">Monto total</th>
+                        <th class="border px-4 py-2">P. Inicial</th>
+                        
+                        {months.map(month => (
+                            <th class="border px-0 py-0" colspan={installmentTypes.length}>
+                                <div class="text-center py-1">{month.name}</div>
+                                <div class="flex">
+                                    {installmentTypes.map(type => (
+                                        <div class="border-t px-4 py-1 flex-1 text-center">{type.name}</div>
+                                    ))}
+                                </div>
+                            </th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {operations && operations.filter(op => op.installments && op.installments.length > 0).map(op => (
+                        <tr class="bg-white">
+                            <td class="border px-4 py-2">{op.name}</td>
+                            <td class="border px-4 py-2">{op.creation_date}</td>
+                            <td class="border px-4 py-2  sticky left-0 bg-white z-10"><li class="list-none">
+                                <a class="text-theme-light-blue font-bold none" href={`/operation/${op.order_number}`}>#{op.order_number}</a></li></td>
+                            <td class="border px-4 py-2">{op.operation_amount}</td>
+                            <td class="border px-4 py-2">{op.initial}</td>
+                            
+                            {months.map(month => (
+                                installmentTypes.map(type => {
+                                    const installment = op.installments && op.installments.length > 0 ? op.installments.find(
+                                        inst => inst.id_month === month.id_month && inst.id_type === type.id
+                                    ) : null;
+                                   
+                                
+                                    const bgColor = installment ? 
+                                        (installment.id_state === 3 ? "bg-orange-200" : 
+                                         installment.id_state === 1 ? "bg-yellow-200" : 
+                                         installment.id_state === 4? "bg-green-200" :
+                                         installment.id_state === 2? "bg-red-200" :
+                                        "") : "";
+                                    
+                                    return (
+                                        <td class={`border px-4 py-2 text-center min-w-[68px] ${bgColor}`}>
+                                            <li class="list-none">
+                                                <a href={`/operation/${op.order_number}`}>{installment ? installment.installment_amount.toFixed(2) : ""}</a>
+                                            </li>
+                                        </td>
+                                    );
+                                })
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </section>
+    <section id="year-revenue-summary" class="w-full">
+        <div class="bg-white rounded-b-lg shadow-md p-4">
+         
+            <table class="min-w-full border-collapse">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th class="border px-4 py-2 text-center">Total No Pagadas</th>
+                        <th class="border px-4 py-2 text-center">Total Errores Bancarios</th>
+                        <th class="border px-4 py-2 text-center">Total Pagados</th>
+                        <th class="border px-4 py-2 text-center">Total Ventas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border px-4 py-3 text-center bg-red-100  font-medium">
+                            ${operations.filter(op => op.installments && op.installments.length > 0).reduce((total, op) => {
+                                const noPagadas = op.installments.filter(inst => inst.id_state === 2).reduce((sum, inst) => sum + inst.installment_amount, 0);
+                                return total + noPagadas;
+                            }, 0).toFixed(2)}
+                        </td>
+                        <td class="border px-4 py-3 text-center bg-orange-100  font-medium">
+                            ${operations.reduce((total, op) => {
+                                const erroresBancarios = op.installments.filter(inst => inst.id_state === 3).reduce((sum, inst) => sum + inst.installment_amount, 0);
+                                return total + erroresBancarios;
+                            }, 0).toFixed(2)}
+                        </td>
+                        <td class="border px-4 py-3 text-center bg-green-100 font-medium">
+                            ${operations.reduce((total, op) => {
+                                const pagados = op.installments.filter(inst => inst.id_state === 4).reduce((sum, inst) => sum + inst.installment_amount, 0);
+                                return total + pagados;
+                            }, 0).toFixed(2)}
+                        </td>
+                        <td class="border px-4 py-3 text-center bg-blue-100 font-medium">
+                            ${data.total_year_amount.toFixed(2)}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<style>
+    table {
+        font-size: 14px;
+    }
+    
+    th, td {
+        white-space: nowrap;
+    }
+
+    /* Estilo para la barra de desplazamiento */
+    .custom-scrollbar {
+        overflow-x: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 85, 179, 0.3) transparent;
+    }
+
+    /* Estilos para navegadores WebKit (Chrome, Safari, etc.) */
+    .custom-scrollbar::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 85, 179, 0.3);
+        border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(0, 85, 179, 0.5);
+    }
+</style>
+
+<script>
+    const yearSelect = document.getElementById("year_select");
+    yearSelect?.addEventListener("change", function() {
+        const selectedYear = yearSelect.value;
+        window.location.href = `/revenue/${selectedYear}`;
+    });
+</script>
