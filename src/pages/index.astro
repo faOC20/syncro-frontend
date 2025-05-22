@@ -4,18 +4,22 @@ import Layout from '../layouts/Layout.astro';
 import OperationForm from '@components/OperationForm.astro';
 import ReactVirtualizedTable from '@components/OperationsTable';
 import {Notifications} from '@components/Notifications';
-
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import ProductsQuickAccess from '@components/ProductsQuickAccess.astro';
 ---
 
 <Layout>
 	
     <div class="w-full h-full flex flex-col gap-[3rem]">
-        <section class="flex justify-center w-full gap-[3rem]">
+        <section class="flex justify-center h-full w-full gap-[3rem]">
             <OperationForm />
-            <Notifications client:visible />
+            <div class="w-full flex flex-col min-h-full gap-[3rem]">
+                <div class="flex h-1/2">
+                    <Notifications client:visible />
+                </div>
+                <div class="flex h-1/2">
+                    <ProductsQuickAccess/>
+                </div>
+            </div>
         </section>
         
         <section class="w-xs lg:w-full md:w-2xl">

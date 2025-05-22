@@ -37,20 +37,23 @@ useEffect(() => {
     const fetchNotifications = async() => {
         const data = await updateNotifications();
         setNotifications(data);
+        setIsLoading(false);
+        
     }
 
     fetchNotifications();
-    setIsLoading(false);
+    
+    
     
 }, []);
 
 
 
     return (
-       isLoading?(<div className='h-[485px] w-full'>
+       isLoading?(<div className='w-full h-full '>
 
        </div>):(
-        <div id="notifications-container" class="grow h-[485px] hidden lg:flex flex-col rounded-lg bg-white shadow-lg overflow-hidden">
+        <div id="notifications-container" class="h-full w-full hidden lg:flex flex-col rounded-lg bg-white shadow-lg overflow-hidden">
         <div class="bg-gradient-to-r from-theme-ocean-blue to-theme-light-blue p-4 text-white">
             <h2 class="text-xl font-bold">Notificaciones</h2>
         </div>

@@ -1,0 +1,10 @@
+---
+interface Props {
+    style: string
+}
+
+const {style} = Astro.props
+---
+<section class=`flex flex-col max-w-2xl gap-3 shadow-md px-6 py-5 relative bg-white text-theme-black grow rounded-lg ${style}`>
+    <slot/>
+</section>
