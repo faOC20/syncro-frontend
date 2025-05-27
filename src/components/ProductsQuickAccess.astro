@@ -1,11 +1,121 @@
 ---
 import Sections from "@layouts/Sections.astro";
 import Bookmark from "./decoration/Bookmark.astro";
+import { BACK_API } from "astro:env/client";
 
+interface Props{
+    products: [any]
+}
+
+const {products} = Astro.props
 
 ---
-<Sections style="">
+<Sections style="max-h-[271px]">
     <Bookmark>
         Productos
+    <input type="search" autocomplete="off" id="product-search" placeholder="código o nombre" class="border py-1 px-2 text-theme-ocean-blue rounded-full text-sm block">
     </Bookmark>
+    
+    <div id="products-container" class="h-full overflow-y-auto flex flex-col mt-2">
+        <!-- Aquí se mostrarán los productos filtrados -->
+    </div>
 </Sections>
+
+<!-- Elemento oculto para pasar los datos del servidor al cliente -->
+<div id="products-data" data-products={JSON.stringify(products)} style="display: none;"></div>
+
+<script>
+
+    // Obtener los productos del backend
+    const products = JSON.parse(document.getElementById('products-data')?.getAttribute('data-products') || '[]');
+    const searchInput = document.getElementById('product-search') as HTMLInputElement;
+    const productsContainer = document.getElementById('products-container') as HTMLDivElement;
+    
+    // Función para mostrar los productos filtrados
+    function filterProducts(searchTerm: string) {
+        const filteredProducts = searchTerm 
+            ? products.filter(product => 
+                product.code_product?.toLowerCase().startsWith(searchTerm.toLowerCase()) ||
+                product.name_product?.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+            : products;
+        
+        displayProducts(filteredProducts);
+    }
+    
+    // Función para mostrar los productos en el contenedor
+    function displayProducts(productsToShow) {
+        productsContainer.innerHTML = '';
+        
+        if (productsToShow.length === 0) {
+            productsContainer.innerHTML = '<p class="text-gray-500 p-2">No se encontraron productos</p>';
+            return;
+        }
+        
+        productsToShow.forEach(product => {
+            const productElement = document.createElement('div');
+            productElement.className = 'pr-3 min-h-full flex flex-col';
+            productElement.innerHTML = `
+                <div class="flex flex-col h-11/12 justify-between border p-2 border-theme-ocean-blue/20 bg-gradient-to-br from-white to-theme-ocean-blue/5 rounded-lg shadow-sm hover:shadow-md hover:bg-gradient-to-br hover:from-white hover:to-theme-ocean-blue/10 transition-all duration-200 cursor-pointer">
+                    <div class="flex grow w-full justify-between items-start">
+                        <div class="text-md max-w-9/12 font-medium text-theme-ocean-blue">${product.name_product}<span class='text-sm opacity-70'> (${product.name_color})</span></div>
+
+                        <div class="text-xs font-bold text-theme-ocean-blue bg-theme-ocean-blue/10 px-2 py-0.5 rounded-full">${product.amount} unidades</div>
+                    </div>
+                
+                    <div class="grow flex justify-between mt-2">
+                        <div class="text-sm text-gray-500 flex flex-col justify-end space-y-0.5">
+                            <span class="text-sm text-gray-600 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1 text-theme-ocean-blue/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" />
+                                </svg>
+                                ${product.code_product || 'Sin código'}
+                            </span>
+
+                            <span class="text-sm text-gray-600 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1 text-theme-ocean-blue/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                </svg>
+                                ${product.name_warehouse}
+                            </span>
+
+                            <span class="text-sm text-gray-600 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1 text-theme-ocean-blue/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Garantía: ${product.guarantee}
+                            </span>
+                        </div>
+
+                        <div class='flex flex-col text-end justify-end'>
+                            <span class='text-red-500 font-medium text-lg'>${product.cost ? `$${product.cost}` : 'Sin precio'}</span>
+                            <span class='text-xs text-gray-500 italic'>Actualizado: ${product.change_date}</span>
+                        </div>
+                    </div>
+                </div>
+                    
+
+              
+            `;
+            
+            // Evento para seleccionar un producto
+            productElement.addEventListener('click', () => {
+                console.log('Producto seleccionado:', product);
+                // Aquí puedes implementar la lógica para cuando se selecciona un producto
+            });
+            
+            productsContainer.appendChild(productElement);
+        });
+    }
+    
+    // Evento para filtrar productos mientras se escribe
+    searchInput?.addEventListener('input', (e) => {
+        filterProducts(e.target.value);
+    });
+    
+    // Mostrar todos los productos al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+        filterProducts('');
+    });
+</script>
+

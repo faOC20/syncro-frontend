@@ -9,11 +9,13 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { format } from 'date-fns';
 import { operationDateFilter } from '@lib/operationDateFilter';
+import casheaLogo from '@icons/cashea-logo.avif'
+import mileniumLogo from '../assets/logos/milenium.svg'
 
 
 
 
-// Columnas de ejemplo - REEMPLAZAR con tus columnas reales
+
 const columns = [
   { id: 'order_number', label: 'Nro de orden', minWidth: 120 },
   { id: 'creation_date', label: 'Fecha de creación', minWidth: 150 },
@@ -21,10 +23,10 @@ const columns = [
   { id: 'dni', label: 'Cédula', minWidth: 120 },
   { id: 'products', label: 'Producto/s', minWidth: 150 },
   { id: 'operation_amount', label: 'Monto', minWidth: 120 },
-  { id: 'state', label: 'Estado', minWidth: 120 }
+  { id: 'state', label: 'Estado', minWidth: 120 },
+  {id:'is_cashea', label: 'Tipo', minWidth: 120}
 ];
 
-// Datos de ejemplo - REEMPLAZAR con los datos de tu base de datos
 
 
 
@@ -120,12 +122,24 @@ export default function OperationsTable() {
                         style={{ cursor: 'pointer'}}
                       >
                         {columns.map((column) => {
+
+                          const opTypes = {
+                            1: 'src/icons/cashea-logo.avif',
+                            0: 'src/icons/milenium-logo.avif'
+                          }
+
                           const value = row[column.id];
+                          
                           return (
                             <TableCell key={column.id} align={column.align}>
-                              {column.format && typeof value === 'number'
-                                ? column.format(value)
+                              {column.id == 'is_cashea'
+                                ? 
+                                    <div className='size-8' >
+                                      <img src={opTypes[value]} alt="" className='rounded-sm size-full'/>
+                                    </div>
+                                
                                 : value}
+                                
                             </TableCell>
                           );
                         })}

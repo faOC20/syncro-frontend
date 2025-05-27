@@ -50,8 +50,10 @@ useEffect(() => {
 
 
     return (
-       isLoading?(<div className='w-full h-full '>
-
+       isLoading?(<div className='w-full h-full rounded-lg shadow-lg bg-white overflow-hidden'>
+            <div class="bg-gradient-to-r from-theme-ocean-blue to-theme-light-blue p-4 text-white">
+            <h2 class="text-xl font-bold">Notificaciones</h2>
+        </div>
        </div>):(
         <div id="notifications-container" class="h-full w-full hidden lg:flex flex-col rounded-lg bg-white shadow-lg overflow-hidden">
         <div class="bg-gradient-to-r from-theme-ocean-blue to-theme-light-blue p-4 text-white">

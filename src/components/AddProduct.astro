@@ -1,0 +1,199 @@
+---
+interface Props{
+  products: [any]
+}
+
+const {products} = Astro.props
+---
+<div class="flex flex-col h-36">
+    <label for="productos" class="block text-sm font-medium  mb-1">Productos</label>
+   
+    <input 
+        id="products-search" 
+        type="search"
+        name="products" 
+        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+        required
+        autocomplete="off"
+    />
+
+   
+    <div class="grow mt-1 relative">
+        <div id="tags" class="absolute h-full flex max-w-full z-10 gap-3 flex-wrap overflow-auto">
+            
+        </div>  
+        <ul id="products-list" class=" relative flex flex-col gap-3 hidden bg-white shadow w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue overflow-hidden z-20" 
+       
+        ></ul>
+    </div>
+</div>
+
+<div id="products" data-products = {JSON.stringify(products)}>
+
+</div>
+{
+    //al seleccionar un producto debe aparacer como una tag, luego se debe eliminar de los allProducts
+}
+
+<script>
+
+    interface product{
+        amount: number,
+        change_date: any,
+        code_product: string,
+        guarantee: number,
+        name_category: string,
+        name_color: string,
+        name_product: string,
+        name_warehouse:string,
+    }
+
+    const allProducts:product[] = JSON.parse(document.getElementById('products')?.getAttribute('data-products') || '[]')
+    const productsList = document.getElementById('products-list') as HTMLDivElement
+    const tagsContainer = document.getElementById('tags') as HTMLDivElement
+    const productsSearch = document.getElementById('products-search') as HTMLInputElement
+    let tags:any[] = []
+
+    const filterProducts = (search: string)=>{
+
+        if(!search){
+            productsList.classList.add('hidden')
+            return
+        }
+        
+        const filteredProducts = allProducts.filter((product: product)=>
+            product.code_product?.toLowerCase().startsWith(search.toLowerCase())
+        )
+        
+        if(filteredProducts.length == 0){
+            productsList.classList.add('hidden')
+            return
+        }
+
+        showProducts(filteredProducts)
+    }
+
+    const showProducts = (filteredProducts: product[])=>{
+
+        productsList.innerHTML = ''
+        filteredProducts.slice(0,5).forEach(product => {
+            const productOption = document.createElement('li')
+            productOption.className = 'text-gray-300 border-b-1 w-full text-start list-none cursor-pointer'
+            productOption.innerHTML = `
+                
+                <a>
+                    <strong class='text-theme-ocean-blue'>
+                    ${product.code_product}
+                </strong>
+                <span class='text-xs text-gray-600 block'>
+                    ${product.name_product} 
+                </span>
+                </a>
+               
+            `
+            
+            productOption.addEventListener('click', (e)=>{
+                productsSearch.value = ''
+                const index = allProducts.findIndex(e => e.code_product === product.code_product);
+                let productTag = {}
+                if (index !== -1) {
+                    productTag = allProducts.splice(index, 1); 
+                }
+
+                tags.push(productTag[0])
+
+                refreshTags()
+
+
+                
+            })
+
+            productsList.appendChild(productOption)
+        });
+
+        productsList.classList.remove('hidden')
+        
+        // productTags.forEach(tag=>{
+            
+        //     tag.addEventListener('click', (e)=>{
+        //         const target = e.target.closest('div')
+        //         console.log(target.id)
+        //     })
+        // })
+        
+    }
+
+    const refreshTags = ()=>{
+        tagsContainer.innerHTML = ''
+        tags.forEach(tag=>{
+                    
+            const productTag = document.createElement('div')
+            productTag.id = `${tag.code_product}`
+            productTag.className = 'product-tag bg-theme-light-blue px-2 max-h-6 rounded-full cursor-pointer hover:bg-red-500 transition-all'
+            productTag.title = `${tag.name_product}`
+            productTag.innerHTML = `
+                <strong class='text-sm text-white'>
+                    ${tag.code_product}
+                </strong>
+            `
+            tagsContainer.appendChild(productTag)
+            
+            
+
+            
+            
+        })
+    }
+
+    
+    productsSearch.addEventListener('input', (e)=>{
+        filterProducts(e.target.value.trim())
+        
+    })
+
+    document.addEventListener('click', (e)=>{
+        if (e.target != productsSearch){
+            
+            productsList.classList.add('hidden')
+        }
+    })
+
+    productsSearch.addEventListener('focus', (e)=>{
+        if (productsSearch.value.trim()){
+            filterProducts(productsSearch.value.trim())
+        }
+    })
+
+
+
+    //eliminar tags
+    
+    const manejadorClick = (e) => {
+        const target = e.target.closest("div");
+        console.log(target.id);
+        const indexProduct = tags.findIndex(t => t.code_product === target.id)
+        const deletedTag = tags.splice(indexProduct, 1)
+        allProducts.push(deletedTag[0])
+        refreshTags()
+    }
+
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === "childList") {
+                
+                const productTags = document.querySelectorAll('.product-tag')
+               
+                productTags.forEach((tag)=>{
+                    
+                    tag.addEventListener("click", manejadorClick);
+                })
+            }
+        });
+    });
+
+
+    const config = { childList: true };
+
+
+    observer.observe(tagsContainer, config);
+</script>

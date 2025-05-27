@@ -1,0 +1,138 @@
+          <div class="relative">
+            <div id="product-tags-container" class="flex flex-wrap gap-2 p-2 min-h-[42px] border border-gray-300 rounded-md focus-within:ring-2 focus-within:ring-theme-ocean-blue focus-within:outline-none">
+              <!-- Aquí se mostrarán los tags seleccionados -->
+              <input 
+                type="search" 
+                id="productos" 
+                placeholder="Buscar productos..." 
+                autocomplete="off"
+                class="flex-grow min-w-[120px] outline-none text-sm"
+              >
+            </div>
+            <input type="hidden" name="products" id="products-hidden-input" required>
+            <div id="product-suggestions" class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-[200px] overflow-y-auto hidden">
+              <!-- Aquí se mostrarán las sugerencias -->
+            </div>
+          </div>
+
+<script>
+  // Ejemplo de productos disponibles
+  const productosDisponibles = [
+    { id: 1, nombre: "Smartphone Samsung Galaxy A54", codigo: "SM-A54" },
+    { id: 2, nombre: "Laptop HP Pavilion", codigo: "HP-PAV22" },
+    { id: 3, nombre: "Monitor LG 24 pulgadas", codigo: "LG-M24" },
+    { id: 4, nombre: "Teclado Logitech K380", codigo: "LOG-K380" },
+    { id: 5, nombre: "Mouse Inalámbrico", codigo: "MS-W120" }
+  ];
+
+  // Productos seleccionados
+  let productosSeleccionados = [];
+  
+  // Elementos del DOM
+  const inputProductos = document.getElementById('productos');
+  const tagsContainer = document.getElementById('product-tags-container');
+  const suggestionsContainer = document.getElementById('product-suggestions');
+  const hiddenInput = document.getElementById('products-hidden-input');
+  
+  // Función para actualizar el input oculto con los productos seleccionados
+  function actualizarInputOculto() {
+    hiddenInput.value = productosSeleccionados.map(p => p.nombre).join(', ');
+  }
+  
+  // Función para renderizar los tags
+  function renderizarTags() {
+    // Eliminar todos los tags existentes (excepto el input)
+    Array.from(tagsContainer.children).forEach(child => {
+      if (child !== inputProductos) {
+        tagsContainer.removeChild(child);
+      }
+    });
+    
+    // Agregar los nuevos tags
+    productosSeleccionados.forEach(producto => {
+      const tag = document.createElement('div');
+      tag.className = 'flex items-center bg-theme-ocean-blue/10 text-theme-ocean-blue px-2 py-1 rounded-md text-sm';
+      tag.innerHTML = `
+        <span>${producto.nombre}</span>
+        <button type="button" class="ml-1 text-theme-ocean-blue hover:text-red-500" data-id="${producto.id}">
+          &times;
+        </button>
+      `;
+      
+      // Agregar evento para eliminar el tag
+      tag.querySelector('button').addEventListener('click', () => {
+        productosSeleccionados = productosSeleccionados.filter(p => p.id !== producto.id);
+        renderizarTags();
+        actualizarInputOculto();
+      });
+      
+      // Insertar el tag antes del input
+      tagsContainer.insertBefore(tag, inputProductos);
+    });
+  }
+  
+  // Función para mostrar sugerencias
+  function mostrarSugerencias(texto) {
+    // Filtrar productos según el texto ingresado
+    const sugerencias = texto 
+      ? productosDisponibles.filter(p => 
+          !productosSeleccionados.some(ps => ps.id === p.id) && // No mostrar productos ya seleccionados
+          (p.nombre.toLowerCase().includes(texto.toLowerCase()) || 
+           p.codigo.toLowerCase().includes(texto.toLowerCase()))
+        )
+      : [];
+    
+    // Limpiar y mostrar/ocultar el contenedor de sugerencias
+    suggestionsContainer.innerHTML = '';
+    
+    if (sugerencias.length > 0) {
+      suggestionsContainer.classList.remove('hidden');
+      
+      sugerencias.forEach(producto => {
+        const item = document.createElement('div');
+        item.className = 'p-2 hover:bg-gray-100 cursor-pointer';
+        item.innerHTML = `
+          <div class="font-medium">${producto.nombre}</div>
+          <div class="text-xs text-gray-500">Código: ${producto.codigo}</div>
+        `;
+        
+        // Agregar evento para seleccionar el producto
+        item.addEventListener('click', () => {
+          productosSeleccionados.push(producto);
+          renderizarTags();
+          actualizarInputOculto();
+          inputProductos.value = '';
+          suggestionsContainer.classList.add('hidden');
+          inputProductos.focus();
+        });
+        
+        suggestionsContainer.appendChild(item);
+      });
+    } else {
+      suggestionsContainer.classList.add('hidden');
+    }
+  }
+  
+  // Evento para buscar productos mientras se escribe
+  inputProductos.addEventListener('input', (e) => {
+    mostrarSugerencias(e.target.value);
+  });
+  
+  // Ocultar sugerencias al hacer clic fuera
+  document.addEventListener('click', (e) => {
+    if (!tagsContainer.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+      suggestionsContainer.classList.add('hidden');
+    }
+  });
+  
+  // Enfocar el input al hacer clic en el contenedor
+  tagsContainer.addEventListener('click', (e) => {
+    if (e.target === tagsContainer) {
+      inputProductos.focus();
+    }
+  });
+  
+  // Inicializar
+  renderizarTags();
+  actualizarInputOculto();
+</script>
