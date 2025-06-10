@@ -3,6 +3,8 @@ import { successAlert } from "@lib/sweetAlert"
 import Swal from 'sweetalert2'
 
 export const newOperation = async (data: string)=>{
+
+    console.log(`esta es la dataaa ${data}`)
     
     try{
 

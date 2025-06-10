@@ -1,14 +1,31 @@
 ---
 import Installments from '@components/operationPage/Installments.astro'
-import Legend from '@components/operationPage/Legend.astro'
+import ProductsSummary from '@components/operationPage/ProductsSummary.astro'
 import OperationInfo from '@components/operationPage/OperationInfo.astro'
 import Layout from '@layouts/Layout.astro'
+import { getOperation } from '@lib/getOperation'
+import { getInstallments } from '@lib/getInstallments'
+
+export interface Installment {
+  change_date: string | null
+  date_to_pay: string
+  installment_amount: number
+  id_state: number
+  state: 'pagado' | 'pendiente' | 'no_pagado' | 'errado'
+  type: string
+  id_type: number
+}
+
 const {id} = Astro.params
 
+const {creation_date: creationDate, name: customerName, operation_amount: amount, order_number:orderNumber, products, state}= await getOperation(id)
+const installments: Installment[] = await getInstallments(orderNumber)
 ---
 
-<Layout>
-    <OperationInfo server:defer orderNumber={id ?? ''}/>
-    <Installments server:defer orderNumber={id ?? ''}/>
-    <Legend/>
+<Layout style='flex justify-center gap-[3rem]'>
+    <div class="flex flex-col gap-[3rem] h-fit">
+        <OperationInfo creationDate={creationDate} customerName={customerName}, amount={amount} products={products} state={state} orderNumber={orderNumber}/>
+        <Installments installments={installments} orderNumber={id}/>
+    </div>
+    <ProductsSummary products={products}/>
 </Layout>

@@ -1,6 +1,6 @@
 import { BACK_API } from "astro:env/client";
 
-export const getOperation = async (orderNumber: number | undefined) => {
+export const getOperation = async (orderNumber: string | undefined) => {
     try {
         const result = await fetch(`${BACK_API}/api/get-operation`, {
             method: "POST",

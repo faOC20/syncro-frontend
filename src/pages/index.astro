@@ -11,9 +11,11 @@ import { promise } from 'astro:schema';
 const result = await fetch(`${BACK_API}/api/get-products`)
 const json = await result.json()
 const products = json.data || []
+
+console.log(products)
 ---
 
-<Layout>
+<Layout style='flex-col'>
 	
     <div class="w-full h-full flex flex-col gap-[3rem]">
         <section class="flex justify-center h-full w-full gap-[3rem]">
@@ -28,7 +30,7 @@ const products = json.data || []
             </div>
         </section>
         
-        <section class="w-xs lg:w-full md:w-2xl">
+        <section class="w-xs lg:w-full md:w-2xl mb-10">
             
                 <ReactVirtualizedTable client:visible/>
             
