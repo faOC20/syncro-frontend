@@ -1,0 +1,478 @@
+---
+import Bookmark from "@components/decoration/Bookmark.astro"
+import Layout from "@layouts/Layout.astro"
+import Sections from '@layouts/Sections.astro'
+import ProductCard from '@components/ProductCard.astro'
+import { BACK_API } from "astro:env/client"
+import type { Product } from "@components/operationPage/OperationInfo.astro"
+import Edit from '@icons/edit.svg'
+import TrashIcon from '@icons/TrashIcon.svg'
+import { useState } from "react"
+
+const result = await fetch(`${BACK_API}/api/get-products`)
+const json = await result.json()
+const products:Product[] = json.data || []
+
+
+const sectionsCategories = [...new Set(products.map(product => product.name_category))];
+
+
+
+
+---
+
+<Layout style="">
+    <Sections style="min-w-full">
+        <Bookmark>
+            <div class="flex gap-5">
+                Productos
+                <input  type="search" autocomplete="off" id="product-filter" placeholder="código o nombre" class="border py-1 px-2 text-theme-ocean-blue rounded-full text-sm block">
+            </div>
+            <button id="add-product-button" class="px-4 py-3 scheme-dark text-theme-light-gray bg-theme-ocean-blue rounded-lg shadow-md border border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-300 ease-in-out hover:bg-blue-700 cursor-pointer font-medium text-sm">
+                Agregar producto
+            </button>
+        </Bookmark>
+        <div id="all-products" data-sections={JSON.stringify(sectionsCategories)} data-products={JSON.stringify(products)} class="w-full max-h-[40rem] overflow-y-auto">
+            {
+                sectionsCategories.map((category)=>(
+                <section id="products-category" class="flex flex-col h-fit gap-8 mt-5 border-b-2 border-[#E0E0E0] pb-8 pl-8">
+                    <h1 class="text-theme-light-blue text-xl font-bold" id="name-category">{category}</h1>
+                    <div class="h-fit flex gap-10">
+                    {
+                        
+                        products
+                        .filter((product) => product.name_category === category)
+                        .map((product) => (
+                            
+                            <ProductCard product={product}/>
+                           
+                        ))
+                            
+                
+                    }
+                     </div>
+                    
+                
+                </section>
+                ))
+            }
+            <dialog id="name-change-dialog" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
+                <div class="flex flex-col gap-5">
+                    <label for="change-name-input" class="text-theme-light-blue font-bold">Cambiar nombre de producto</label>
+                    <input required id="change-name-input" class="rounded-md border p-1 border-theme-light-blue" type="text">
+                
+                </div>
+                <div class="flex space-x-3 justify-end mt-6">
+                    <button 
+                        type="button" 
+                        onclick="document.getElementById('name-change-dialog').close()"
+                        class="px-4 py-2  rounded-md border hover:bg-gray-50"
+                    >
+                        Cancelar
+                    </button>
+                    <button 
+                        id="update-name-change"
+                        type="button" 
+                        class="px-4 py-2 bg-theme-ocean-blue text-white rounded-md hover:bg-opacity-90"
+                    >
+                        Actualizar
+                    </button>
+                </div>
+            </dialog>
+            
+            <dialog id="code-change-dialog" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
+                <div class="flex flex-col gap-5">
+                    <label for="change-code-input" class="text-theme-light-blue font-bold">Cambiar código de producto</label>
+                    <input required  id="change-code-input" class="rounded-md border p-1 border-theme-light-blue" type="text">
+                
+                </div>
+                <div class="flex space-x-3 justify-end mt-6">
+                    <button 
+                        type="button" 
+                        onclick="document.getElementById('code-change-dialog').close()"
+                        class="px-4 py-2  rounded-md border hover:bg-gray-50"
+                    >
+                        Cancelar
+                    </button>
+                    <button 
+                        id="update-code-change"
+                        type="button" 
+                        class="px-4 py-2 bg-theme-ocean-blue text-white rounded-md hover:bg-opacity-90"
+                    >
+                        Actualizar
+                    </button>
+                </div>
+            </dialog>
+            
+            <dialog id="cost-change-dialog" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
+                <div class="flex flex-col gap-5">
+                    <label for="change-cost-input" class="text-theme-light-blue font-bold">Cambiar costo de producto</label>
+                    <input required id="change-cost-input" class="rounded-md border p-1 border-theme-light-blue" type="number">
+                
+                </div>
+                <div class="flex space-x-3 justify-end mt-6">
+                    <button 
+                        type="button" 
+                        onclick="document.getElementById('cost-change-dialog').close()"
+                        class="px-4 py-2  rounded-md border hover:bg-gray-50"
+                    >
+                        Cancelar
+                    </button>
+                    <button 
+                        id="update-cost-change"
+                        type="button" 
+                        class="px-4 py-2 bg-theme-ocean-blue text-white rounded-md hover:bg-opacity-90"
+                    >
+                        Actualizar
+                    </button>
+                </div>
+            </dialog>
+
+            <dialog id="confirm-delete-dialog" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
+                <span>¿Está seguro de eliminar el producto?</span>
+                <button 
+                        type="button" 
+                        onclick="document.getElementById('confirm-delete-dialog').close()"
+                        class="px-4 py-2  rounded-md border hover:bg-gray-50"
+                    >
+                        Cancelar
+                    </button>
+                    <button 
+                        id="confirm-delete-button"
+                        type="button" 
+                        class="px-4 py-2 bg-theme-ocean-blue text-white rounded-md hover:bg-opacity-90"
+                    >
+                        Eliminar
+                    </button>
+            </dialog>
+        </div>
+        
+        <dialog id="product-info-dialog" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-medium text-gray-900">Información del producto</h3>
+                <button id="delete-product" class="size-10 rounded-full border p-1 cursor-pointer text-theme-light-blue">
+                    <TrashIcon/>
+                </button>
+            </div>
+            
+            <span id="product-info-error" class="h-5 w-full mt-2 text-sm text-red-600">
+                
+            </span>
+            <div class="flex flex-col mt-3">
+                
+                <div class="flex flex-col gap-5">
+                    <div>
+                        <div class="flex gap-2">
+                            <label class='text-theme-light-blue font-bold' for='info-name'>Nombre</label>
+                            <button class="size-6 text-theme-ocean-blue cursor-pointer" id="change-name">
+                                <Edit/>
+                            </button>
+                        </div>
+                        <span id="product-name"></span>
+                    </div>
+                    <div>
+                        <div class="flex gap-2">
+                            <label class='text-theme-light-blue font-bold' for='info-code'>Código</label>
+                            <button class="size-6 text-theme-ocean-blue cursor-pointer" id="change-code">
+                                <Edit/>
+                            </button>
+                        </div>
+                        <span id="product-code"></span>
+                    </div>
+                    <div>
+                        <div class="flex gap-2">
+                            <label class='text-theme-light-blue font-bold' for='info-color'>Color</label>
+                        </div>
+                        <span id="product-color">
+                            <select 
+                            id="info-color" 
+                            class=" px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+                        >
+                            <option value='' selected disabled>Seleccione el color</option>
+                            <option value='1'>Blanco</option>
+                            <option value='2'>Negro</option>
+                            <option value='3'>Plata</option>
+                        </select>
+                        </span>
+                    </div>
+                    <div>
+                        <div class="flex gap-2">
+                            <label class='text-theme-light-blue font-bold' for='info-warehouse'>Almacen</label>
+                            
+                        </div>
+                        <span id="product-warehouse">
+                            <select 
+                            id="info-warehouse" 
+                            class=" px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+                        >
+                            <option value='' selected disabled>Seleccione el almacen</option>
+                            <option value='1'>Almacen 1</option>
+                            <option value='2'>Almacen 2</option>
+                            
+                        </select>
+                        </span>
+                    </div>
+                    <div>
+                        <div class="flex gap-2">
+                            <label class='text-theme-light-blue font-bold' for='info-cost'>Costo</label>
+                            <button class="size-6 text-theme-ocean-blue cursor-pointer" id="change-cost">
+                                <Edit/>
+                            </button>
+                        </div>
+                        <span id="product-cost"></span>
+                    </div>
+                    <div>
+                        <label class='text-theme-light-blue font-bold' for='info-last-up'>Última actualización</label>
+                       
+                        <span id="last-update"></span>
+                    </div>
+                    <div>
+                        <label class='block text-theme-light-blue font-bold' for='info-category'>Categoría</label>
+                        
+                        <span id="product-category">
+                            <select 
+                            id="info-category" 
+                            class=" px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+                        >
+                            <option value='' selected disabled>Seleccione la categoría</option>
+                            <option value='1'>AA split</option>
+                            <option value='2'>AA de ventana</option>
+                            <option value='3'>Cocinas</option>
+                            <option value='4'>Refrigeradores</option>
+                            <option value='5'>Lavadoras</option>
+                            <option value='6'>Arroceras</option>
+                        </select>
+                        </span>
+                    </div>
+                    <div class="flex gap-2 items-center">
+                        <label for="product-amount">Cantidad: </label>
+                        
+                        <input id="product-amount" type="number" min="0" class="max-w-15 px-2 py-1 border rounded-md">
+                    </div>
+                    
+                </div>
+              
+               
+                
+            </div>
+  
+            <div class="flex justify-end space-x-3 mt-6">
+                <button 
+                    type="button" 
+                    onclick="document.getElementById('product-info-dialog').close()"
+                    class="px-4 py-2  rounded-md border hover:bg-gray-50"
+                >
+                    Cancelar
+                </button>
+                <button 
+                    id="update-product-button"
+                    type="button" 
+                    class="px-4 py-2 bg-theme-ocean-blue text-white rounded-md hover:bg-opacity-90"
+                >
+                    Actualizar
+                </button>
+            </div>
+        </dialog>
+
+        <dialog id="add-product-dialog" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
+            <h3 class="text-lg font-medium text-gray-900">Agregar nuevo producto</h3>
+            
+            <!-- <span id="product-info-error" class="h-5 w-full mt-2 text-sm text-red-600">
+                
+            </span> -->
+            <form id="add-product-form" class="flex flex-col mt-3">
+                
+                <div class="flex flex-col gap-8">
+                    <div>
+                        <div class="flex gap-2 flex-col">
+                            <label class='text-theme-light-blue font-bold' for='new-name'>Nombre</label>
+                            <input name="newName" required class="border rounded-md px-2 py-1" id="new-name"/>
+                               
+                            
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex gap-2 flex-col">
+                            <label class='text-theme-light-blue font-bold' for='new-code'>Código</label>
+                            <input name="newCode" required class="border rounded-md px-2 py-1" id="new-code"/>
+                        </div>
+                      
+                    </div>
+                    <div>
+                        <div class="flex gap-2">
+                            <label class='text-theme-light-blue font-bold' for='new-color'>Color</label>
+                        </div>
+                        <span id="new-product-color">
+                            <select 
+                            name="newColor"
+                            required
+                            id="new-color" 
+                            class=" px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+                        >
+                            <option value='' selected disabled>Seleccione el color</option>
+                            <option value='1'>Blanco</option>
+                            <option value='2'>Negro</option>
+                            <option value='3'>Plata</option>
+                        </select>
+                        </span>
+                    </div>
+                    <div>
+                        <div class="flex gap-2">
+                            <label class='text-theme-light-blue font-bold' for='new-warehouse'>Almacen</label>
+                            
+                        </div>
+                        <span id="new-product-warehouse">
+                            <select 
+                            name="newWarehouse"
+                            required
+                            id="new-warehouse" 
+                            class=" px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+                        >
+                            <option value='' selected disabled>Seleccione el almacen</option>
+                            <option value='1'>Almacen 1</option>
+                            <option value='2'>Almacen 2</option>
+                            
+                        </select>
+                        </span>
+                    </div>
+                    <div>
+                        <div class="flex gap-2 flex-col">
+                            <label class='text-theme-light-blue font-bold' for='info-cost'>Costo</label>
+                            <input name="newCost" required class="border rounded-md px-2 py-1" id="new-cost"/>
+                            
+                          
+                        </div>
+                    </div>
+                    <!-- <div>
+                        <label class='text-theme-light-blue font-bold' for='info-last-up'>Última actualización</label>
+                       
+                        <span id="last-update"></span>
+                    </div> -->
+                    <div>
+                        <label class='block text-theme-light-blue font-bold' for='new-category'>Categoría</label>
+                        
+                        <span id="new-product-category">
+                            <select 
+                            name="newCategory"
+                            required
+                            id="new-category" 
+                            class=" px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+                        >
+                            <option value='' selected disabled>Seleccione la categoría</option>
+                            <option value='1'>AA split</option>
+                            <option value='2'>AA de ventana</option>
+                            <option value='3'>Cocinas</option>
+                            <option value='4'>Refrigeradores</option>
+                            <option value='5'>Lavadoras</option>
+                            <option value='6'>Arroceras</option>
+                        </select>
+                        </span>
+                    </div>
+                    <div class="flex gap-2 items-center">
+                        <label for="new-amount">Cantidad: </label>
+                        
+                        <input name="newAmount" required id="new-amount" type="number" min="0" class="max-w-15 px-2 py-1 border rounded-md">
+                    </div>
+                    
+                </div>
+              
+               
+                
+            </div>
+  
+            <div class="flex justify-end space-x-3 mt-6">
+                <button 
+                    type="button" 
+                    onclick="document.getElementById('add-product-dialog').close()"
+                    class="px-4 py-2  rounded-md border hover:bg-gray-50"
+                >
+                    Cancelar
+                </button>
+                <button 
+                    id="create-product-button"
+                    type="submit" 
+                    class="px-4 py-2 bg-theme-ocean-blue text-white rounded-md hover:bg-opacity-90"
+                >
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </Sections>
+    
+
+</Layout>
+
+<script>
+    import type { Product } from '@components/operationPage/OperationInfo.astro'
+import {newProduct} from '@lib/newProduct'
+import { getIconElement } from 'astro/runtime/client/dev-toolbar/ui-library/icons.js'
+    const addProductDialog = document.getElementById('add-product-dialog') as HTMLDialogElement
+    const addProductButton = document.getElementById('add-product-button') as HTMLButtonElement
+    const AddProductForm = document.getElementById('add-product-form') as HTMLFormElement
+
+    addProductButton.addEventListener('click', ()=>{
+        addProductDialog.showModal()
+    })
+
+    AddProductForm.addEventListener('submit', (e)=>{
+
+        e.preventDefault()
+
+        const data = Object.fromEntries(new FormData(e.target as HTMLFormElement))
+
+        newProduct(data)
+    })
+
+   
+
+
+</script>
+
+<!-- <script>
+import type { Product } from "@components/operationPage/OperationInfo.astro"
+
+    const allProductsContainer = document.getElementById('all-products') as HTMLDivElement
+    const allProducts = JSON.parse(allProductsContainer.dataset.products)
+    const allCategories = JSON.parse(allProductsContainer.dataset.sections)
+    import ProductCard from "@components/ProductCard.astro"
+
+    let filteredProducts:Product[]|null = null
+    const getFilteredProducts = ()=>{
+        return filteredProducts
+    } 
+    const setFilteredProducts = (input: string)=>{
+        filteredProducts = allProducts.filter((product:Product)=>product.name_product.toLowerCase().startsWith(input.toLowerCase()) || product.code_product.toLowerCase().startsWith(input.toLowerCase()))
+    }
+
+    const productFilter = document.getElementById('product-filter') as HTMLInputElement
+    productFilter.addEventListener('input', (e)=>{
+        setFilteredProducts(e.target.value)
+        console.log(getFilteredProducts())
+
+        allProductsContainer.innerHTML = allCategories.map((category)=>(
+            `
+                <section id="products-category" class="flex flex-col h-fit gap-8 mt-5 border-b-2 border-[#E0E0E0] pb-8 pl-8">
+                    <h1 class="text-theme-light-blue text-xl font-bold" id="name-category">${category}</h1>
+                    <div class="h-fit flex gap-10">
+                    ${
+                        
+                        filteredProducts
+                        .filter((product) => product.name_category === category)
+                        .map((product) => (
+                            
+                            <ProductCard product={product}/>
+                           
+                        ))
+                            
+                
+                    }
+                     </div>
+                    
+                
+                </section>
+            
+            `
+        ))
+    })
+
+</script> -->

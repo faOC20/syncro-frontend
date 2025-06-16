@@ -6,7 +6,6 @@ import ReactVirtualizedTable from '@components/OperationsTable';
 import {Notifications} from '@components/Notifications';
 import ProductsQuickAccess from '@components/ProductsQuickAccess.astro';
 import { BACK_API } from 'astro:env/client';
-import { promise } from 'astro:schema';
 
 const result = await fetch(`${BACK_API}/api/get-products`)
 const json = await result.json()

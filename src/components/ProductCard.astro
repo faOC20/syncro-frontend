@@ -1,0 +1,359 @@
+---
+import Bed from "@icons/bed.svg"
+import Freezer from '@icons/freezer.svg'
+import Kitchen from '@icons/kitchen.svg'
+import Microwave from '@icons/microwave.svg'
+import Speaker from '@icons/speaker.svg'
+import Split from '@icons/split.svg'
+import Ventana from '@icons/ventana.svg'
+import Washer from '@icons/washer.svg'
+import type { Product } from "./operationPage/OperationInfo.astro"
+import Varios from '@icons/varios.svg'
+
+
+const ProductImg = {
+    'AA split': Split,
+    'AA de ventana': Ventana,
+    'Cocinas':Kitchen,
+    'Refrigeradores':Freezer,
+    'Lavadoras': Washer,
+}
+
+interface Props {
+    product: Product
+}
+
+const {product} = Astro.props 
+const ProductImgComponent = ProductImg[product.name_category]
+
+---
+
+<button data-product={JSON.stringify(product)} class="product-card h-fit max-w-50 min-w-50 border-3 border-[#E0E0E0] px-3 pt-5 pb-3 shadow-md flex flex-col gap-3 rounded-lg text-sm cursor-pointer">
+    <div class="w-2/3 h-20 self-center  bg-theme-light-blue flex justify-center items-center rounded-lg">
+        <div class="size-full text-white">
+            {
+                ProductImgComponent?(
+                <ProductImgComponent/>
+                ):<Varios/>
+            }
+         </div>
+    </div>
+    <hr class="text-[#E0E0E0]">
+    <div class="flex justify-between text-theme-ocean-blue">
+        <span>{product.code_product}</span>
+        <span>{product.amount} und.</span>
+    </div>
+    <div class="flex text-xs">
+        <span>{product.name_product}</span>
+    </div>
+    <div class="flex flex-col text-xs" >
+        <span>
+            {product.name_color}
+        </span>
+        <span class="text-red-500">
+            costo: {product.cost}$
+        </span>
+        <span class="text-[#FF9600]">
+            {product.name_warehouse}
+        </span>
+    </div>
+    <hr class="text-[#E0E0E0]">
+    <div class="flex justify-center text-xs text-gray-500">
+        actualizacion: {product.change_date}
+    </div>
+</button>
+
+
+
+<script>
+import type { Product } from "./operationPage/OperationInfo.astro"
+    import {changeProductInfo} from '@lib/changeProductInfo'
+    import {deleteProduct} from '@lib/deleteProduct'
+
+    let name: string | null = null
+    let code: string | null = null
+    let cost: string | null = null
+    let selectedProduct: Product | null = null
+    let amount: string | null = null
+    let category : string | null = null
+    let color: string | null = null
+    let warehouse: string | null = null
+
+
+    const allCards = document.querySelectorAll('.product-card')
+    const productInfoDialog = document.getElementById('product-info-dialog') as HTMLDialogElement
+    const productAmountInput = document.getElementById('product-amount') as HTMLInputElement
+    const productName = document.getElementById('product-name') as HTMLSpanElement
+    const productCode = document.getElementById('product-code') as HTMLSpanElement
+    const productColor = document.getElementById('product-color') as HTMLSpanElement
+    const productWarehouse = document.getElementById('product-warehouse') as HTMLSpanElement
+    const productCost = document.getElementById('product-cost') as HTMLSpanElement
+    const lastUpdate = document.getElementById('last-update') as HTMLSpanElement
+    const productCategory = document.getElementById('product-category') as HTMLSpanElement
+    const updateProductButton = document.getElementById('update-product-button') as HTMLButtonElement
+
+    const productError = document.getElementById('product-info-error') as HTMLSpanElement
+
+
+    
+    //dialogo de cambio de datos
+    const changeNameButton = document.getElementById('change-name') as HTMLButtonElement
+    const changeNameDialog = document.getElementById('name-change-dialog') as HTMLDialogElement
+    const updateName = document.getElementById('update-name-change') as HTMLButtonElement
+    const changeNameInput = document.getElementById('change-name-input') as HTMLInputElement
+
+    const changeCodeButton = document.getElementById('change-code') as HTMLButtonElement
+    const changeCodeDialog = document.getElementById('code-change-dialog') as HTMLDialogElement
+    const updateCode = document.getElementById('update-code-change') as HTMLButtonElement
+    const changeCodeInput = document.getElementById('change-code-input') as HTMLInputElement
+
+
+    const changeCostButton = document.getElementById('change-cost') as HTMLButtonElement
+    const changeCostDialog = document.getElementById('cost-change-dialog') as HTMLDialogElement
+    const updateCost = document.getElementById('update-cost-change') as HTMLButtonElement
+    const changeCostInput = document.getElementById('change-cost-input') as HTMLInputElement
+
+    const changeCategory = document.getElementById('info-category') as HTMLSelectElement
+
+    const changeColor = document.getElementById('info-color') as HTMLSelectElement
+
+    const changeWarehouse = document.getElementById('info-warehouse') as HTMLSelectElement
+
+    const deleteProductButton = document.getElementById('delete-product') as HTMLButtonElement
+
+    const confirmDeleteDialog = document.getElementById('confirm-delete-dialog') as HTMLDialogElement
+    const confirmDeleteButton = document.getElementById('confirm-delete-button') as HTMLButtonElement
+
+    const getSelectedProduct = ()=>{
+        return selectedProduct
+    }
+
+    const setSelectedProduct = (product: Product|null)=>{
+        selectedProduct = product
+    }
+
+    
+    const getName = ()=>{
+        return name
+    }
+    const setName = (nameInp: string| null)=>{
+        name = nameInp
+    }
+
+    const getCode = ()=>{
+        return code
+    }
+    const setCode = (codeInp: string| null)=>{
+        code = codeInp
+    }
+
+    const getCost = ()=>{
+        return cost
+    }
+    const setCost = (costInp: string| null)=>{
+        cost = costInp
+    }
+
+    const getAmount = ()=>{
+        return amount
+    }
+    const setAmount = (amountInp: string| null)=>{
+        amount = amountInp
+    }
+
+    const getCategory = ()=>{
+        return category
+    }
+    const setCategory = (categorySelected: string| null)=>{
+        category = categorySelected
+    }
+
+    const getColor = ()=>{
+        return color
+    }
+    const setColor = (colorSelected: string | null)=>{
+        color = colorSelected
+    }
+
+    const getWarehouse = ()=>{
+        return warehouse
+    }
+    const setWarehouse = (warehouseSelected: string | null)=>{
+        warehouse = warehouseSelected
+    }
+
+    const sendData = ()=>{
+        
+       if (getName() || getCode() || getCost() || getAmount() || getCategory() || getColor() || getWarehouse()){
+            
+            const data = {
+                code: getSelectedProduct()?.code_product,
+                name: getName(),
+                newCode: getCode(),
+                cost: getCost(),
+                amount: getAmount(),
+                category: getCategory(),
+                color: getColor(),
+                warehouse: getWarehouse()
+            }
+
+            changeProductInfo(data)
+        }
+
+        else{
+            // productError.innerText = 'No hay cambios'
+            console.log('no tengo nada que actualizar ps')
+        }
+
+    }
+    
+
+    const showProductModal = (productData: Product)=>{
+        productInfoDialog.showModal()
+        productAmountInput.value = productData.amount
+        
+        productName.innerHTML = `
+            
+                
+                <p id='info-name'>${productData.name_product}</p>
+            
+        `
+        productCode.innerHTML = `
+            
+                
+                <p id='info-code'>${productData.code_product}</p>
+            
+        `
+        
+        productCost.innerHTML = `
+            
+                
+                <p id='info-cost' class=''>${productData.cost}$</p>
+            
+        `
+        lastUpdate.innerHTML = `
+           
+                
+                <p id='info-last-up'>${productData.change_date}</p>
+           
+        `
+       
+    }
+    
+    
+    const cardHandler = (event)=>{
+        const clickedCard = event.currentTarget
+        const productData: Product = JSON.parse(clickedCard.dataset.product)
+        setSelectedProduct(productData)
+        showProductModal(productData)
+    }
+
+    allCards.forEach(card=>{
+        card.removeEventListener('click', cardHandler)
+        card.addEventListener('click', cardHandler)
+    })
+
+
+    //change name
+    changeNameButton.addEventListener('click', ()=>{
+        changeNameDialog.showModal()
+    })
+    changeNameDialog.addEventListener('close', ()=>{
+        changeNameInput.value = ''
+    })
+    updateName.addEventListener('click', ()=>{    
+        setName(changeNameInput.value)
+        if (getName().length > 0){
+            productName.innerHTML = `
+            
+                
+                <p id='info-name'>${getName()}</p>
+            
+        `
+        changeNameDialog.close()
+        }
+    })
+
+    //change code
+    changeCodeButton.addEventListener('click', ()=>{
+        changeCodeDialog.showModal()
+    })
+    changeCodeDialog.addEventListener('close', ()=>{
+        changeCodeInput.value = ''
+    })
+    updateCode.addEventListener('click', ()=>{    
+        setCode(changeCodeInput.value)
+        if (getCode().length > 0){
+            productCode.innerHTML = `
+            
+                
+                <p id='info-code'>${getCode()}</p>
+            
+        `
+        changeCodeDialog.close()
+        }
+    })
+
+    //change cost
+    changeCostButton.addEventListener('click', ()=>{
+        changeCostDialog.showModal()
+    })
+    changeCostDialog.addEventListener('close', ()=>{
+        changeCostInput.value = ''
+    })
+    updateCost.addEventListener('click', ()=>{    
+        setCost(changeCostInput.value)
+        if (getCost().length > 0){
+            productCost.innerHTML = `
+            
+                
+                <p id='info-cost'>${getCost()}</p>
+            
+        `
+        changeCostDialog.close()
+        }
+    })
+
+    updateProductButton.addEventListener('click', ()=>{
+        sendData()
+    })
+
+    productAmountInput.addEventListener('change', (e)=>{
+        setAmount(e.target.value)
+    })
+
+    changeCategory.addEventListener('change', (e)=>{
+        setCategory(e.target.value)
+    })
+
+    changeColor.addEventListener('change', (e)=>{
+        setColor(e.target.value)
+    })
+
+    changeWarehouse.addEventListener('change', (e)=>{
+        setWarehouse(e.target.value)
+    })
+
+    productInfoDialog.addEventListener('close', ()=>{
+        setAmount(null)
+        setCategory(null)
+        setCode(null)
+        setColor(null)
+        setCost(null)
+        setName(null)
+        setSelectedProduct(null)
+        setWarehouse(null)
+
+
+    })
+
+    deleteProductButton.addEventListener('click', ()=>{
+        confirmDeleteDialog.showModal()
+    })
+
+    confirmDeleteButton.addEventListener('click', ()=>{
+        deleteProduct(selectedProduct?.code_product)
+    })
+
+</script>
+
