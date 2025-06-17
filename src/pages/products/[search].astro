@@ -7,16 +7,41 @@ import { BACK_API } from "astro:env/client"
 import type { Product } from "@components/operationPage/OperationInfo.astro"
 import Edit from '@icons/edit.svg'
 import TrashIcon from '@icons/TrashIcon.svg'
-import { useState } from "react"
-
-const result = await fetch(`${BACK_API}/api/get-products`)
-const json = await result.json()
-const products:Product[] = json.data || []
 
 
-const sectionsCategories = [...new Set(products.map(product => product.name_category))];
 
 
+let products:Product[]
+let sectionsCategories: string[]
+
+const {search} = Astro.params
+
+if (search == 'all'){
+    const result = await fetch(`${BACK_API}/api/get-products`)
+    const json = await result.json()
+    products = json.data || []
+    sectionsCategories = [...new Set(products.map(product => product.name_category))];
+}
+
+else {
+    const result = await fetch(`${BACK_API}/api/filter-products`, {
+        method: 'POST',
+        headers: {
+            'Content-Type':'application/json'
+        },
+        body: JSON.stringify(search)
+    })
+    const json = await result.json()
+
+    console.log(json.data.length)
+
+    if (json.data.length === 0){
+        return Astro.redirect('/products/all')
+    }
+
+    products = json.data || []
+    sectionsCategories = [...new Set(products.map(product => product.name_category))];
+}
 
 
 ---
@@ -428,51 +453,21 @@ import { getIconElement } from 'astro/runtime/client/dev-toolbar/ui-library/icon
 
 </script>
 
-<!-- <script>
+<script>
 import type { Product } from "@components/operationPage/OperationInfo.astro"
 
-    const allProductsContainer = document.getElementById('all-products') as HTMLDivElement
-    const allProducts = JSON.parse(allProductsContainer.dataset.products)
-    const allCategories = JSON.parse(allProductsContainer.dataset.sections)
-    import ProductCard from "@components/ProductCard.astro"
-
-    let filteredProducts:Product[]|null = null
-    const getFilteredProducts = ()=>{
-        return filteredProducts
-    } 
-    const setFilteredProducts = (input: string)=>{
-        filteredProducts = allProducts.filter((product:Product)=>product.name_product.toLowerCase().startsWith(input.toLowerCase()) || product.code_product.toLowerCase().startsWith(input.toLowerCase()))
-    }
 
     const productFilter = document.getElementById('product-filter') as HTMLInputElement
-    productFilter.addEventListener('input', (e)=>{
-        setFilteredProducts(e.target.value)
-        console.log(getFilteredProducts())
+    productFilter.addEventListener('keydown', (e)=>{
+        // if(e.target.value != ''){
+        //     // window.location.href = `${e.target.value}`
+        // }
 
-        allProductsContainer.innerHTML = allCategories.map((category)=>(
-            `
-                <section id="products-category" class="flex flex-col h-fit gap-8 mt-5 border-b-2 border-[#E0E0E0] pb-8 pl-8">
-                    <h1 class="text-theme-light-blue text-xl font-bold" id="name-category">${category}</h1>
-                    <div class="h-fit flex gap-10">
-                    ${
-                        
-                        filteredProducts
-                        .filter((product) => product.name_category === category)
-                        .map((product) => (
-                            
-                            <ProductCard product={product}/>
-                           
-                        ))
-                            
-                
-                    }
-                     </div>
-                    
-                
-                </section>
-            
-            `
-        ))
+        if (e.key === "Enter" && e.target.value != '') {
+            console.log("Buscando:", e.target.value);
+            window.location.href = e.target.value
+        // Aquí puedes ejecutar tu lógica de búsqueda
+    }
     })
 
-</script> -->
+</script> 
