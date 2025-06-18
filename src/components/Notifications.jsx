@@ -52,12 +52,12 @@ useEffect(() => {
     return (
        isLoading?(<div className='w-full h-full rounded-lg shadow-lg bg-white overflow-hidden'>
             <div class="bg-gradient-to-r from-theme-ocean-blue to-theme-light-blue p-4 text-white">
-            <h2 class="text-xl font-bold">Notificaciones</h2>
+            <h2 class="text-lg md:text-xl font-bold">Notificaciones</h2>
         </div>
        </div>):(
-        <div id="notifications-container" class="h-full w-full hidden lg:flex flex-col rounded-lg bg-white shadow-lg overflow-hidden">
+        <div class="h-full w-full lg:flex flex-col rounded-lg bg-white shadow-lg overflow-hidden">
         <div class="bg-gradient-to-r from-theme-ocean-blue to-theme-light-blue p-4 text-white">
-            <h2 class="text-xl font-bold">Notificaciones</h2>
+            <h2 class="text-lg md:text-xl font-bold">Notificaciones</h2>
         </div>
         
         <div class="overflow-y-auto p-2 flex-grow">
@@ -66,7 +66,7 @@ useEffect(() => {
                     {notifications.map((notification) => (
                         <li>
                             <a 
-                                class={`w-full text-left p-3 rounded-lg transition-all duration-200 hover:bg-gray-100 justify-between flex gap-3 border-l-4 border-theme-ocean-blue`}
+                                class={`w-full text-left p-3 rounded-lg transition-all duration-200 hover:bg-gray-100 justify-between flex gap-8 border-l-4 border-theme-ocean-blue`}
                                 href={`/operation/${notification.order_number}`}
                             >
                                 <div class={`rounded-full flex items-center`}>
@@ -80,7 +80,7 @@ useEffect(() => {
                                     
                                     <div className='flex gap-5 justify-end w-full'>
                                     <h3 class="text-xs text-gray-600">{notification.type} cuota de la orden <span className='text-theme-light-blue text-center'>#{notification.order_number}</span> </h3>
-                                    <p class="flex text-xs text-red-800  ">{notification.date_to_pay}</p>
+                                    <p class="flex text-xs min-w-[80px] justify-center text-red-800 grow">{notification.date_to_pay}</p>
                                     </div>
                                 </div>
                             </a>

@@ -65,13 +65,13 @@ export default function OperationsTable() {
   };
 
   return (
-    <section className='w-full flex flex-col'>
+    <section className='w-full h-full flex flex-col'>
       <div className='w-full text-theme-black text-lg flex justify-between bg-white rounded-t-lg shadow-md px-6 py-7'>
-        <h2 className='font-bold text-theme-light-blue text-xl'>Operaciones</h2>
+        <h2 className='font-bold text-theme-light-blue text-lg md:text-xl'>Operaciones</h2>
         
         <input 
           max={new Date().toISOString().split('T')[0]}
-          className='px-4 py-2.5 scheme-light text-theme-black  rounded-lg shadow-md border border-theme-ocean-blue focus:outline-none focus:ring-2 focus:ring-blue-300  duration-200 ease-in-out hover:bg-theme-ocean-blue hover:scheme-dark hover:text-theme-light-gray  cursor-pointer font-medium text-sm' 
+          className='px-2 scheme-light text-theme-black  rounded-lg shadow-md border border-theme-ocean-blue focus:outline-none focus:ring-2 focus:ring-blue-300  duration-200 ease-in-out hover:bg-theme-ocean-blue hover:scheme-dark hover:text-theme-light-gray  cursor-pointer font-medium text-xs max-w-30 md:px-4 md:py-2.5 md:max-w-full' 
           type="date" 
           value={currentDate}
           onChange={(e) => setCurrentDate(e.target.value)}

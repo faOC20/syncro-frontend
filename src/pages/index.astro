@@ -16,24 +16,31 @@ console.log(products)
 
 <Layout style='flex-col items-center'>
 	
-    <div id="homepage-container" class="h-full w-full px-[3rem] flex flex-col items-center gap-[3rem] my-8">
-        <section class="flex justify-center h-[600px] w-full gap-[3rem]">
-            <OperationForm products={products}/>
-            <div class="w-full flex flex-col min-h-full gap-[3rem]">
-                <div class="flex h-1/2">
-                    <Notifications client:visible />
-                </div>
-                <div class="flex h-1/2">
-                    <ProductsQuickAccess products={products}/>
-                </div>
-            </div>
-        </section>
+    <div id="homepage-container" class="h-full w-full py-5 px-8 gap-8">
         
-        <section class="w-xs lg:w-full md:w-2xl">
+        
+        <div id="new-operation">
+            <OperationForm products={products}/>
+        </div>
+    
+        
+        <div id="notifications-container">
+            <Notifications client:visible />
+        </div>
+        
+        <div id='quick-products'>
+            <ProductsQuickAccess products={products}/>
+        </div>
+        
+        
+        
+        
             
-                <ReactVirtualizedTable client:visible/>
+        <div id='orders-table'>
+            <ReactVirtualizedTable client:visible/>
+        </div> 
             
-        </section>
+        
     </div>
 
     
@@ -41,15 +48,61 @@ console.log(products)
     
 </Layout>
 
-<!-- <style>
+<style>
     #homepage-container{
+        max-width: 1800px;
+        display: grid;
         grid-template-areas: 
-        "operation-form operation-form notifications"
-        "operation form operation form products"
+        "form form notifications"
+        "form form products"
         "orders orders orders"
         ;
         
-        grid-template-columns: auto auto 500px;
+        grid-template-columns: 1fr 1fr 600px;
 		grid-template-rows:  300px 300px auto;
+        height: 100%;
+        width: 100%;
+    
     }
-</style> -->
+
+    #new-operation{
+        grid-area: form;
+    }
+
+
+    #notifications-container{
+        grid-area: notifications;
+    }
+
+   
+    #orders-table{
+        grid-area: orders;
+    }
+
+    #quick-products{
+        grid-area: products;
+    }
+
+    @media (max-width: 1280px) {
+    #homepage-container {
+        
+        grid-template-columns: 1fr 1fr 390px;
+        grid-template-rows: auto 300px auto; 
+    }
+}
+
+    @media (max-width:1000px) {
+        #homepage-container{
+            grid-template-areas: 
+        "form"
+        "products"
+        "orders"
+        "notifications"
+        ;
+        
+        grid-template-columns: 100%;
+		grid-template-rows:  auto 300px;
+        }
+    }
+
+</style>

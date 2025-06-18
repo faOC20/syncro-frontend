@@ -36,14 +36,14 @@ export const MonthSummary = ({year}) => {
     return (
         <section id="year-revenue-summary" class="w-full py-2">
     
-    <div class="bg-whit shadow  shadow-theme-light-blue rounded-lg  p-9 flex flex-col bg-white">
+    <div class="shadow  shadow-theme-light-blue rounded-lg  p-9 flex flex-col bg-white overflow-x-auto">
         <div class="flex gap-5">
-            <h2 class='font-bold py-2 text-theme-light-blue text-xl'>
+            <h2 class='font-bold py-2 text-theme-light-blue text-lg md:text-xl'>
                 Resumen del mes
             </h2>
 
     
-            <div class="flex text-sm ">
+            <div class="flex text-sm items-center">
                         
                 <select 
                 onChange={(e)=>{
@@ -52,7 +52,7 @@ export const MonthSummary = ({year}) => {
                 }}
                   id="year" 
                   name="paymentMethod"
-                  class="w-full border px-3 flex border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+                  class="w-full h-fit border px-3 py-2 md:h-full md:py-0 flex border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
                 >
                   <option value={1} selected={currentMonth === 1}>enero</option>
                   <option value={2} selected={currentMonth === 2}>febrero</option>

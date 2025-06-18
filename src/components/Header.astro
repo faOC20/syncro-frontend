@@ -3,23 +3,30 @@
 import DateDolar from '@components/DateDolar.astro'
 import SummaryButton from './SummaryButton.astro'
 import { BACK_API } from 'astro:env/client'
+import MenuIcon from '@icons/menuIcon.svg'
 
 const result = await fetch(`${BACK_API}/api/get-all-orders`)
 const {data} = await result.json()
 ---
 
-<header class="flex items-center justify-center text-theme-light-gray text-md w-full">
-   
+<header class="flex items-center justify-center text-theme-light-gray text-xs md:text-sm w-full lg:justify-end">
+
     
-       <div class="flex gap-8 w-7xl justify-end">
-        <div class="relative flex items-center gap-4">
+       <div class="flex items-center gap-2 max-w-[400px] justify-center md:gap-8 md:max-w-full lg:justify-end lg:pr-10">
+        
+        <button id="menu-button" class="size-8 text-theme-light-blue lg:hidden mr-4">
+            <MenuIcon/>
+        </button>
+
+        <div class="relative flex items-center md:gap-4">
            
             <input 
+
                 id="order-search" 
                 autocomplete="off"
                 type="search" 
                 placeholder="número de orden" 
-                class="border rounded-2xl py-1 px-2 text-sm"
+                class="max-w-20 border rounded-2xl py-1 px-2 text md:max-w-full"
             >
             <div id="search-results" class="absolute top-10 z-10 mt-1 w-full bg-white rounded-md shadow-lg hidden max-h-60 overflow-y-auto"></div>
         </div>
@@ -35,8 +42,9 @@ const {data} = await result.json()
             <!-- <SummaryButton/> -->
             
         
-    
 </header>
+
+
 
 <script is:inline define:vars={{ data }}>
     // Obtener referencias a los elementos del DOM
@@ -109,3 +117,30 @@ const {data} = await result.json()
     });
 </script>
 
+
+<style>
+    @media (max-width: 1280px){
+        
+    }
+</style>
+
+<script>
+    const menuButton = document.getElementById('menu-button') as HTMLButtonElement 
+    const menuNav = document.getElementById('menuNav') as HTMLDivElement
+    const circle = document.getElementById('menu') as HTMLDivElement
+    const closeButton = document.getElementById('close-button') as HTMLButtonElement
+    
+    menuButton.addEventListener('click', ()=>{
+        menuNav.classList.remove('invisible')
+
+        circle.classList.remove('invisible')
+        circle.classList.add('scale-[3000%]')
+    })
+
+    closeButton.addEventListener('click', ()=>{
+        menuNav.classList.add('invisible')
+
+        circle.classList.add('invisible')
+        circle.classList.remove('scale-[3000%]')
+    })
+</script>

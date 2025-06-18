@@ -53,12 +53,12 @@ const installmentTypes = [
                     Resumen del año
                 </Bookmark>
     
-                <div class="flex text-sm ">
+                <div class="flex text-sm items-center">
                     
                     <select 
                       id="year_select" 
                       name="select-year"
-                      class="w-full border px-3 flex border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+                      class="w-full h-fit md:h-full border py-2 px-3 md:py-0 flex border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
                     >
                       {[2023, 2024, 2025].map(yearOption => (
                         <option value={yearOption} selected={numberYear === yearOption}>{yearOption}</option>
@@ -131,8 +131,8 @@ const installmentTypes = [
             </div>
         </div>
     </section>
-    <section id="year-revenue-summary" class="w-full">
-        <div class="bg-white rounded-b-lg shadow-md p-4">
+    <section id="year-revenue-summary" class="w-full overflow-x-auto">
+        <div class="rounded-b-lg shadow-md p-4">
          
             <table class="min-w-full border-collapse">
                 <thead>

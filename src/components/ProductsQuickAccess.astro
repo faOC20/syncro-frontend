@@ -10,10 +10,10 @@ interface Props{
 const {products} = Astro.props
 
 ---
-<Sections style="max-h-[271px]">
+<Sections style="w-full h-full">
     <Bookmark>
         <a href="/products/all">Productos</a>
-    <input type="search" autocomplete="off" id="product-search" placeholder="código o nombre" class="border py-1 px-2 text-theme-ocean-blue rounded-full text-sm block">
+    <input type="search" autocomplete="off" id="product-search" placeholder="código o nombre" class="border py-1 px-2 text-theme-ocean-blue rounded-full text-xs max-w-30 block md:text-sm md:max-w-full">
     </Bookmark>
     
     <div id="products-container" class="h-full overflow-y-auto flex flex-col mt-2">

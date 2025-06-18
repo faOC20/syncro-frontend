@@ -200,7 +200,7 @@ export const AddProduct = ({products})=>{
             </Dialog>
 
 
-            <div className="flex flex-col h-36">
+            <div className="flex flex-col">
                 <label className="block text-sm font-medium  mb-1">Productos</label>
 
                 <input 
@@ -246,7 +246,7 @@ export const AddProduct = ({products})=>{
                             ))
                         }
                     </div>  
-                    <ul id="products-list" className={` ${showOptions?('relative flex flex-col gap-3 bg-white shadow w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue overflow-hidden z-20'):('hidden')}`} >
+                    <ul id="products-list" className={` ${showOptions?('absolute flex flex-col gap-3 bg-white shadow w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue overflow-hidden z-20'):('hidden')}`} >
                         {
                             filteredProducts?.map((product)=>(
                                 <li id={`${product.code_product}`} key={product.code_product} onClick={preparateTags} className='text-gray-300 border-b-1 w-full text-start list-none cursor-pointer'>

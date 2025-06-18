@@ -3,6 +3,7 @@ import '@styles/global.css'
 import Header from '@components/Header.astro'
 import Footer from '@components/Footer.astro'
 import Navigation from '@components/Navigation.astro'
+import CloseIcon from '@icons/closeIcon.svg'
 
 interface Props{
 	style:string
@@ -21,6 +22,22 @@ const {style} = Astro.props
 		<title>Milenium System</title>
 	</head>
 	<body>
+		<div class="absolute">
+			<div id="menu" class="rounded-full invisible size-20 transition-transform duration-300 ease-in-out">
+
+			</div>
+            <div id="menuNav" class="invisible">
+				<Navigation/>
+				<div id="cancel-button" class="fixed right-10 top-7 h-full">
+					<button id="close-button" class="size-10 text-theme-light-blue">
+						<CloseIcon/>
+					</button>
+				</div>
+				
+			</div>
+			
+			
+        </div>
 		<Header/>
 		<Navigation/>
 		<main class=`${style}`>
@@ -31,8 +48,22 @@ const {style} = Astro.props
 </html>
 
 <style is:global>
+
+	#menu, #menuNav {
+		position: fixed; /* Lo fija en pantalla sin importar el scroll */
+		top: 0;
+		left: 0;
+		
+		background-color: var(--color-theme-black);
+		z-index: 9999; /* Asegura que esté por encima de todos los elementos */
+	}
+
+	#cancel-button {
+		z-index: 9999;
+	}
+
 	html,
-	body {
+	body{
 		margin: 0;
 		width: 100%;
 		min-height: 100vh;
@@ -69,6 +100,7 @@ const {style} = Astro.props
 		height: 100%;
 		grid-area: main;
 		display: flex;
+		overflow: hidden;
 	}
 
 	nav {
@@ -79,4 +111,38 @@ const {style} = Astro.props
 		background-color: var(--color-theme-black);
 	}
 	
+
+	@media (max-width: 1280px) {
+		body{
+			overflow: hidden;
+			display: grid;
+			grid-template-areas: 
+			"nav header header"
+			"nav main main" 
+			"nav main main" 
+			;
+			grid-template-columns: 200px 1fr 1fr;
+			grid-template-rows: 70px auto auto;
+		}
+
+		nav, main{
+			font-size: small;
+		}
+
+		
+	}
+
+	@media (max-width: 1000px) {
+		body{
+			
+		
+			grid-template-areas: 
+			"header header"
+			"main main" 
+			"main main" 
+			;
+			grid-template-columns: 1fr;
+			grid-template-rows: 70px auto auto;
+		}
+	}
 </style>
