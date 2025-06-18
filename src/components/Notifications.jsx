@@ -66,20 +66,21 @@ useEffect(() => {
                     {notifications.map((notification) => (
                         <li>
                             <a 
-                                class={`w-full text-left p-3 rounded-lg transition-all duration-200 hover:bg-gray-100 flex items-start gap-3 border-l-4 border-theme-ocean-blue`}
+                                class={`w-full text-left p-3 rounded-lg transition-all duration-200 hover:bg-gray-100 justify-between flex gap-3 border-l-4 border-theme-ocean-blue`}
                                 href={`/operation/${notification.order_number}`}
                             >
-                                <div class={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center`}>
+                                <div class={`rounded-full flex items-center`}>
                                     <i class={`fas ${getIcon(notification.alarm)} ${getColor(notification.alarm)}`}></i>
                                 </div>
-                                <div class="flex flex-grow gap-2">
-                                    <div class="text-xs flex justify-between items-start max-w-15">
+                                <div class="text-xs flex">
                                         
                                        {notification.message}
                                     </div>
-                                    <div className='flex gap-2'>
-                                    <h3 class="text-xs text-gray-600 max-w-45">{notification.type} cuota de la orden <span className='text-theme-light-blue'>#{notification.order_number}</span> </h3>
-                                    <p class="text-xs text-red-800  ">{notification.date_to_pay}</p>
+                                <div class="flex grow justify-center">
+                                    
+                                    <div className='flex gap-5 justify-end w-full'>
+                                    <h3 class="text-xs text-gray-600">{notification.type} cuota de la orden <span className='text-theme-light-blue text-center'>#{notification.order_number}</span> </h3>
+                                    <p class="flex text-xs text-red-800  ">{notification.date_to_pay}</p>
                                     </div>
                                 </div>
                             </a>

@@ -1,5 +1,5 @@
 ---
-import MileniumLogo from '../assets/logos/milenium.svg'
+
 import DateDolar from '@components/DateDolar.astro'
 import SummaryButton from './SummaryButton.astro'
 import { BACK_API } from 'astro:env/client'
@@ -8,37 +8,34 @@ const result = await fetch(`${BACK_API}/api/get-all-orders`)
 const {data} = await result.json()
 ---
 
-<header class="flex justify-center text-theme-light-gray text-md w-full">
-    <section class="flex w-full max-w-4xl">
-        <a href="/" class="flex items-center justify-start grow gap-8">
-            <picture class="h-12">
-                <MileniumLogo/>
-            </picture>
-            
-        </a>
+<header class="flex items-center justify-center text-theme-light-gray text-md w-full">
+   
     
-        <div class="flex items-center justify-end grow gap-8">
-            <div class="relative">
-                <input 
-                    id="order-search" 
-                    autocomplete="off"
-                    type="search" 
-                    placeholder="número de orden" 
-                    class="border rounded-2xl py-1 px-2 text-sm"
-                >
-                <div id="search-results" class="absolute z-10 mt-1 w-full bg-white rounded-md shadow-lg hidden max-h-60 overflow-y-auto"></div>
-            </div>
-            
-            <DateDolar>
-                <span slot="fallback">
-                    Loading date and dollar information...
-                </span>
-            </DateDolar> 
-            
-            <SummaryButton/>
-            
+       <div class="flex gap-8 w-7xl justify-end">
+        <div class="relative flex items-center gap-4">
+           
+            <input 
+                id="order-search" 
+                autocomplete="off"
+                type="search" 
+                placeholder="número de orden" 
+                class="border rounded-2xl py-1 px-2 text-sm"
+            >
+            <div id="search-results" class="absolute top-10 z-10 mt-1 w-full bg-white rounded-md shadow-lg hidden max-h-60 overflow-y-auto"></div>
         </div>
-    </section>
+        
+        <DateDolar>
+            <span slot="fallback">
+                Loading date and dollar information...
+            </span>
+        </DateDolar> 
+       </div>
+           
+            
+            <!-- <SummaryButton/> -->
+            
+        
+    
 </header>
 
 <script is:inline define:vars={{ data }}>

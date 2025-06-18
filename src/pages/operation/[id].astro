@@ -23,9 +23,11 @@ const installments: Installment[] = await getInstallments(orderNumber)
 ---
 
 <Layout style='flex justify-center gap-[3rem]'>
-    <div class="flex flex-col gap-[3rem] h-fit">
+    <div class="flex justify-center gap-[3rem] mt-8 ">
+      <div class="flex flex-col gap-[3rem] h-fit">
         <OperationInfo creationDate={creationDate} customerName={customerName}, amount={amount} products={products} state={state} orderNumber={orderNumber}/>
         <Installments installments={installments} orderNumber={id}/>
     </div>
     <ProductsSummary products={products}/>
+    </div>
 </Layout>

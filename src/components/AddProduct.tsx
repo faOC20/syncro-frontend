@@ -112,11 +112,11 @@ export const AddProduct = ({products})=>{
 
     return(
         <>
-            <Dialog open={isOpen} onClose={()=>{
+            <Dialog className='max-w-full' open={isOpen} onClose={()=>{
                 setIsOpen(false)
                 setErrorMesage('')
                 }} id="product-amount">
-                <div className='w-96 p-6 flex flex-col gap-4'>
+                <div className='p-6 flex flex-col gap-4 w-md'>
                     <h2 className='text-xl font-medium text-theme-ocean-blue'>Detalles del producto</h2>
 
                     <div className='flex flex-col gap-1'>
@@ -206,7 +206,14 @@ export const AddProduct = ({products})=>{
                 <input 
 
                     
-        
+                    onKeyDown={(e)=>{
+                        if (e.key == 'Escape'){
+                            setShowOptions(false)
+                        }
+                    }}
+                    // onBlur={()=>{
+                    //     setShowOptions(false)
+                    // }}
                     onFocus={(e)=>{
                         if(e.target.value != ''){
                             inputSearchHandler(e)

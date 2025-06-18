@@ -107,9 +107,7 @@ export default function OperationsTable() {
             <TableBody>
               {
                 isLoading ? (
-                  <TableRow>
-                    <TableCell colSpan={columns.length}>Cargando...</TableCell>
-                  </TableRow>
+                  ""
                 ):(
                   filteredRows.map((row) => {
                     return (

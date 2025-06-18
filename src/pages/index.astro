@@ -14,10 +14,10 @@ const products = json.data || []
 console.log(products)
 ---
 
-<Layout style='flex-col'>
+<Layout style='flex-col items-center'>
 	
-    <div class="w-full h-full flex flex-col gap-[3rem]">
-        <section class="flex justify-center h-full w-full gap-[3rem]">
+    <div id="homepage-container" class="h-full w-full px-[3rem] flex flex-col items-center gap-[3rem] my-8">
+        <section class="flex justify-center h-[600px] w-full gap-[3rem]">
             <OperationForm products={products}/>
             <div class="w-full flex flex-col min-h-full gap-[3rem]">
                 <div class="flex h-1/2">
@@ -29,7 +29,7 @@ console.log(products)
             </div>
         </section>
         
-        <section class="w-xs lg:w-full md:w-2xl mb-10">
+        <section class="w-xs lg:w-full md:w-2xl">
             
                 <ReactVirtualizedTable client:visible/>
             
@@ -40,3 +40,16 @@ console.log(products)
     
     
 </Layout>
+
+<!-- <style>
+    #homepage-container{
+        grid-template-areas: 
+        "operation-form operation-form notifications"
+        "operation form operation form products"
+        "orders orders orders"
+        ;
+        
+        grid-template-columns: auto auto 500px;
+		grid-template-rows:  300px 300px auto;
+    }
+</style> -->

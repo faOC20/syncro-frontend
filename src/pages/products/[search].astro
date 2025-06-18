@@ -46,8 +46,8 @@ else {
 
 ---
 
-<Layout style="">
-    <Sections style="min-w-full">
+<Layout style="justify-center">
+    <Sections style="mx-[3rem] my-8">
         <Bookmark>
             <div class="flex gap-5">
                 Productos
@@ -57,7 +57,7 @@ else {
                 Agregar producto
             </button>
         </Bookmark>
-        <div id="all-products" data-sections={JSON.stringify(sectionsCategories)} data-products={JSON.stringify(products)} class="w-full max-h-[40rem] overflow-y-auto">
+        <div id="all-products" data-sections={JSON.stringify(sectionsCategories)} data-products={JSON.stringify(products)} class="w-full  overflow-y-auto">
             {
                 sectionsCategories.map((category)=>(
                 <section id="products-category" class="flex flex-col h-fit gap-8 mt-5 border-b-2 border-[#E0E0E0] pb-8 pl-8">
