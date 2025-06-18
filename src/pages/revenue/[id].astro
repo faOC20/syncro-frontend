@@ -8,7 +8,7 @@ const {id} = Astro.params
 ---
 
 <Layout style="">
-    <div class="w-full h-full flex flex-col gap-[3rem] mb-8 pt-8 px-10">
+    <div class="w-full h-full flex flex-col gap-[3rem] mb-8 py-5 px-[3rem]">
         <RevenueTable year = {id || undefined}/>
         <MonthSummary client:only year = {id}/>
     </div>

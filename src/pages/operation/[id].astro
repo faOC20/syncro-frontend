@@ -22,8 +22,8 @@ const {creation_date: creationDate, name: customerName, operation_amount: amount
 const installments: Installment[] = await getInstallments(orderNumber)
 ---
 
-<Layout style='flex justify-center gap-[3rem]'>
-    <div id="operation-page" class="flex flex-col justify-center xl:flex-row gap-[3rem] mt-8 px-[3rem]">
+<Layout style='flex justify-center'>
+    <div id="operation-page" class="flex flex-col justify-center xl:flex-row mt-8 gap-[3rem] xl:gap-0 px-[3rem]">
       <div class="flex w-full flex-col gap-[3rem] h-fit items-center">
         <OperationInfo creationDate={creationDate} customerName={customerName}, amount={amount} products={products} state={state} orderNumber={orderNumber}/>
         <Installments installments={installments} orderNumber={id}/>
