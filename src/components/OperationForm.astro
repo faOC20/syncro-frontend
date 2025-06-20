@@ -80,7 +80,7 @@ const {products} = Astro.props
         <dialog id="check-info" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
           <h3 class="text-lg font-medium text-gray-900 mb-4">¿Está seguro de confirmar la orden?</h3>
 
-          <div class="flex flex-col">
+          <div class="flex flex-col gap-5">
             <div>
               <label for="customer-info" class="block text-md font-medium underline underline-offset-4 mb-2">Cliente</label>
               <div  
@@ -89,12 +89,21 @@ const {products} = Astro.props
                 >
 
               </div>
+            </div>
+              <div>
+                <label for="confirm-total" class="block text-md font-medium underline underline-offset-4 mb-2">Monto total</label>
+                <div id="confirm-total" class="text-md">
+
+                </div>
+            </div>
+
               <div>
                   <label for="confirm-products" class="block text-md font-medium underline underline-offset-4 mb-2">Productos</label>
                   <div id="confirm-products" class="flex flex-col gap-2">
 
                   </div>
               </div>
+              
               
           </div>
 
@@ -146,11 +155,12 @@ const {products} = Astro.props
         <div>
           <label for="inicial" class="block text-sm font-medium  mb-1">Inicial ($)</label>
           <input 
+            required
             id="initial-label"
             type="number" 
             name="initial" 
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
-            step="0.1"
+            step="any"
           >
         </div>
     

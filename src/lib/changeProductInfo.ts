@@ -2,6 +2,7 @@ import { BACK_API } from "astro:env/client"
 import { successAlert } from "./sweetAlert"
 
 const productInfoDialog = document.getElementById('product-info-dialog') as HTMLDialogElement
+const errorChangeProduct = document.getElementById('change-product-error') as HTMLParagraphElement
 
 export interface ChangeData {
     name: string | null,
@@ -27,5 +28,9 @@ export const changeProductInfo = async(data: ChangeData)=>{
         productInfoDialog.close()
         await successAlert(json.message)
         window.location.reload()
+    }
+
+    if (json.status == 'failed'){
+        errorChangeProduct.innerText = json.message
     }
 }

@@ -1,12 +1,14 @@
 ---
+import { boolean } from "astro:schema";
 import Bookmark from "./decoration/Bookmark.astro";
 import { BACK_API } from "astro:env/client";
 
 interface Props{
-    year: string | undefined
+    year: string
+    isCashea: string 
 }
 
-const {year} = Astro.props as Props
+const {year, isCashea} = Astro.props as Props
 const numberYear = parseInt(year!)
 
 const result = await fetch(`${BACK_API}/api/get-all-revenue`, {
@@ -15,7 +17,8 @@ const result = await fetch(`${BACK_API}/api/get-all-revenue`, {
         "Content-Type": "application/json",
     },
     body: JSON.stringify({
-        year: year
+        year: year,
+        isCashea: parseInt(isCashea)
     })
 })
 const {data} = await result.json()
@@ -45,7 +48,9 @@ const installmentTypes = [
 
 ---
 
-<div>
+{
+    isCashea=='1'?(
+    <div>
     <section id="year-revenue-table" class="w-full shadow-md">
         <div class="bg-white rounded-t-lg p-4 shadow"> 
             <div class='min-w-full text-theme-black text-lg flex rounded-t-lg py-7 gap-5 bg-white'>
@@ -56,6 +61,7 @@ const installmentTypes = [
                 <div class="flex text-sm items-center">
                     
                     <select 
+                        data-isCashea={isCashea}
                       id="year_select" 
                       name="select-year"
                       class="w-full h-fit md:h-full border py-2 px-3 md:py-0 flex border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
@@ -169,9 +175,119 @@ const installmentTypes = [
                     </tr>
                 </tbody>
             </table>
+
+            <table class="min-w-full border-collapse mt-3">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th title="costo total de productos" class="border px-4 py-2 text-center">Total Gastos</th>
+                        <th title="venta total de productos" class="border px-4 py-2 text-center">Total Ventas</th>
+                        <th class="border px-4 py-2 text-center">Ganancias brutas</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border px-4 py-3 text-center bg-red-100 font-medium">
+                            ${data.total_year_cost.toFixed(2)}
+                        </td>
+                        <td class="border px-4 py-3 text-center bg-green-100 font-medium">
+                            ${data.total_year_amount.toFixed(2)}
+                        </td>
+                        <td class="border px-4 py-3 text-center bg-blue-100 font-medium">
+                            ${(data.total_year_amount - data.total_year_cost).toFixed(2)}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </section>
 </div>
+    ):(
+    <div>
+    <section  id="year-revenue-table" class="w-full shadow-md">
+        <div class="bg-white rounded-t-lg p-4 shadow"> 
+            <div class='min-w-full text-theme-black text-lg flex rounded-t-lg py-7 gap-5 bg-white'>
+                <Bookmark>
+                    Resumen del año
+                </Bookmark>
+    
+                <div class="flex text-sm items-center">
+                    
+                    <select 
+                        data-isCashea={isCashea}
+                      id="year_select" 
+                      name="select-year"
+                      class="w-full h-fit md:h-full border py-2 px-3 md:py-0 flex border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+                    >
+                      {[2023, 2024, 2025].map(yearOption => (
+                        <option value={yearOption} selected={numberYear === yearOption}>{yearOption}</option>
+                      ))}
+                    </select>
+                  </div>
+            </div>
+    
+            <hr class="py-5 text-theme-black/10">
+            <div class="overflow-x-auto custom-scrollbar max-h-[550px]">
+                <table class="min-w-full border-collapse overflow-scroll">
+                
+                <thead>
+                    <tr class="bg-white  outline-1">
+                        <th class="border px-4 py-2">Cliente</th>
+                        <th class="border px-4 py-2 ">Fecha de orden</th>
+                        <th class="border px-4 py-2 sticky left-0 bg-theme-ocean-blue z-30 text-gray-50">Orden</th>
+                        <th class="border px-4 py-2">Monto total</th>
+                        
+                
+                    </tr>
+                </thead>
+                <tbody>
+                    {operations.map(op => (
+                        <tr class="bg-white">
+                            <td class="border px-4 py-2">{op.name}</td>
+                            <td class="border px-4 py-2">{op.creation_date}</td>
+                            <td class="border px-4 py-2  sticky left-0 bg-white z-10"><li class="list-none">
+                                <a class="text-theme-light-blue font-bold none" href={`/operation/${op.order_number}`}>#{op.order_number}</a></li></td>
+                            <td class="border px-4 py-2">{op.operation_amount}</td>
+                            
+                            
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </section>
+    <section id="year-revenue-summary" class="w-full overflow-x-auto">
+        <div class="rounded-b-lg shadow-md p-4">
+         
+            <table class="min-w-full border-collapse">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th title="costo total de productos" class="border px-4 py-2 text-center">Total Gastos</th>
+                        <th title="venta total de productos" class="border px-4 py-2 text-center">Total Ventas</th>
+                        <th class="border px-4 py-2 text-center">Ganancias brutas</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border px-4 py-3 text-center bg-red-100 font-medium">
+                            ${data.total_year_cost.toFixed(2)}
+                        </td>
+                        <td class="border px-4 py-3 text-center bg-green-100 font-medium">
+                            ${data.total_year_amount.toFixed(2)}
+                        </td>
+                        <td class="border px-4 py-3 text-center bg-blue-100 font-medium">
+                            ${(data.total_year_amount - data.total_year_cost).toFixed(2)}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+    )
+}
 
 <style>
     table {
@@ -210,9 +326,12 @@ const installmentTypes = [
 </style>
 
 <script>
+    
     const yearSelect = document.getElementById("year_select");
+    const isCashea = yearSelect?.getAttribute('data-isCashea')
+    console.log(isCashea)
     yearSelect?.addEventListener("change", function() {
         const selectedYear = yearSelect.value;
-        window.location.href = `/revenue/${selectedYear}`;
+        window.location.href = `/revenue/${isCashea}-${selectedYear}`;
     });
 </script>

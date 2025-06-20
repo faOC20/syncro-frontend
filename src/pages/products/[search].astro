@@ -7,6 +7,7 @@ import { BACK_API } from "astro:env/client"
 import type { Product } from "@components/operationPage/OperationInfo.astro"
 import Edit from '@icons/edit.svg'
 import TrashIcon from '@icons/TrashIcon.svg'
+import AlertIcon from '@icons/AlertIcon.svg'
 
 
 
@@ -153,22 +154,21 @@ else {
                 </div>
             </dialog>
 
-            <dialog id="confirm-delete-dialog" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
-                <span>¿Está seguro de eliminar el producto?</span>
-                <button 
-                        type="button" 
-                        onclick="document.getElementById('confirm-delete-dialog').close()"
-                        class="px-4 py-2  rounded-md border hover:bg-gray-50"
-                    >
-                        Cancelar
-                    </button>
-                    <button 
-                        id="confirm-delete-button"
-                        type="button" 
-                        class="px-4 py-2 bg-theme-ocean-blue text-white rounded-md hover:bg-opacity-90"
-                    >
-                        Eliminar
-                    </button>
+            <dialog id="confirm-delete-dialog" class="w-sm h-80 mx-auto my-auto rounded-lg">
+                <div class="w-full h-full flex flex-col gap-10 items-center justify-center">
+                    <picture class="text-red-700 size-20">
+                        <AlertIcon/>
+                    </picture>
+                    <p class="text-gray-500">¿Estás seguro de eliminar este producto?</p>
+                    <div class="flex gap-4">
+                        <button onclick="document.getElementById('confirm-delete-dialog').close()" class="cursor-pointer h-8 w-auto border px-3 py-1  text-gray-500  rounded-full">
+                            Cancelar
+                        </button>
+                        <button id="confirm-delete-button" class="cursor-pointer h-8 w-auto border px-3 py-1 text-red-700 rounded-full">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
             </dialog>
         </div>
         
@@ -180,9 +180,9 @@ else {
                 </button>
             </div>
             
-            <span id="product-info-error" class="h-5 w-full mt-2 text-sm text-red-600">
+            <p id="change-product-error" class="h-3 w-full mt-1 mb-5 text-sm text-red-600">
                 
-            </span>
+            </p>
             <div class="flex flex-col mt-3">
                 
                 <div class="flex flex-col gap-5">
@@ -302,11 +302,11 @@ else {
         <dialog id="add-product-dialog" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
             <h3 class="text-lg font-medium text-gray-900">Agregar nuevo producto</h3>
             
-            <!-- <span id="product-info-error" class="h-5 w-full mt-2 text-sm text-red-600">
-                
-            </span> -->
+            
             <form id="add-product-form" class="flex flex-col mt-3">
-                
+                <p id="product-info-error-form" class="h-5 w-full text-sm mb-3 text-red-600">
+                    
+                </p>
                 <div class="flex flex-col gap-8">
                     <div>
                         <div class="flex gap-2 flex-col">
@@ -431,6 +431,7 @@ else {
     import type { Product } from '@components/operationPage/OperationInfo.astro'
 import {newProduct} from '@lib/newProduct'
 import { getIconElement } from 'astro/runtime/client/dev-toolbar/ui-library/icons.js'
+    const errorNewProduct = document.getElementById('product-info-error-form') as HTMLParagraphElement
     const addProductDialog = document.getElementById('add-product-dialog') as HTMLDialogElement
     const addProductButton = document.getElementById('add-product-button') as HTMLButtonElement
     const AddProductForm = document.getElementById('add-product-form') as HTMLFormElement
@@ -448,6 +449,10 @@ import { getIconElement } from 'astro/runtime/client/dev-toolbar/ui-library/icon
         newProduct(data)
     })
 
+    AddProductForm.addEventListener('close',()=>[
+        errorNewProduct.innerText = ''
+    ])
+
    
 
 
@@ -459,15 +464,20 @@ import type { Product } from "@components/operationPage/OperationInfo.astro"
 
     const productFilter = document.getElementById('product-filter') as HTMLInputElement
     productFilter.addEventListener('keydown', (e)=>{
-        // if(e.target.value != ''){
-        //     // window.location.href = `${e.target.value}`
-        // }
 
         if (e.key === "Enter" && e.target.value != '') {
             console.log("Buscando:", e.target.value);
             window.location.href = e.target.value
-        // Aquí puedes ejecutar tu lógica de búsqueda
+        
     }
     })
 
 </script> 
+
+<script>
+    const productInfoDialog = document.getElementById('product-info-dialog') as HTMLDialogElement
+    const errorChangeProduct = document.getElementById('change-product-error') as HTMLParagraphElement
+    productInfoDialog.addEventListener('close', ()=>{
+        errorChangeProduct.innerText = ''
+    })
+</script>

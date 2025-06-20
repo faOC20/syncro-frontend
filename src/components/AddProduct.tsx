@@ -2,7 +2,7 @@
 // import { selectProductsHandler } from '@lib/selectProductsHandler.ts'
 import { sendNewOperation } from '@lib/sendOperation'
 import { useEffect, useState } from 'react'
-import { useProductsStore } from 'stores/productsStore'
+import { useProductsStore } from 'src/stores/productsStore'
 import Dialog from '@mui/material/Dialog';
 import { stockCheck } from '@lib/stockCheck';
 
@@ -116,7 +116,10 @@ export const AddProduct = ({products})=>{
                 setIsOpen(false)
                 setErrorMesage('')
                 }} id="product-amount">
-                <div className='p-6 flex flex-col gap-4 w-md'>
+                <form onSubmit={(e)=>{
+                                e.preventDefault()
+                                addTags()
+                            }} className='p-6 flex flex-col gap-4 w-md'>
                     <h2 className='text-xl font-medium text-theme-ocean-blue'>Detalles del producto</h2>
 
                     <div className='flex flex-col gap-1'>
@@ -153,6 +156,8 @@ export const AddProduct = ({products})=>{
                     <div className='flex flex-col gap-2'>
                         <label htmlFor="price" className="text-sm font-medium">Precio de venta</label>
                         <input 
+                            step="any"
+                            required
                             onChange={(e)=>{setPrice(e.target.value)}}
                             type="number" 
                             id="price" 
@@ -164,6 +169,7 @@ export const AddProduct = ({products})=>{
                     <div className='flex flex-col gap-2'>
                         <label htmlFor="serial" className="text-sm font-medium">Número de Serie</label>
                         <input 
+                            required
                             onChange={(e)=>{setSerial(e.target.value)}}
                             type="text" 
                             id="serial" 
@@ -187,7 +193,7 @@ export const AddProduct = ({products})=>{
                             Cancelar
                         </button>
                         <button 
-                            onClick={addTags}
+                            type='submit'
                             className="px-4 py-2 bg-theme-ocean-blue text-white rounded-md hover:bg-opacity-90"
                         >
                             Agregar
@@ -196,16 +202,14 @@ export const AddProduct = ({products})=>{
 
 
 
-                </div>
+                </form>
             </Dialog>
 
 
-            <div className="flex flex-col">
+            <div className="mb-8 flex flex-col xl:mb-0">
                 <label className="block text-sm font-medium  mb-1">Productos</label>
 
-                <input 
-
-                    
+                <input
                     onKeyDown={(e)=>{
                         if (e.key == 'Escape'){
                             setShowOptions(false)
@@ -235,7 +239,7 @@ export const AddProduct = ({products})=>{
 
     
                 <div className="grow mt-1 relative">
-                    <div id="tags" className="absolute h-full flex max-w-full z-10 gap-3 flex-wrap overflow-auto">
+                    <div id="tags" className="absolute h-6 flex max-w-full z-10 gap-3 flex-wrap overflow-auto">
                         {
                             tags.map((tag)=>(
                                 <div onClick={deleteTags} key={tag.code_product} title={`${tag.name_product} (cant: ${tag.quantity})`} id={tag.code_product} className='product-tag bg-theme-light-blue px-2 max-h-6 rounded-full cursor-pointer hover:bg-red-500 transition-all'>
@@ -246,7 +250,7 @@ export const AddProduct = ({products})=>{
                             ))
                         }
                     </div>  
-                    <ul id="products-list" className={` ${showOptions?('absolute flex flex-col gap-3 bg-white shadow w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue overflow-hidden z-20'):('hidden')}`} >
+                    <ul id="products-list" className={` ${showOptions?('absolute flex flex-col gap-3 bg-white shadow w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue overflow-hidden z-20 max-h-50 overflow-y-auto'):('hidden')}`} >
                         {
                             filteredProducts?.map((product)=>(
                                 <li id={`${product.code_product}`} key={product.code_product} onClick={preparateTags} className='text-gray-300 border-b-1 w-full text-start list-none cursor-pointer'>

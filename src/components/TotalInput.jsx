@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useProductsStore } from "stores/productsStore"
+import { useProductsStore } from "src/stores/productsStore"
 
 export const TotalInput = ()=>{
 
@@ -20,7 +20,7 @@ export const TotalInput = ()=>{
           <input disabled
             type="number" 
             id="total" 
-            step="0.1"
+            step="any"
             name="total" 
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue" 
             value={total}

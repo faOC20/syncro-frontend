@@ -3,6 +3,9 @@ import MileniumLogo from '../assets/logos/milenium.svg'
 import PackageIcon from '@icons/package.svg'
 import SummaryIcon from '@icons/summary.svg'
 import HomeIcon from '@icons/home.svg'
+import casheaLogo from '@icons/cashea-logo.avif'
+import { Image } from 'astro:assets'
+import milleniumLogo from '@icons/milenium-logo.avif'
 
 const currentYear = new Date().getFullYear();
 ---
@@ -41,13 +44,34 @@ const currentYear = new Date().getFullYear();
 
             <li>
                 
-                <a  class="flex items-center gap-2" href={`/revenue/${currentYear}`}>
+                <a  class="flex items-center gap-2" href={`/revenue/1-${currentYear}`}>
                     <div class="size-8">
                         <SummaryIcon/>
                     </div>
                     Resumen
                 </a>
+
+                <li class="flex ml-8">
+                
+                    <a  class="self-end flex items-center text-xs gap-2" href={`/revenue/1-${currentYear}`}>
+                        <div class="size-5 rounded-sm overflow-hidden">
+                            <Image src={casheaLogo} alt='logo de cashea'/>
+                        </div>
+                        Cashea
+                    </a>
+                </li>
+    
+                <li class="flex ml-8">
+                    
+                    <a  class="self-end flex items-center text-xs gap-2" href={`/revenue/0-${currentYear}`}>
+                        <div class="size-5  rounded-sm overflow-hidden">
+                            <Image src={milleniumLogo} alt='logo de milenium mania'/>
+                        </div>
+                        De contado
+                    </a>
+                </li>
             </li>
+
 
             
         </ul>

@@ -14,11 +14,19 @@ export const deleteProduct = async(data: string | undefined)=>{
     })
     const json = await result.json()
 
-    if (json.status = 'success'){
+    if (json.status == 'success'){
         productInfoDialog.close()
         confirmDeleteDialog.close()
 
         await successAlert(json.message)
         window.location.reload()
+    }
+
+    if(json.status == 'failed' ){
+        productInfoDialog.close()
+        confirmDeleteDialog.close()
+
+        console.log(json.message)
+        
     }
 }

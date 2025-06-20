@@ -3,7 +3,7 @@ import { BACK_API } from "astro:env/client"
 import Bookmark from "./decoration/Bookmark.astro"
 import { useEffect, useState } from "react"
 
-const fetchMonthSummary = async (month, year) => {
+const fetchMonthSummary = async (month, year, isCashea) => {
     const result = await fetch (`${BACK_API}/api/get-month-revenue`, {
         method: "POST",
         headers: {
@@ -11,21 +11,22 @@ const fetchMonthSummary = async (month, year) => {
         },
         body: JSON.stringify({
             year: year,
-            month: month
+            month: month,
+            isCashea: isCashea
         })
     })
     const {data} = await result.json()
     return data
 }
 
-export const MonthSummary = ({year}) => {
+export const MonthSummary = ({year, isCashea}) => {
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth()+1)
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const fetchData = async()=>{
-            const data =  await fetchMonthSummary(currentMonth, year)
+            const data =  await fetchMonthSummary(currentMonth, year, isCashea)
 
             setData(data)
         }
@@ -75,28 +76,58 @@ export const MonthSummary = ({year}) => {
         {
             loading ? (""):
             (
-                <table class="min-w-full border-collapse">
-            <thead>
-                <tr class="bg-gray-50">
-                    <th class="border px-4 py-2 text-center">Total No Pagadas</th>
-                    <th class="border px-4 py-2 text-center">Total Errores Bancarios</th>
-                    <th class="border px-4 py-2 text-center">Total Pagados</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="border px-4 py-3 text-center bg-red-100  font-medium">
-                        ${data?.total_unpaid}
-                    </td>
-                    <td class="border px-4 py-3 text-center bg-orange-100  font-medium">
-                        ${data?.total_error}
-                    </td>
-                    <td class="border px-4 py-3 text-center bg-green-100 font-medium">
-                        ${data?.total_paid}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                <>
+                    {
+                        isCashea == '1'?(
+                            <table class="min-w-full border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-50">
+                                        <th class="border px-4 py-2 text-center">Total No Pagadas</th>
+                                        <th class="border px-4 py-2 text-center">Total Errores Bancarios</th>
+                                        <th class="border px-4 py-2 text-center">Total Pagados</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border px-4 py-3 text-center bg-red-100  font-medium">
+                                            ${data?.total_unpaid}
+                                        </td>
+                                        <td class="border px-4 py-3 text-center bg-orange-100  font-medium">
+                                            ${data?.total_error}
+                                        </td>
+                                        <td class="border px-4 py-3 text-center bg-green-100 font-medium">
+                                            ${data?.total_paid}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        ):(
+                            <table class="min-w-full border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-50">
+                                        <th class="border px-4 py-2 text-center">Total gastos</th>
+                                        <th class="border px-4 py-2 text-center">Total ventas</th>
+                                        <th class="border px-4 py-2 text-center">Ganancias brutas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border px-4 py-3 text-center bg-red-100  font-medium">
+                                            ${data?.total_unpaid}
+                                        </td>
+                                        <td class="border px-4 py-3 text-center bg-orange-100  font-medium">
+                                            ${data?.total_error}
+                                        </td>
+                                        <td class="border px-4 py-3 text-center bg-green-100 font-medium">
+                                            ${data?.total_paid}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        )
+                    }
+                
+                </>
             )
         }
         

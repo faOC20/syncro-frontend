@@ -1,13 +1,14 @@
 
 import { checkDni } from "./checkDni";
 import { newOperation } from "./newOperation";
-import { useProductsStore } from "stores/productsStore";
+import { useProductsStore } from "src/stores/productsStore";
 
 
 const confirmDialog = document.getElementById('check-info') as HTMLDialogElement
 const dialog = document.getElementById('additional-info-dialog') as HTMLDialogElement;
 const confirmProducts = document.getElementById('confirm-products') as HTMLDivElement
 const customerInfo = document.getElementById('customer-info') as HTMLDivElement
+const confirmTotal = document.getElementById('confirm-total') as HTMLDivElement
 
 const saveAditionalInfo = (data) => {
     
@@ -77,10 +78,11 @@ const handleCashea = (e)=>{
 }
 
 const handleSubmit = async (e:any) => {
-    const {cartProducts} = useProductsStore.getState()
+    const {dolar, cartProducts} = useProductsStore.getState()
     // const confirmProducts = document.getElementById('confirm-products') as HTMLDivElement
     confirmProducts.innerHTML = ''
     const saveConfirmedInfoButton = document.getElementById('save-confirmed-info') as HTMLButtonElement
+
     
     console.log(cartProducts)
     e.preventDefault(); 
@@ -125,7 +127,7 @@ const handleSubmit = async (e:any) => {
     cartProducts.forEach(product => {
         const productContainer = document.createElement('div')
         productContainer.innerHTML = `
-            <div class = 'flex flex-col text-sm border-b pb-3'>
+            <div class = 'flex flex-col text-sm border-b gap-2 pb-3'>
                 <b class='text-theme-light-blue '>
                     ${product.name_product}
                 </b>
@@ -133,12 +135,32 @@ const handleSubmit = async (e:any) => {
                     cantidad: ${product.quantity}
                 </span>
                 <span>
-                    precio de venta: ${product.salePrice}
+                    precio de venta por unidad: ${product.salePrice}
                 </span>
             </div>
         `      
         confirmProducts.appendChild(productContainer)
     });
+
+    if (isCashea){
+        confirmTotal.innerHTML = `
+        
+        <div class = 'flex flex-col'>
+            <span class='font-medium text-theme-black'>${data.initial}$ × ${dolar.toFixed(2)}</span>
+            <span class='font-bold text-theme-light-blue'>${(parseFloat(data.initial)*dolar).toFixed(2)}Bs</span>
+        </div>
+    `
+    }
+
+    else{
+        confirmTotal.innerHTML = `
+        
+        <div class = 'flex flex-col'>
+            <span class='font-medium text-theme-black'>${data.total}$ × ${dolar.toFixed(2)}</span>
+            <span class='font-bold text-theme-light-blue'>${(parseFloat(data.total)*dolar).toFixed(2)}Bs</span>
+        </div>
+    `
+    }
 
     saveConfirmedInfoButton.onclick = ()=>{
         newOperation(data)

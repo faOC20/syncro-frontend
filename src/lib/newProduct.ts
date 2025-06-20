@@ -3,8 +3,11 @@ import { BACK_API } from "astro:env/client"
 import { successAlert } from "./sweetAlert"
 
 const addProductDialog = document.getElementById('add-product-dialog') as HTMLDialogElement
+const errorNewProduct = document.getElementById('product-info-error-form') as HTMLParagraphElement
+
 
 export const newProduct = async(data)=>{
+    
     const result = await fetch(`${BACK_API}/api/new-product`, {
         method: 'POST',
         headers: {
@@ -18,5 +21,9 @@ export const newProduct = async(data)=>{
         addProductDialog.close()
         await successAlert(json.message)
         window.location.reload()
+    }
+
+    if (json.status == 'failed'){
+        errorNewProduct.innerText = json.message
     }
 }
