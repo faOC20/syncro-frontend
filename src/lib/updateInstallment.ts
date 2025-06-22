@@ -13,7 +13,9 @@ export const updateInstallment = async (data: any, index:string)=>{
             headers:{
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
+            credentials: 'include'
+
         })
 
         const json = await result.json()

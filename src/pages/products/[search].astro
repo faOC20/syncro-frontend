@@ -16,10 +16,21 @@ let products:Product[]
 let sectionsCategories: string[]
 
 const {search} = Astro.params
+const cookie = Astro.request.headers.get('cookie')
 
 if (search == 'all'){
-    const result = await fetch(`${BACK_API}/api/get-products`)
+    const result = await fetch(`${BACK_API}/api/get-products`,{
+    method: 'GET',
+    headers:{
+        Cookie:cookie
+    }
+})
+    if (result.status == 401 ){
+        return Astro.redirect('/auth')
+    }
     const json = await result.json()
+
+       
     products = json.data || []
     sectionsCategories = [...new Set(products.map(product => product.name_category))];
 }
@@ -28,10 +39,17 @@ else {
     const result = await fetch(`${BACK_API}/api/filter-products`, {
         method: 'POST',
         headers: {
-            'Content-Type':'application/json'
+            'Content-Type':'application/json',
+            Cookie:cookie
         },
-        body: JSON.stringify(search)
+        body: JSON.stringify(search),
+
     })
+
+    if (result.status == 401 ){
+        return Astro.redirect('/auth')
+    }
+    
     const json = await result.json()
 
     console.log(json.data.length)

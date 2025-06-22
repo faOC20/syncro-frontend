@@ -1,13 +1,22 @@
 ---
-
 import DateDolar from '@components/DateDolar.astro'
 import SummaryButton from './SummaryButton.astro'
 import { BACK_API } from 'astro:env/client'
 import MenuIcon from '@icons/menuIcon.svg'
+import { fetchAuth } from '@lib/fetchAuth'
 
-const result = await fetch(`${BACK_API}/api/get-all-orders`)
-const {data} = await result.json()
+const cookie = Astro.request.headers.get('cookie') || ''
+
+const res = await fetch(`${BACK_API}/api/get-all-orders`, {
+  method: 'GET',
+  headers: {
+    Cookie: cookie
+  }
+})
+
+const { data } = await res.json()
 ---
+
 
 <header class="flex items-center justify-center text-theme-light-gray text-xs md:text-sm w-full lg:justify-end">
 

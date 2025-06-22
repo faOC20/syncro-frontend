@@ -10,7 +10,8 @@ export const deleteProduct = async(data: string | undefined)=>{
         headers: {
             'Content-Type':'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        credentials: 'include'
     })
     const json = await result.json()
 

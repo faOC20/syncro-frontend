@@ -8,6 +8,7 @@ export const deleteOperation = async (orderNumber:string)=>{
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(orderNumber),
+        credentials: 'include'
     })
 
     const json = await res.json()

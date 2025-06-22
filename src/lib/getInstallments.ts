@@ -1,13 +1,16 @@
 import { BACK_API } from "astro:env/client";
 
-export const getInstallments = async (orderNumber: string | undefined) => {
+export const getInstallments = async (orderNumber: string | undefined, cookie) => {
     try {
         const result = await fetch(`${BACK_API}/api/get-installments`, {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                Cookie: cookie
+
             },
-            body: JSON.stringify(orderNumber)
+            body: JSON.stringify(orderNumber),
+        
         })
 
         if (result){

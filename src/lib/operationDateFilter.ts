@@ -9,7 +9,8 @@ export const operationDateFilter = async(date: any)=>{
             headers: {
                 'Content-Type':'application/json'
             },
-            body: JSON.stringify(date)
+            body: JSON.stringify(date),
+            credentials: 'include'
         })
         const json = await result.json()
         console.log(json.data)

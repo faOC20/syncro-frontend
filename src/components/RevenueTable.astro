@@ -1,5 +1,4 @@
 ---
-import { boolean } from "astro:schema";
 import Bookmark from "./decoration/Bookmark.astro";
 import { BACK_API } from "astro:env/client";
 
@@ -11,16 +10,21 @@ interface Props{
 const {year, isCashea} = Astro.props as Props
 const numberYear = parseInt(year!)
 
+const cookie = Astro.request.headers.get('cookie')
+
 const result = await fetch(`${BACK_API}/api/get-all-revenue`, {
     method: "POST",
     headers: {
         "Content-Type": "application/json",
+        Cookie: cookie
     },
     body: JSON.stringify({
         year: year,
         isCashea: parseInt(isCashea)
     })
 })
+
+
 const {data} = await result.json()
 const operations = data.operations
 
@@ -53,9 +57,11 @@ const installmentTypes = [
     <div>
     <section id="year-revenue-table" class="w-full shadow-md">
         <div class="bg-white rounded-t-lg p-4 shadow"> 
-            <div class='min-w-full text-theme-black text-lg flex rounded-t-lg py-7 gap-5 bg-white'>
-                <Bookmark>
+            <div class='min-w-full text-theme-black text-lg flex items-center rounded-t-lg py-7 justify-between bg-white'>
+                <div class="flex gap-5">
+                    <Bookmark>
                     Resumen del año
+                    
                 </Bookmark>
     
                 <div class="flex text-sm items-center">
@@ -71,11 +77,20 @@ const installmentTypes = [
                       ))}
                     </select>
                   </div>
+                </div>
+                <button 
+                    id="download-cashea-button"
+                    class="px-4 py-2 scheme-dark text-theme-light-gray bg-theme-ocean-blue rounded-lg shadow-md border border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-300 ease-in-out hover:bg-blue-700 cursor-pointer font-medium text-sm"
+                    > 
+                    Descargar .xls
+                </button>
             </div>
+
+                    
     
             <hr class="py-5 text-theme-black/10">
             <div class="overflow-x-auto custom-scrollbar max-h-[550px]">
-                <table class="min-w-full border-collapse overflow-scroll">
+                <table id="cashea-table" class="min-w-full border-collapse overflow-scroll">
                 
                 <thead>
                     <tr class="bg-white  outline-1">
@@ -206,8 +221,9 @@ const installmentTypes = [
     <div>
     <section  id="year-revenue-table" class="w-full shadow-md">
         <div class="bg-white rounded-t-lg p-4 shadow"> 
-            <div class='min-w-full text-theme-black text-lg flex rounded-t-lg py-7 gap-5 bg-white'>
-                <Bookmark>
+            <div class='min-w-full text-theme-black text-lg flex items-center justify-between rounded-t-lg py-7 gap-5 bg-white'>
+                <div class="flex gap-5">
+                    <Bookmark>
                     Resumen del año
                 </Bookmark>
     
@@ -224,11 +240,19 @@ const installmentTypes = [
                       ))}
                     </select>
                   </div>
+
+                </div>
+                <button 
+                id="download-normal-button"
+                class="px-4 py-2 scheme-dark text-theme-light-gray bg-theme-ocean-blue rounded-lg shadow-md border border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-300 ease-in-out hover:bg-blue-700 cursor-pointer font-medium text-sm"
+                > 
+                Descargar .xls
+                </button>
             </div>
     
             <hr class="py-5 text-theme-black/10">
             <div class="overflow-x-auto custom-scrollbar max-h-[550px]">
-                <table class="min-w-full border-collapse overflow-scroll">
+                <table id="normal-table" class="min-w-full border-collapse overflow-scroll">
                 
                 <thead>
                     <tr class="bg-white  outline-1">
@@ -334,4 +358,31 @@ const installmentTypes = [
         const selectedYear = yearSelect.value;
         window.location.href = `/revenue/${isCashea}-${selectedYear}`;
     });
+</script>
+
+<script>
+    import * as XLSX from 'xlsx'
+    
+    const tableCashea = document.getElementById('cashea-table') as HTMLTableElement
+    const downloadCasheaTable = document.getElementById('download-cashea-button') as HTMLButtonElement
+    
+    downloadCasheaTable.addEventListener('click', ()=>{
+       const libro = XLSX.utils.table_to_book(tableCashea, { sheet: 'Inventario' });
+       XLSX.writeFile(libro, 'Resumen-cashea.xlsx');
+    })
+
+
+    
+</script>
+
+<script>
+    import * as XLSX from 'xlsx'
+    const tableNormal = document.getElementById('normal-table') as HTMLTableElement
+    const downloadNormalTable = document.getElementById('download-normal-button') as HTMLButtonElement
+
+    downloadNormalTable.addEventListener('click', ()=>{
+        console.log('hola')
+        const book = XLSX.utils.table_to_book(tableNormal, { sheet: 'Inventario' });
+        XLSX.writeFile(book, 'Resumen-normal.xlsx');
+    })
 </script>

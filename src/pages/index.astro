@@ -5,13 +5,26 @@ import OperationForm from '@components/OperationForm.astro';
 import ReactVirtualizedTable from '@components/OperationsTable';
 import {Notifications} from '@components/Notifications';
 import ProductsQuickAccess from '@components/ProductsQuickAccess.astro';
-import { BACK_API } from 'astro:env/client';
+import {BACK_API } from 'astro:env/client';
+import {fetchAuth} from '@lib/fetchAuth'
 
-const result = await fetch(`${BACK_API}/api/get-products`)
-const json = await result.json()
-const products = json.data || []
 
-console.log(products)
+const cookie = Astro.request.headers.get('cookie') || '';
+
+const res = await fetchAuth(`${BACK_API}/api/get-products`, {
+  method: 'GET',
+  headers: { Cookie: cookie }
+});
+
+if (res.status === 302) {
+  // Esto detiene el renderizado y redirige al login
+  return res;
+}
+
+const { data: products = [] } = await res.json();
+
+
+
 ---
 
 <Layout style='flex-col items-center'>
@@ -19,7 +32,9 @@ console.log(products)
     <div id="homepage-container" class="h-full w-full py-5 px-[3rem] gap-[3rem]">
         
         
-        <div id="new-operation">
+        {
+            products.length > 0?(
+            <div id="new-operation">
             <OperationForm products={products}/>
         </div>
     
@@ -39,6 +54,10 @@ console.log(products)
         <div id='orders-table'>
             <ReactVirtualizedTable client:visible/>
         </div> 
+            ):(
+                ""
+            )
+        }
             
         
     </div>
@@ -106,3 +125,4 @@ console.log(products)
     }
 
 </style>
+

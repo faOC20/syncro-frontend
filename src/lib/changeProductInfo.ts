@@ -20,7 +20,8 @@ export const changeProductInfo = async(data: ChangeData)=>{
         headers: {
             'Content-Type':'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        credentials: 'include'
     })
     const json = await result.json()
 

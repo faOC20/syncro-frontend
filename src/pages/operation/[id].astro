@@ -5,6 +5,8 @@ import OperationInfo from '@components/operationPage/OperationInfo.astro'
 import Layout from '@layouts/Layout.astro'
 import { getOperation } from '@lib/getOperation'
 import { getInstallments } from '@lib/getInstallments'
+import { fetchAuth } from '@lib/fetchAuth'
+import { BACK_API } from 'astro:env/client'
 
 export interface Installment {
   change_date: string | null
@@ -16,10 +18,31 @@ export interface Installment {
   id_type: number
 }
 
+const cookie = Astro.request.headers.get('cookie') || ""
+
 const {id} = Astro.params
 
-const {creation_date: creationDate, name: customerName, operation_amount: amount, order_number:orderNumber, products, state}= await getOperation(id)
-const installments: Installment[] = await getInstallments(orderNumber)
+const res = await fetchAuth(`${BACK_API}/api/get-operation`, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: cookie
+    },
+    body: JSON.stringify(id)
+})
+
+if (res.status === 302) {
+  return res;
+}
+
+
+const {data} = await res.json()
+const {creation_date: creationDate, name: customerName, operation_amount: amount, order_number:orderNumber, products, state} = data
+
+
+const installments: Installment[] = await getInstallments(orderNumber, cookie)
+
+console.log(installments)
 ---
 
 <Layout style='flex justify-center'>

@@ -13,7 +13,8 @@ const fetchMonthSummary = async (month, year, isCashea) => {
             year: year,
             month: month,
             isCashea: isCashea
-        })
+        }),
+        credentials: 'include'
     })
     const {data} = await result.json()
     return data
