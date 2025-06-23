@@ -2,7 +2,7 @@
 import Sections from "@layouts/Sections.astro"
 import Bookmark from "./decoration/Bookmark.astro"
 import { Image } from "astro:assets"
-import CasheaLogo from "../icons/cashea-logo.avif"
+// import CasheaLogo from "../icons/cashea-logo.avif"
 import {AddProduct} from "./AddProduct"
 import { TotalInput } from "./TotalInput"
 
@@ -23,7 +23,7 @@ const {products} = Astro.props
           Nueva operación
           <button id="cashea-mode" class="size-10 rounded-md overflow-hidden cursor-pointer shadow">
               
-                <Image src={CasheaLogo} alt="logo de cashea">
+                <img src='/cashea-logo.avif' alt="logo de cashea">
               
           </button>
       </Bookmark>

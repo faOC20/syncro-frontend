@@ -154,7 +154,7 @@ export const AddProduct = ({products})=>{
                     </div>
 
                     <div className='flex flex-col gap-2'>
-                        <label htmlFor="price" className="text-sm font-medium">Precio de venta</label>
+                        <label htmlFor="price" className="text-sm font-medium">Precio de venta (por unidad)</label>
                         <input 
                             step="any"
                             required
@@ -166,7 +166,7 @@ export const AddProduct = ({products})=>{
                         />
                     </div>
                     
-                    <div className='flex flex-col gap-2'>
+                    {/* <div className='flex flex-col gap-2'>
                         <label htmlFor="serial" className="text-sm font-medium">Número de Serie</label>
                         <input 
                             required
@@ -176,7 +176,7 @@ export const AddProduct = ({products})=>{
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
                             placeholder="Ingrese el número de serie"
                         />
-                    </div>
+                    </div> */}
 
                    <span className='w-full h-5 text-red-600'>
                         {errorMessage}

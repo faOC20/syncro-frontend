@@ -4,7 +4,7 @@ import Bookmark from "./decoration/Bookmark.astro"
 import { useEffect, useState } from "react"
 
 const fetchMonthSummary = async (month, year, isCashea) => {
-    const result = await fetch (`${BACK_API}/api/get-month-revenue`, {
+    const result = await fetch (`http://localhost:5000/api/get-month-revenue`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

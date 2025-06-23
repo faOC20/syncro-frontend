@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { BACK_API } from 'astro:env/client';
 
 const updateNotifications = async() => {
-    const result = await fetch(`${BACK_API}/api/notifications-update`,{
+    const result = await fetch(`http://localhost:5000/api/notifications-update`,{
         method: 'GET',
         credentials: 'include'
     })

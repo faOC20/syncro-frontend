@@ -1,7 +1,7 @@
 import { BACK_API } from "astro:env/client"
 
 export const getProducts = async()=>{
-    const result = await fetch(`${BACK_API}/api/get-products`, {
+    const result = await fetch(`http://localhost:5000/api/get-products`, {
         method: 'GET',
         credentials: "include" 
     })

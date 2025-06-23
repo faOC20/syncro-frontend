@@ -9,8 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { format } from 'date-fns';
 import { operationDateFilter } from '@lib/operationDateFilter';
-import casheaLogo from '@icons/cashea-logo.avif'
-import mileniumLogo from '../assets/logos/milenium.svg'
+
 
 
 
@@ -122,8 +121,8 @@ export default function OperationsTable() {
                         {columns.map((column) => {
 
                           const opTypes = {
-                            1: 'src/icons/cashea-logo.avif',
-                            0: 'src/icons/milenium-logo.avif'
+                            1: '/cashea-logo.avif',
+                            0: '/milenium-logo.avif'
                           }
 
                           const value = row[column.id];

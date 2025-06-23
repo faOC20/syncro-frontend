@@ -2,7 +2,7 @@ import { BACK_API } from "astro:env/client"
 import { successAlert } from "./sweetAlert";
 
 export const deleteOperation = async (orderNumber:string)=>{
-    const res = await fetch(`${BACK_API}/api/delete-operation`,{
+    const res = await fetch(`http://localhost:5000/api/delete-operation`,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -4,7 +4,7 @@ import { BACK_API } from "astro:env/client"
 
 export const operationDateFilter = async(date: any)=>{
     try{
-        const result = await fetch(`${BACK_API}/api/get-operations`, {
+        const result = await fetch(`http://localhost:5000/api/get-operations`, {
             method: "POST",
             headers: {
                 'Content-Type':'application/json'

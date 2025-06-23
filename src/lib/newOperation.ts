@@ -7,7 +7,7 @@ export const newOperation = async (data)=>{
     try{
 
 
-        const result = await fetch(`${BACK_API}/api/new-operation`, {
+        const result = await fetch(`http://localhost:5000/api/new-operation`, {
             method: "POST",
             headers: {
                 'Content-Type':'application/json'

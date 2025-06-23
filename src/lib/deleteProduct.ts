@@ -5,7 +5,7 @@ const productInfoDialog = document.getElementById('product-info-dialog') as HTML
 const confirmDeleteDialog = document.getElementById('confirm-delete-dialog') as HTMLDialogElement
 
 export const deleteProduct = async(data: string | undefined)=>{
-    const result = await fetch (`${BACK_API}/api/delete-product`, {
+    const result = await fetch (`http://localhost:5000/api/delete-product`, {
         method: 'POST',
         headers: {
             'Content-Type':'application/json'

@@ -7,7 +7,7 @@ export const checkDni = async (data)=>{
     const errorInfo = document.getElementById('error-info');
     const errorFormInfo = document.getElementById('error-form-info');
 
-    const result = await fetch(`${BACK_API}/api/customer-check`, {
+    const result = await fetch(`http://localhost:5000/api/customer-check`, {
         method: 'POST',
         headers: {
             "Content-Type":"application/json"

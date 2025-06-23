@@ -8,7 +8,7 @@ export const updateInstallment = async (data: any, index:string)=>{
       }
 
     try{
-        const result = await fetch(`${BACK_API}/api/installment-update`, {
+        const result = await fetch(`http://localhost:5000/api/installment-update`, {
             method: 'POST',
             headers:{
                 'Content-Type': 'application/json'

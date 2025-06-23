@@ -8,7 +8,7 @@ const errorNewProduct = document.getElementById('product-info-error-form') as HT
 
 export const newProduct = async(data)=>{
     
-    const result = await fetch(`${BACK_API}/api/new-product`, {
+    const result = await fetch(`http://localhost:5000/api/new-product`, {
         method: 'POST',
         headers: {
             'Content-Type':'application/json'

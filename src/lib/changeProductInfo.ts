@@ -15,7 +15,7 @@ export interface ChangeData {
 }
 
 export const changeProductInfo = async(data: ChangeData)=>{
-    const result = await fetch(`${BACK_API}/api/change-product-info`, {
+    const result = await fetch(`http://localhost:5000/api/change-product-info`, {
         method: 'POST',
         headers: {
             'Content-Type':'application/json'

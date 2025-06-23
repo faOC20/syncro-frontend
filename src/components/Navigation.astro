@@ -3,9 +3,8 @@ import MileniumLogo from '../assets/logos/milenium.svg'
 import PackageIcon from '@icons/package.svg'
 import SummaryIcon from '@icons/summary.svg'
 import HomeIcon from '@icons/home.svg'
-import casheaLogo from '@icons/cashea-logo.avif'
 import { Image } from 'astro:assets'
-import milleniumLogo from '@icons/milenium-logo.avif'
+import LogOutIcon from '@icons/logout.svg'
 
 const currentYear = new Date().getFullYear();
 ---
@@ -55,7 +54,9 @@ const currentYear = new Date().getFullYear();
                 
                     <a  class="self-end flex items-center text-xs gap-2" href={`/revenue/1-${currentYear}`}>
                         <div class="size-5 rounded-sm overflow-hidden">
-                            <Image src={casheaLogo} alt='logo de cashea'/>
+                            <div class="size-5  rounded-sm overflow-hidden">
+                                <img src="/cashea-logo.avif" alt="logo cashea">
+                            </div>
                         </div>
                         Cashea
                     </a>
@@ -65,11 +66,21 @@ const currentYear = new Date().getFullYear();
                     
                     <a  class="self-end flex items-center text-xs gap-2" href={`/revenue/0-${currentYear}`}>
                         <div class="size-5  rounded-sm overflow-hidden">
-                            <Image src={milleniumLogo} alt='logo de milenium mania'/>
+                            <img src="/milenium-logo.avif" alt="logo milenium mania">
                         </div>
                         De contado
                     </a>
                 </li>
+            </li>
+
+            <li>
+                
+                <a class="log-out flex items-center gap-2 cursor-pointer">
+                    <div class="size-8">
+                        <LogOutIcon/>
+                    </div>
+                    Cerrar Sesión
+                </a>
             </li>
 
 
@@ -78,3 +89,30 @@ const currentYear = new Date().getFullYear();
     </div>
    </div>
 </nav>
+
+<script>
+
+    const logOutButton = document.querySelectorAll('.log-out')
+
+
+    const logOut = async ()=>{
+        console.log('holaaa')
+        const response = await fetch('http://localhost:5000/logout', {
+            method: 'GET',
+            credentials:'include'
+            
+        })
+
+        if (response.status === 200){
+            window.location.href = '/auth'
+        }
+
+        
+    }
+
+    
+    logOutButton.forEach((logout)=>{
+        logout.removeEventListener('click', logOut)
+        logout.addEventListener('click', logOut)
+    })
+</script>
