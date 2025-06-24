@@ -42,7 +42,7 @@ const {products} = Astro.props
                     <input 
                         type="text" 
                         id="name" 
-                        name="additionalName" 
+                        
                         class="w-full px-3 py-2 border border-gray-300 rounded-md"
                     >
                 </div>
@@ -52,7 +52,7 @@ const {products} = Astro.props
                     <input 
                         type="tel" 
                         id="phone" 
-                        name="additionalPhone" 
+                        
                         class="w-full px-3 py-2 border border-gray-300 rounded-md"
                     >
                 </div>
@@ -80,6 +80,10 @@ const {products} = Astro.props
         <dialog id="check-info" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
           <h3 class="text-lg font-medium text-gray-900 mb-4">¿Está seguro de confirmar la orden?</h3>
 
+          <span id="error-form-info" class="flex items-center h-3 w-full text-red-600">
+          
+          </span>
+
           <div class="flex flex-col gap-5">
             <div>
               <label for="customer-info" class="block text-md font-medium underline underline-offset-4 mb-2">Cliente</label>
@@ -103,6 +107,15 @@ const {products} = Astro.props
 
                   </div>
               </div>
+
+              <div>
+                <label for="orden_number" class="block text-sm font-medium  mb-1">Número de orden</label>
+                <input 
+                  type="number" 
+                  id="orden_number" 
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+                >
+              </div>
               
               
           </div>
@@ -124,8 +137,7 @@ const {products} = Astro.props
               </button>
           </div>
       </dialog>
-      
-        <!-- Diálogo para nuevo cliente -->
+    
        
       
       <div class="grid grid-cols-1 xl:grid-cols-2 gap-4 relative grow">
@@ -148,7 +160,7 @@ const {products} = Astro.props
     
       
     
-      <div class="grid grid-cols xl:grid-cols-3 gap-4 grow">
+      <div class="grid grid-cols xl:grid-cols-2 gap-4 grow">
         
         <TotalInput client:only/>
         
@@ -159,21 +171,13 @@ const {products} = Astro.props
             id="initial-label"
             type="number" 
             name="initial" 
+            max=""
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
             step="any"
           >
         </div>
     
-        <div>
-          <label for="fecha" class="block text-sm font-medium  mb-1">Fecha</label>
-          <input 
-            type="date" 
-            id="fecha" 
-            name="date" 
-            class=" cursor-pointer  w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
-            max={new Date().toISOString().split('T')[0]}
-          >
-        </div>
+        
       </div>
     
       <div class="grid grid-cols-1 grow xl:grid-cols-2 gap-4">
@@ -196,22 +200,25 @@ const {products} = Astro.props
         </div>
         
         <div>
-          <label for="orden" class="block text-sm font-medium  mb-1">Número de orden</label>
+          <label for="fecha" class="block text-sm font-medium  mb-1">Fecha</label>
           <input 
-            type="number" 
-            id="orden" 
-            name="order" 
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+            type="date" 
+            id="fecha" 
+            name="date" 
+            class=" cursor-pointer  w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+            max={new Date().toISOString().split('T')[0]}
           >
         </div>
+        
       </div>
 
       
     
       <div class="flex">
-        <span id="error-form-info" class="flex items-center invisible text-red-600">
+        <span id="error-form-principal" class="flex items-center h-3 w-full text-red-600">
           
         </span>
+        
         <div class="flex justify-end grow my-2">
           <button 
           type="submit" 

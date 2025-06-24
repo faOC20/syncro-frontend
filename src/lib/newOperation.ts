@@ -1,9 +1,11 @@
 import { BACK_API } from "astro:env/client"
 import { successAlert } from "@lib/sweetAlert"
 
+const errorFormInfo = document.getElementById('error-form-info');
+
 export const newOperation = async (data)=>{
 
-    
+    console.log('hola')
     try{
 
 
@@ -38,6 +40,10 @@ export const newOperation = async (data)=>{
 
         if (json.status === 'customer_not_found'){
             return json.status
+        }
+
+        if (json.status === 'repeated_order'){
+            errorFormInfo.innerHTML = json.message
         }
 
 

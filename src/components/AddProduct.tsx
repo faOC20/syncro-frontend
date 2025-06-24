@@ -41,7 +41,7 @@ export const AddProduct = ({products})=>{
         }
 
         const filteredProducts = allProducts.filter((product)=>(
-            product.code_product.toLowerCase().startsWith(search.toLowerCase())
+            product.code_product.toLowerCase().startsWith(search.toLowerCase()) || product.name_product.toLowerCase().startsWith(search.toLowerCase())
         ))
 
         setFilteredProducts(filteredProducts)

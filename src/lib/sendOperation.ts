@@ -9,6 +9,17 @@ const dialog = document.getElementById('additional-info-dialog') as HTMLDialogEl
 const confirmProducts = document.getElementById('confirm-products') as HTMLDivElement
 const customerInfo = document.getElementById('customer-info') as HTMLDivElement
 const confirmTotal = document.getElementById('confirm-total') as HTMLDivElement
+const saveConfirmedInfoButton = document.getElementById('save-confirmed-info') as HTMLButtonElement
+
+let toSubmit = null
+
+const getToSubmit = ()=>{
+    return toSubmit
+}
+
+const setToSubmit = (data)=>{
+    toSubmit = data
+}
 
 const saveAditionalInfo = (data) => {
     
@@ -24,6 +35,8 @@ const saveAditionalInfo = (data) => {
     };
 
     const isChecked = await checkDni({ ...data, ...additionalData });
+
+    console.log(isChecked)
 
     if (isChecked.status === 'success') {
         
@@ -56,6 +69,20 @@ const casheaModeButton = document.getElementById('cashea-mode') as HTMLButtonEle
 const form = document.getElementById("operation-form");
 let isCashea = true
 
+const orderInput = document.getElementById('orden_number') as HTMLInputElement
+
+let order: string | null = null
+const getOrder  = ()=>{
+    return order
+}
+const setOrder = (inputOrder: string)=>{
+    order = inputOrder
+}
+
+orderInput.addEventListener('input', (e)=>{
+    setOrder(e.target?.value.trim())
+})
+
 const handleCashea = (e)=>{
     e.preventDefault();
     // const form = document.getElementById('operation-form') as HTMLFormElement;
@@ -77,25 +104,39 @@ const handleCashea = (e)=>{
     }
 }
 
+let isSubmitting = false
+
 const handleSubmit = async (e:any) => {
+    e.preventDefault(); 
+    if(isSubmitting) return
+
+    isSubmitting = true
+
     const {dolar, cartProducts} = useProductsStore.getState()
     // const confirmProducts = document.getElementById('confirm-products') as HTMLDivElement
     confirmProducts.innerHTML = ''
-    const saveConfirmedInfoButton = document.getElementById('save-confirmed-info') as HTMLButtonElement
+    
 
     
     console.log(cartProducts)
-    e.preventDefault(); 
+    
     const data = Object.fromEntries(new FormData(e.target as HTMLFormElement));
     data.isCashea = String(Number(isCashea)); 
     data.total = cartProducts.reduce((iteration, product)=>iteration+parseFloat(product.salePrice)*parseFloat(product.quantity), 0).toString()
     console.log(data)
 
     data.products = cartProducts.map((product) => ({code:product.code_product, name:product.name_product, amount:product.quantity, serial: product.serial, sale_price: product.salePrice}));
-
+    setToSubmit(data)
     const isCustomer = await checkDni(data)
     
-   
+    console.log(isCustomer)
+
+    if (isCustomer.status == 'invalid_initial'){
+        isSubmitting = false
+        return
+    }
+
+
     if(isCustomer.status == 'customer_not_found'){
         const dialog = document.getElementById('additional-info-dialog') as HTMLDialogElement;
         if (dialog) {
@@ -105,26 +146,29 @@ const handleSubmit = async (e:any) => {
         }
 
         saveAditionalInfo(data);
-
         
     }
 
+    
+    
     else{
         const customerData = isCustomer.data
         console.log(customerInfo)
         confirmDialog.showModal();
 
-        customerInfo.innerHTML = `
-            <b class='text-sm text-theme-light-blue'>
-                ${customerData.name}
-            </b>
-            <span class = 'text-sm'>
-                ${customerData.dni}
-            </span>
-        `
+    customerInfo.innerHTML = `
+        <b class='text-sm text-theme-light-blue'>
+            ${customerData.name}
+        </b>
+        <span class = 'text-sm'>
+            ${customerData.dni}
+        </span>
+    `
     }
-     
+    
+    console.log(cartProducts.length)
     cartProducts.forEach(product => {
+        
         const productContainer = document.createElement('div')
         productContainer.innerHTML = `
             <div class = 'flex flex-col text-sm border-b gap-2 pb-3'>
@@ -162,48 +206,50 @@ const handleSubmit = async (e:any) => {
     `
     }
 
-    saveConfirmedInfoButton.onclick = ()=>{
-        newOperation(data)
-    }
+    
 
-
-
-     
-
+    
+    isSubmitting = false
     
 };
 
-// const status = await newOperation(JSON.stringify(data)); 
+saveConfirmedInfoButton.addEventListener('click', async()=>{
+    saveConfirmedInfoButton.disabled = true
+    const order = getOrder()
     
-    // if(status == 'customer_not_found'){
-    //     //Muestra el dialogo
-    //     const dialog = document.getElementById('additional-info-dialog');
-    //     if (dialog) {
-    //         (dialog as HTMLDialogElement).showModal();
-    //     }
+    if(order!=null && order!= ''){
+        const data = getToSubmit()
+        if( data != null){
+            data.order = order
+            await newOperation(data)
+        }
+    }
+    else{
+        console.log('la orden esta vacia')
+    }
+     
+    saveConfirmedInfoButton.disabled= false
+})
 
-    //     saveAditionalInfo(data);
-    // } 
-  
-    // console.log(data);
-    // form?.removeEventListener("submit", handleSubmit); mousekiherramienta, recarga la pagina
 
 export const sendNewOperation = async () => {
-try{
-        
-    casheaModeButton.removeEventListener('click', handleCashea)
+    try{
+        casheaModeButton.removeEventListener('click', handleCashea)
     casheaModeButton.addEventListener('click', handleCashea)
-
+    
     form?.removeEventListener("submit", handleSubmit);
     form?.addEventListener("submit", handleSubmit)
-
-    
-
-    
     }
+
     catch(e){
         console.log(e);
-    };
+    }
+    
 }
+
+
+
+
+
 
 
