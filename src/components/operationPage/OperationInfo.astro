@@ -7,16 +7,19 @@ import Bookmark from '@components/decoration/Bookmark.astro';
 export interface Product {
     name_product: string,
     code_product: string, 
-    amount: number,
     cost: number,
     change_date: any,
-    name_warehouse: string,
     name_category: string,
     guarantee: number,
     name_color: string, 
     sale_price: number
+    warehouses: Warehouses[]
 }
 
+interface Warehouses {
+    amount: number,
+    name_warehouse: string
+}
 
 interface Props {
     creationDate: any,

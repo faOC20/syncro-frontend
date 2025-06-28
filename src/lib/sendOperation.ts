@@ -125,7 +125,7 @@ const handleSubmit = async (e:any) => {
     data.total = cartProducts.reduce((iteration, product)=>iteration+parseFloat(product.salePrice)*parseFloat(product.quantity), 0).toString()
     console.log(data)
 
-    data.products = cartProducts.map((product) => ({code:product.code_product, name:product.name_product, amount:product.quantity, serial: product.serial, sale_price: product.salePrice}));
+    data.products = cartProducts.map((product) => ({code:product.code_product, name:product.name_product, amount:product.quantity, serial: product.serial, sale_price: product.salePrice, update_stock_data: product.stockUpdate}));
     setToSubmit(data)
     const isCustomer = await checkDni(data)
     

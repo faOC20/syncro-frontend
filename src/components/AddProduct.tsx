@@ -19,6 +19,7 @@ export const AddProduct = ({products})=>{
     const [isOpen, setIsOpen] = useState(false)
     const[selectedTag, setSelectedTag] = useState()
     const[errorMessage, setErrorMesage] = useState('')
+
     // const [total, setTotal] = useState(0)
 
     //product in cart details, inputs of the dialog thats open when we select a tag
@@ -26,6 +27,7 @@ export const AddProduct = ({products})=>{
     const[amount, setAmount] = useState(0)
     const[serial, setSerial] = useState('')
     const[price, setPrice] = useState(0)
+
 
     const inputSearchHandler = (e)=>{
 
@@ -67,7 +69,10 @@ export const AddProduct = ({products})=>{
 
         const data = {
             code: selectedTag.code_product,
-            amount: amount
+            totalAmount: {
+                amountA: amountA,
+                amountB: amountB
+            }
         }
 
         const result = await stockCheck(data)
@@ -82,12 +87,21 @@ export const AddProduct = ({products})=>{
         if(productIndex != -1){
             
             const deletedProduct = allProducts.splice(productIndex,1)[0]
-            deletedProduct.quantity = amount
+            deletedProduct.quantity = parseInt(amountA) + parseInt(amountB)
+            const stockUpdater = {};
+            if (amountA !== 0) stockUpdater.amountA = amountA;
+            if (amountB !== 0) stockUpdater.amountB = amountB;
+            
+            deletedProduct.stockUpdate = stockUpdater
             deletedProduct.serial = serial
             deletedProduct.salePrice = price
             setTags([...tags, deletedProduct])
             setErrorMesage("")
             setIsOpen(false)
+            setDisabled(true)
+            setDisabledB(true)
+            setAmountA(0)
+            setAmountB(0)
         }
 
 
@@ -105,16 +119,44 @@ export const AddProduct = ({products})=>{
     }
 
     useEffect(()=>{
+        console.log(tags)
         updateProducts(tags)
         // setTotal(tags.reduce((acumulador, tag)=>acumulador + tag.salePrice, 0))
         sendNewOperation()
     },[tags])
 
+    const [disabled, setDisabled] = useState(true)
+    const [disabledB, setDisabledB] = useState(true)
+
+    const [amountA, setAmountA] = useState(0)
+    const [amountB, setAmountB] = useState(0)
+
+    const [infoWarehouses, setInfoWarehouses] = useState(null)
+
+    useEffect(()=>{
+        if (selectedTag){
+            const info = selectedTag.warehouses.map(warehouse=>{
+                const disableFunction = warehouse.name_warehouse === 'almacen 1'?(setDisabled):(setDisabledB)
+                const changeAmountFunction = warehouse.name_warehouse === 'almacen 1'?(setAmountA):(setAmountB)
+        
+                return({nameWarehouse:warehouse.name_warehouse, amount:warehouse.amount, disableFunction: disableFunction, changeAmountFunction:changeAmountFunction})
+            })
+            
+            setInfoWarehouses(info)
+        }
+
+        console.log(infoWarehouses)
+    },[selectedTag])
+    
     return(
         <>
             <Dialog className='max-w-full' open={isOpen} onClose={()=>{
                 setIsOpen(false)
                 setErrorMesage('')
+                setDisabled(true)
+                setDisabledB(true)
+                setAmountA(0)
+                setAmountB(0)
                 }} id="product-amount">
                 <form onSubmit={(e)=>{
                                 e.preventDefault()
@@ -129,10 +171,6 @@ export const AddProduct = ({products})=>{
                                     {selectedTag.name_product}
                                 </b>
 
-                                <span>
-                                    quedan {selectedTag.amount} unidades
-                                </span>
-
                                 <span className='text-red-600'>
                                     costo: {selectedTag.cost}$
                                 </span>
@@ -140,18 +178,38 @@ export const AddProduct = ({products})=>{
                         ):('araa')}
                     </div>
                     
-                    <div className='flex flex-col gap-2'>
-                        <label htmlFor="cantidad" className="text-sm font-medium">Cantidad</label>
-                        <input 
-                            onChange={(e)=>{setAmount(e.target.value)}}
-                            required
-                            type="number" 
-                            id="cantidad" 
-                            min="1"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
-                            placeholder="Ingrese la cantidad"
-                        />
-                    </div>
+                    <div className="flex flex-col gap-3 justify-center">
+                            <div className="flex">
+                                <label className='text-theme-black font-bold'>Cantidad</label>
+                                
+                            </div>
+                            <span id="add-product" className=" flex flex-col gap-3">
+                                {
+                                    infoWarehouses?.map(infoWarehouse => (
+                                        <div className="flex gap-3">
+                                            <label className='flex gap-2 items-center'>
+                                                {infoWarehouse.nameWarehouse}
+                                            <input onChange={(e)=>{
+                                                
+                                                infoWarehouse.disableFunction(!e.target.checked)
+                                                if (!e.target.checked) {
+                                                    infoWarehouse.changeAmountFunction(0); // Reinicia a 0 si se desmarca
+                                                }
+                                                
+                                            }} type="checkbox" name="" id="" />
+                                            </label>
+                                            <input value={infoWarehouse.nameWarehouse === "almacen 1" ? amountA : amountB} onChange={(e)=>{
+                                                infoWarehouse.changeAmountFunction(e.target.value)
+                                            }}required id="change-amount-a" className="border rounded-md px-2 max-w-20" type="number" disabled={infoWarehouse.nameWarehouse === "almacen 1" ? disabled : disabledB}/>
+                                            
+                                            <label>
+                                                ({infoWarehouse.amount} und. restantes)
+                                            </label>
+                                        </div>
+                                    ))
+                                }
+                            </span>
+                        </div>
 
                     <div className='flex flex-col gap-2'>
                         <label htmlFor="price" className="text-sm font-medium">Precio de venta (por unidad)</label>
@@ -187,6 +245,10 @@ export const AddProduct = ({products})=>{
                             onClick={() => {
                                 setIsOpen(false)
                                 setErrorMesage('')
+                                setDisabled(true)
+                                setDisabledB(true)
+                                setAmountA(0)
+                                setAmountB(0)
                             }}
                             className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
                         >

@@ -41,21 +41,30 @@ const ProductImgComponent = ProductImg[product.name_category]
     <hr class="text-[#E0E0E0]">
     <div class="flex justify-between text-theme-ocean-blue">
         <span>{product.code_product}</span>
-        <span>{product.amount} und.</span>
-    </div>
-    <div class="flex text-xs">
-        <span>{product.name_product}</span>
-    </div>
-    <div class="flex flex-col text-xs" >
-        <span>
-            {product.name_color}
-        </span>
         <span class="text-red-500">
             costo: {product.cost}$
         </span>
-        <span class="text-[#FF9600]">
-            {product.name_warehouse}
-        </span>
+    </div>
+    <div class="flex flex-col items-start text-xs">
+        <span>{product.name_product}</span>
+        <span>{product.name_color}</span>
+    </div>
+    <div class="text-[#FF9600] flex flex-col text-xs items-center" >
+        
+        
+        {
+            product.warehouses.map((product)=>(
+                <div class="flex gap-3">
+                    <span>
+                        {product.name_warehouse}
+                    </span>
+                    <span>
+                        {product.amount} und.
+                    </span>
+                </div>
+            ))
+        }
+        
     </div>
     <hr class="text-[#E0E0E0]">
     <div class="flex justify-center text-xs text-gray-500">
@@ -74,19 +83,18 @@ import type { Product } from "./operationPage/OperationInfo.astro"
     let code: string | null = null
     let cost: string | null = null
     let selectedProduct: Product | null = null
-    let amount: string | null = null
     let category : string | null = null
     let color: string | null = null
-    let warehouse: string | null = null
 
 
     const allCards = document.querySelectorAll('.product-card')
     const productInfoDialog = document.getElementById('product-info-dialog') as HTMLDialogElement
-    const productAmountInput = document.getElementById('product-amount') as HTMLInputElement
+    
+  
+    
     const productName = document.getElementById('product-name') as HTMLSpanElement
     const productCode = document.getElementById('product-code') as HTMLSpanElement
     const productColor = document.getElementById('product-color') as HTMLSpanElement
-    const productWarehouse = document.getElementById('product-warehouse') as HTMLSpanElement
     const productCost = document.getElementById('product-cost') as HTMLSpanElement
     const lastUpdate = document.getElementById('last-update') as HTMLSpanElement
     const productCategory = document.getElementById('product-category') as HTMLSpanElement
@@ -116,8 +124,6 @@ import type { Product } from "./operationPage/OperationInfo.astro"
     const changeCategory = document.getElementById('info-category') as HTMLSelectElement
 
     const changeColor = document.getElementById('info-color') as HTMLSelectElement
-
-    const changeWarehouse = document.getElementById('info-warehouse') as HTMLSelectElement
 
     const deleteProductButton = document.getElementById('delete-product') as HTMLButtonElement
 
@@ -154,12 +160,30 @@ import type { Product } from "./operationPage/OperationInfo.astro"
         cost = costInp
     }
 
-    const getAmount = ()=>{
-        return amount
+    //WAREHOUSES AMOUNTS
+
+    const warehouseAInput = document.getElementById('change-amount-a') as HTMLInputElement
+    const warehouseBInput = document.getElementById('change-amount-b') as HTMLInputElement
+
+    let amountA: string | null = null
+    let amountB: string | null = null
+
+    const getAAmount = ()=>{
+        return amountA
     }
-    const setAmount = (amountInp: string| null)=>{
-        amount = amountInp
+
+    const getBAmount = ()=>{
+        return amountB
     }
+    const setAAmount = (amountInp: string| null)=>{
+        amountA = amountInp
+    }
+
+    const setBAmount = (amountInp: string| null)=>{
+        amountB = amountInp
+    }
+
+     //WAREHOUSES AMOUNTS
 
     const getCategory = ()=>{
         return category
@@ -175,26 +199,20 @@ import type { Product } from "./operationPage/OperationInfo.astro"
         color = colorSelected
     }
 
-    const getWarehouse = ()=>{
-        return warehouse
-    }
-    const setWarehouse = (warehouseSelected: string | null)=>{
-        warehouse = warehouseSelected
-    }
 
     const sendData = ()=>{
         
-       if (getName() || getCode() || getCost() || getAmount() || getCategory() || getColor() || getWarehouse()){
+       if (getName() || getCode() || getCost() || getAAmount() || getBAmount() || getCategory() || getColor()){
             
             const data = {
                 code: getSelectedProduct()?.code_product,
                 name: getName(),
                 newCode: getCode(),
                 cost: getCost(),
-                amount: getAmount(),
+                amountA: getAAmount(),
+                amountB: getBAmount(),
                 category: getCategory(),
                 color: getColor(),
-                warehouse: getWarehouse()
             }
 
             changeProductInfo(data)
@@ -210,7 +228,17 @@ import type { Product } from "./operationPage/OperationInfo.astro"
 
     const showProductModal = (productData: Product)=>{
         productInfoDialog.showModal()
-        productAmountInput.value = productData.amount
+        
+
+        productData.warehouses.forEach(product => {
+            if (product.name_warehouse == 'almacen 1'){
+                warehouseAInput.value = product.amount.toString()
+            }
+
+            if (product.name_warehouse == 'almacen 2'){
+                warehouseBInput.value = product.amount.toString()
+            }
+        });
         
         productName.innerHTML = `
             
@@ -318,9 +346,15 @@ import type { Product } from "./operationPage/OperationInfo.astro"
         sendData()
     })
 
-    productAmountInput.addEventListener('change', (e)=>{
-        setAmount(e.target.value)
+    warehouseAInput.addEventListener('change', (e)=>{
+        setAAmount(e.target.value)
     })
+
+    warehouseBInput.addEventListener('change', (e)=>{
+        setBAmount(e.target.value)
+    })
+
+
 
     changeCategory.addEventListener('change', (e)=>{
         setCategory(e.target.value)
@@ -330,19 +364,16 @@ import type { Product } from "./operationPage/OperationInfo.astro"
         setColor(e.target.value)
     })
 
-    changeWarehouse.addEventListener('change', (e)=>{
-        setWarehouse(e.target.value)
-    })
 
     productInfoDialog.addEventListener('close', ()=>{
-        setAmount(null)
+        setAAmount(null)
+        setBAmount(null)
         setCategory(null)
         setCode(null)
         setColor(null)
         setCost(null)
         setName(null)
         setSelectedProduct(null)
-        setWarehouse(null)
 
 
     })

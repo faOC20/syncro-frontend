@@ -21,6 +21,7 @@ export interface Installment {
 const cookie = Astro.request.headers.get('cookie') || ""
 
 const {id} = Astro.params
+console.log(typeof(id))
 
 const res = await fetchAuth(`${BACK_API}/api/get-operation`, {
     method: "POST",

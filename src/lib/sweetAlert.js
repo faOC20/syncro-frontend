@@ -21,3 +21,25 @@ export const successAlert = async (text) => {
         }
     })
 }
+
+
+export const failedAlert = async (text) => {
+    await Swal.fire({
+        title: "¡Ups!",
+        text: text,
+        icon: "error",
+        confirmButtonText: "Confirmar",
+        timer: 2000,
+        color: "var(--color-theme-error)",
+        iconColor: "var(--color-theme-error)",
+        confirmButtonColor: "var(--color-theme-error)",
+        didOpen: () => {
+            document.body.style.overflow = 'hidden';
+            // Configurar el z-index aquí, cuando el contenedor ya existe
+            Swal.getContainer().style.zIndex = 10000;
+        },
+        willClose: () => {
+            document.body.style.overflow = 'auto';
+        }
+    })
+}

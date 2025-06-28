@@ -1,5 +1,5 @@
 import { BACK_API } from "astro:env/client"
-import { successAlert } from "./sweetAlert"
+import { failedAlert, successAlert } from "./sweetAlert"
 
 const productInfoDialog = document.getElementById('product-info-dialog') as HTMLDialogElement
 const confirmDeleteDialog = document.getElementById('confirm-delete-dialog') as HTMLDialogElement
@@ -27,7 +27,7 @@ export const deleteProduct = async(data: string | undefined)=>{
         productInfoDialog.close()
         confirmDeleteDialog.close()
 
-        console.log(json.message)
+        await failedAlert(json.message)
         
     }
 }

@@ -1,7 +1,8 @@
 import { BACK_API } from "astro:env/client"
-import { successAlert } from "@lib/sweetAlert"
+import { failedAlert, successAlert } from "@lib/sweetAlert"
 
 const errorFormInfo = document.getElementById('error-form-info');
+const confirmDialog = document.getElementById('check-info') as HTMLDialogElement
 
 export const newOperation = async (data)=>{
 
@@ -23,8 +24,6 @@ export const newOperation = async (data)=>{
         console.log(json)
         
         if (json.status === 'success'){
-            
-            const confirmDialog = document.getElementById('check-info') as HTMLDialogElement
 
             if(confirmDialog && confirmDialog.open) {
                 confirmDialog.close()
@@ -44,6 +43,15 @@ export const newOperation = async (data)=>{
 
         if (json.status === 'repeated_order'){
             errorFormInfo.innerHTML = json.message
+        }
+
+        if (json.status === 'failed'){
+            if(confirmDialog && confirmDialog.open) {
+                confirmDialog.close()
+            }
+
+            await failedAlert(json.message)
+            window.location.reload()
         }
 
 

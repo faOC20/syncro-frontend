@@ -19,6 +19,7 @@
     --color-theme-light-gray: #F7F8FD;
     --color-theme-ocean-blue: #0055b3;
     --color-theme-light-blue: #007AFF;
+    --color-theme-error: #D64541;
 }
 
 body{

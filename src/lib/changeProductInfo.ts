@@ -4,17 +4,16 @@ import { successAlert } from "./sweetAlert"
 const productInfoDialog = document.getElementById('product-info-dialog') as HTMLDialogElement
 const errorChangeProduct = document.getElementById('change-product-error') as HTMLParagraphElement
 
-export interface ChangeData {
-    name: string | null,
-    newCode: string | null,
-    cost: string | null
-    amount: string | null
-    category: string | null
-    color: string | null
-    warehouse: string | null
-}
+// export interface ChangeData {
+//     name: string | null,
+//     newCode: string | null,
+//     cost: string | null
+//     category: string | null
+//     color: string | null
+    
+// }
 
-export const changeProductInfo = async(data: ChangeData)=>{
+export const changeProductInfo = async(data)=>{
     const result = await fetch(`http://localhost:5000/api/change-product-info`, {
         method: 'POST',
         headers: {

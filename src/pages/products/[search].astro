@@ -62,7 +62,6 @@ else {
     sectionsCategories = [...new Set(products.map(product => product.name_category))];
 }
 
-
 ---
 
 <Layout style="justify-center">
@@ -239,21 +238,28 @@ else {
                         </span>
                     </div>
                     <div>
-                        <div class="flex gap-2">
-                            <label class='text-theme-light-blue font-bold' for='info-warehouse'>Almacen</label>
+                        <div class="flex flex-col gap-3 justify-center">
+                            <div class="flex">
+                                <label class='text-theme-light-blue font-bold' for='new-warehouse'>Almacen</label>
+                                
+                            </div>
+                            <span id="change-product-warehouse" class=" flex flex-col gap-3">
+                                <div class="flex gap-5">
+                                    <label>
+                                      Almacén 1
+                                    </label>
+                                    <input id="change-amount-a" class="border rounded-md px-2 max-w-20" type="number"/>
+                                </div>
                             
+                                  <!-- Almacén B -->
+                                <div class="flex gap-5">
+                                    <label>
+                                      Almacén 2
+                                    </label>
+                                    <input id="change-amount-b" class="max-w-20 px-2 border rounded-md" type="number"/>
+                                </div>
+                            </span>
                         </div>
-                        <span id="product-warehouse">
-                            <select 
-                            id="info-warehouse" 
-                            class=" px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
-                        >
-                            <option value='' selected disabled>Seleccione el almacen</option>
-                            <option value='1'>Almacen 1</option>
-                            <option value='2'>Almacen 2</option>
-                            
-                        </select>
-                        </span>
                     </div>
                     <div>
                         <div class="flex gap-2">
@@ -287,11 +293,7 @@ else {
                         </select>
                         </span>
                     </div>
-                    <div class="flex gap-2 items-center">
-                        <label for="product-amount">Cantidad: </label>
-                        
-                        <input id="product-amount" type="number" min="0" class="max-w-15 px-2 py-1 border rounded-md">
-                    </div>
+                    
                     
                 </div>
               
@@ -317,7 +319,7 @@ else {
             </div>
         </dialog>
 
-        <dialog id="add-product-dialog" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
+        <dialog id="add-product-dialog" class="rounded-lg shadow-xl w-full h-fit max-w-3xl m-auto relative  z-50 bg-white p-6">
             <h3 class="text-lg font-medium text-gray-900">Agregar nuevo producto</h3>
             
             
@@ -359,23 +361,28 @@ else {
                         </select>
                         </span>
                     </div>
-                    <div>
-                        <div class="flex gap-2">
+                    <div class="flex flex-col gap-3 justify-center">
+                        <div class="flex">
                             <label class='text-theme-light-blue font-bold' for='new-warehouse'>Almacen</label>
                             
                         </div>
-                        <span id="new-product-warehouse">
-                            <select 
-                            name="newWarehouse"
-                            required
-                            id="new-warehouse" 
-                            class=" px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
-                        >
-                            <option value='' selected disabled>Seleccione el almacen</option>
-                            <option value='1'>Almacen 1</option>
-                            <option value='2'>Almacen 2</option>
-                            
-                        </select>
+                        <span id="new-product-warehouse" class=" flex flex-col gap-3">
+                            <div class="almacen flex gap-5">
+                                <label>
+                                  <input type="checkbox" name="useWarehouseA" />
+                                  Almacén 1
+                                </label>
+                                <input required class="border rounded-md px-2 max-w-20" type="number" name="amountA" disabled />
+                            </div>
+                        
+                              <!-- Almacén B -->
+                            <div class="almacen flex gap-5">
+                                <label>
+                                  <input type="checkbox" name="useWarehouseB" />
+                                  Almacén 2
+                                </label>
+                                <input required class="max-w-20 px-2 border rounded-md" type="number" name="amountB" disabled />
+                            </div>
                         </span>
                     </div>
                     <div>
@@ -411,11 +418,7 @@ else {
                         </select>
                         </span>
                     </div>
-                    <div class="flex gap-2 items-center">
-                        <label for="new-amount">Cantidad: </label>
-                        
-                        <input name="newAmount" required id="new-amount" type="number" min="0" class="max-w-15 px-2 py-1 border rounded-md">
-                    </div>
+                   
                     
                 </div>
               
@@ -463,6 +466,7 @@ import { getIconElement } from 'astro/runtime/client/dev-toolbar/ui-library/icon
         e.preventDefault()
 
         const data = Object.fromEntries(new FormData(e.target as HTMLFormElement))
+        console.log(data)
 
         newProduct(data)
     })
@@ -498,4 +502,16 @@ import type { Product } from "@components/operationPage/OperationInfo.astro"
     productInfoDialog.addEventListener('close', ()=>{
         errorChangeProduct.innerText = ''
     })
+</script>
+
+
+<script>
+    document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+  checkbox.addEventListener("change", (e) => {
+    const inputCantidad = e.target.closest(".almacen").querySelector('input[type="number"]');
+    inputCantidad.disabled = !e.target.checked;
+    if (!e.target.checked) inputCantidad.value = "";
+  });
+});
+
 </script>
