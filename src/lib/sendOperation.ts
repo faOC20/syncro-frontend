@@ -10,6 +10,7 @@ const confirmProducts = document.getElementById('confirm-products') as HTMLDivEl
 const customerInfo = document.getElementById('customer-info') as HTMLDivElement
 const confirmTotal = document.getElementById('confirm-total') as HTMLDivElement
 const saveConfirmedInfoButton = document.getElementById('save-confirmed-info') as HTMLButtonElement
+const errorFormInfo = document.getElementById('error-form-info');
 
 let toSubmit = null
 
@@ -83,12 +84,14 @@ orderInput.addEventListener('input', (e)=>{
     setOrder(e.target?.value.trim())
 })
 
+
+const initial = document.getElementById('initial-label') as HTMLInputElement
+
 const handleCashea = (e)=>{
     e.preventDefault();
     // const form = document.getElementById('operation-form') as HTMLFormElement;
     isCashea = !isCashea;
     console.log(Number(isCashea));
-    const initial = document.getElementById('initial-label') as HTMLInputElement
     
     if(!isCashea){
     casheaModeButton.classList.add('opacity-30')
@@ -106,13 +109,38 @@ const handleCashea = (e)=>{
 
 let isSubmitting = false
 
+
+const inputsPayments = document.querySelectorAll('.payment-amount');
+const confirmPayments = document.querySelectorAll('.payment-confirm')
+
+
 const handleSubmit = async (e:any) => {
+
+    payments = []
+    inputsPayments.forEach((input)=>{
+        
+            input.removeAttribute('disabled')
+            input.value = ''
+        
+    })
+    confirmPayments.forEach((confirm)=>{
+        
+        confirm.classList.remove('hidden')
+        
+    })
+
+    paymentsCheckboxes.forEach((checkbox)=>{
+        
+            checkbox.removeAttribute('disabled')
+        
+    })
+
     e.preventDefault(); 
     if(isSubmitting) return
 
     isSubmitting = true
-
     const {dolar, cartProducts} = useProductsStore.getState()
+    
     // const confirmProducts = document.getElementById('confirm-products') as HTMLDivElement
     confirmProducts.innerHTML = ''
     
@@ -190,8 +218,8 @@ const handleSubmit = async (e:any) => {
         confirmTotal.innerHTML = `
         
         <div class = 'flex flex-col'>
-            <span class='font-medium text-theme-black'>${data.initial}$ × ${dolar.toFixed(2)}</span>
-            <span class='font-bold text-theme-light-blue'>${(parseFloat(data.initial)*dolar).toFixed(2)}Bs</span>
+            <span id='dolar-products' class='font-medium text-theme-black flex gap-1'><span>${data.initial}$</span>× ${dolar.toFixed(2)}</span>
+            <span id='bs-products' class='font-bold text-theme-light-blue'>${(parseFloat(data.initial)*dolar).toFixed(2)}Bs</span>
         </div>
     `
     }
@@ -200,8 +228,8 @@ const handleSubmit = async (e:any) => {
         confirmTotal.innerHTML = `
         
         <div class = 'flex flex-col'>
-            <span class='font-medium text-theme-black'>${data.total}$ × ${dolar.toFixed(2)}</span>
-            <span class='font-bold text-theme-light-blue'>${(parseFloat(data.total)*dolar).toFixed(2)}Bs</span>
+            <span id='dolar-products' class='font-medium text-theme-black flex gap-1'><span>${data.total}$</span>× ${dolar.toFixed(2)}</span>
+            <span id='bs-products' class='font-bold text-theme-light-blue'>${(parseFloat(data.total)*dolar).toFixed(2)}Bs</span>
         </div>
     `
     }
@@ -213,18 +241,45 @@ const handleSubmit = async (e:any) => {
     
 };
 
+
+
 saveConfirmedInfoButton.addEventListener('click', async()=>{
     saveConfirmedInfoButton.disabled = true
     const order = getOrder()
     
     if(order!=null && order!= ''){
         const data = getToSubmit()
-        if( data != null){
-            data.order = order
-            await newOperation(data)
+        if( data != null && payments.length>0){
+
+            const totalAmount = payments.reduce((acc, payment)=> acc + parseFloat(payment.paymentAmount), 0)
+            
+            
+            if (isCashea && (totalAmount < parseFloat(data.initial))){
+                errorFormInfo.innerText = 'el total de metodos de pago debe ser igual a la inicial'
+                console.log('el total de metodos de pago debe ser igual a la inicial')
+            }
+            
+
+            
+            else if (!isCashea && (totalAmount < parseFloat(data.total))){
+                errorFormInfo.innerText = 'el total de metodos de pago debe ser igual al total'
+                console.log('el total de metodos de pago debe ser igual al total')
+            }  
+            
+            else{
+                console.log('aja y aahor')
+                data.order = order
+                data.paymentMethod = payments
+                await newOperation(data)
+            }
+        }
+        else{
+            errorFormInfo.innerText = 'Debe tener al menos 1 método de pago'
+            console.log('Debe tener al menos 1 método de pago')
         }
     }
     else{
+        errorFormInfo.innerText = 'Inserte número de orden'
         console.log('la orden esta vacia')
     }
      
@@ -235,10 +290,10 @@ saveConfirmedInfoButton.addEventListener('click', async()=>{
 export const sendNewOperation = async () => {
     try{
         casheaModeButton.removeEventListener('click', handleCashea)
-    casheaModeButton.addEventListener('click', handleCashea)
+        casheaModeButton.addEventListener('click', handleCashea)
     
-    form?.removeEventListener("submit", handleSubmit);
-    form?.addEventListener("submit", handleSubmit)
+        form?.removeEventListener("submit", handleSubmit);
+        form?.addEventListener("submit", handleSubmit)
     }
 
     catch(e){
@@ -247,6 +302,78 @@ export const sendNewOperation = async () => {
     
 }
 
+let payments:{}[] = []
+
+const paymentsCheckboxes = document.querySelectorAll('.payment-method')
+
+
+
+
+
+if (paymentsCheckboxes){
+    paymentsCheckboxes.forEach((checkbox)=>{
+        const container = checkbox.closest('.payment-container'); // ancestro común
+        const inputPayment = container?.querySelector('.payment-amount'); 
+        const confirmPayment = container?.querySelector('.payment-confirm')
+        
+        confirmPayment?.addEventListener('click', (e)=>{
+            e.preventDefault()
+
+            const {dolar, cartProducts} = useProductsStore.getState()
+
+            if(inputPayment?.value == '0' || inputPayment?.value.trim() == ''){
+                console.log('digite la cantidad')
+                return
+            }
+
+            const productDolar = document.getElementById('dolar-products')
+            const productBs = document.getElementById('bs-products')
+
+            payments.push({
+                'paymentId': checkbox.id.split('-')[0].trim(),
+                'paymentAmount': inputPayment?.value
+            })
+
+            if (!isCashea){
+
+                const {total} = getToSubmit()
+
+                productDolar.innerText = `${ (total -  (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?(parseFloat(method.paymentAmount)):((parseFloat(method.paymentAmount))/dolar)),0))).toFixed(2)}x ${dolar}`
+
+                productBs.innerText = `${((parseFloat(total)*dolar) - (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?((parseFloat(method.paymentAmount))*dolar):(parseFloat(method.paymentAmount))),0))).toFixed(2)}bs`
+                
+
+            }
+
+            else{
+                const {initial} = getToSubmit()
+                productDolar.innerText = `${ (initial -  (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?(parseFloat(method.paymentAmount)):((parseFloat(method.paymentAmount))/dolar)),0))).toFixed(2)}x ${dolar}`
+
+                productBs.innerText = `${((parseFloat(initial)*dolar) - (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?((parseFloat(method.paymentAmount))*dolar):(parseFloat(method.paymentAmount))),0))).toFixed(2)}bs`
+            }
+            
+            
+
+            checkbox.setAttribute('disabled', '')
+            inputPayment?.setAttribute('disabled', '')
+            confirmPayment?.classList.add('hidden')
+            console.log(payments)
+            
+        })
+
+        checkbox.addEventListener('change', (e)=>{
+            if(e.target.checked){
+                
+                inputPayment.focus()
+                inputPayment?.removeAttribute('disabled')
+            }
+            else{
+                inputPayment.value = ''
+                inputPayment?.setAttribute('disabled', '')
+            }
+        })
+    })
+}
 
 
 

@@ -5,6 +5,7 @@ import { Image } from "astro:assets"
 // import CasheaLogo from "../icons/cashea-logo.avif"
 import {AddProduct} from "./AddProduct"
 import { TotalInput } from "./TotalInput"
+import { PAYMENTS_METHODS } from "@lib/constants/paymentMethods"
 
 interface Props{
   products: [any]
@@ -21,7 +22,7 @@ const {products} = Astro.props
       
       <Bookmark>
           Nueva operación
-          <button id="cashea-mode" class="size-10 rounded-md overflow-hidden cursor-pointer shadow">
+          <button type="button" id="cashea-mode" class="size-10 rounded-md overflow-hidden cursor-pointer shadow">
               
                 <img src='/cashea-logo.avif' alt="logo de cashea">
               
@@ -116,14 +117,39 @@ const {products} = Astro.props
                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
                 >
               </div>
+              <div>
+                <label for="metodo" class="block text-sm font-medium  mb-5">Método de pago</label>
+
+                <div class="flex justify-between gap-y-8 flex-wrap">
+                  {
+                    PAYMENTS_METHODS.map(({id, payment_method_name, icon: Icon})=>(
+                      <div class="payment-container max-w-40 grid grid-cols-3 gap-1 text-xs items-center justify-between">
+                        <div class="col-span-2 flex justify-center gap-2">
+                          <input class="payment-method" type="checkbox" id={`${id}-${payment_method_name}`}>
+                          <div class="size-12 text-theme-ocean-blue">
+                              <Icon/>
+                          </div>
+                          
+                        </div>
+                        
+                        
+                        <input disabled class="payment-amount border border-gray-500 rounded-md py-1 px-2" type="number">
+
+                        <button type="button" class="payment-confirm border rounded-md cursor-pointer mt-1 px-2 py-1 col-span-3 justify-center">añadir</button>
+                      </div>
+                    ))
+                  }
+                </div>
+    
+            </div>
               
               
           </div>
 
           <div class="flex justify-end space-x-3 mt-6">
               <button 
-                  type="button" 
                   onclick="document.getElementById('check-info').close()"
+                  type="button" 
                   class="px-4 py-2  rounded-md border hover:bg-gray-50"
               >
                   Cancelar
@@ -181,23 +207,7 @@ const {products} = Astro.props
       </div>
     
       <div class="grid grid-cols-1 grow xl:grid-cols-2 gap-4">
-        <div>
-          <label for="metodo" class="block text-sm font-medium  mb-1">Método de pago</label>
-          <select 
-            required
-            id="metodo" 
-            name="paymentMethod"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
-          >
-            <option value="" selected disabled>Seleccione...</option>
-            <option value="1">Transferencia</option>
-            <option value="2">Efectivo (bs)</option>
-            <option value="3">Efectivo (divisas)</option>
-            <option value="4">Tarjeta</option>
-            <option value="5">Pago Móvil</option>
-            <option value="6">Zelle</option>
-          </select>
-        </div>
+        
         
         <div>
           <label for="fecha" class="block text-sm font-medium  mb-1">Fecha</label>
@@ -249,26 +259,27 @@ const {products} = Astro.props
   fechaInput.addEventListener('click', ()=>{
     fechaInput.showPicker()
   })
+
  
 </script>
 
 
-<!-- <script>
+{/* <!-- <script>
   
   let total = 0
   const totalInput = document.getElementById('total') as HTMLInputElement;
   setInterval(() => {
     const {cartProducts} = useProductsStore.getState()
     if (cartProducts && cartProducts.length > 0){
-    total = cartProducts.reduce((iteration, product)=>iteration+parseFloat(product.salePrice), 0)
+   
     totalInput.value = total.toString()
   }
   }, 1000);
 
-</script> -->
-  
-</script>
+</script> --> */}
 
+
+  
 
 <style>
   /* Ocultar flechas para inputs de tipo number */

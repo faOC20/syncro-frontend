@@ -67,12 +67,20 @@ export const AddProduct = ({products})=>{
 
     const addTags = async()=>{
 
-        const data = {
+        if( amountA == 0 && amountB == 0){
+            setErrorMesage('introduce cantidad')
+            return
+        }
+
+        let data = {}
+
+        const totalAmount = {};
+            if (amountA) totalAmount.amountA = amountA;
+            if (amountB) totalAmount.amountB = amountB;
+
+        data = {
             code: selectedTag.code_product,
-            totalAmount: {
-                amountA: amountA,
-                amountB: amountB
-            }
+            totalAmount: totalAmount
         }
 
         const result = await stockCheck(data)
@@ -89,8 +97,10 @@ export const AddProduct = ({products})=>{
             const deletedProduct = allProducts.splice(productIndex,1)[0]
             deletedProduct.quantity = parseInt(amountA) + parseInt(amountB)
             const stockUpdater = {};
-            if (amountA !== 0) stockUpdater.amountA = amountA;
-            if (amountB !== 0) stockUpdater.amountB = amountB;
+            if (amountA) stockUpdater.amountA = amountA;
+            if (amountB) stockUpdater.amountB = amountB;
+
+            console.log(stockUpdater)
             
             deletedProduct.stockUpdate = stockUpdater
             deletedProduct.serial = serial
@@ -161,7 +171,12 @@ export const AddProduct = ({products})=>{
                 <form onSubmit={(e)=>{
                                 e.preventDefault()
                                 addTags()
-                            }} className='p-6 flex flex-col gap-4 w-md'>
+                            }}  onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  console.log('¡Enter fue presionado!');
+                                }
+                              }} className='p-6 flex flex-col gap-4 w-md'>
+                                
                     <h2 className='text-xl font-medium text-theme-ocean-blue'>Detalles del producto</h2>
 
                     <div className='flex flex-col gap-1'>
@@ -193,12 +208,12 @@ export const AddProduct = ({products})=>{
                                                 
                                                 infoWarehouse.disableFunction(!e.target.checked)
                                                 if (!e.target.checked) {
-                                                    infoWarehouse.changeAmountFunction(0); // Reinicia a 0 si se desmarca
+                                                    infoWarehouse.changeAmountFunction(''); // Reinicia a 0 si se desmarca
                                                 }
                                                 
-                                            }} type="checkbox" name="" id="" />
+                                            }} type="checkbox"/>
                                             </label>
-                                            <input value={infoWarehouse.nameWarehouse === "almacen 1" ? amountA : amountB} onChange={(e)=>{
+                                            <input defaultValue="" onChange={(e)=>{
                                                 infoWarehouse.changeAmountFunction(e.target.value)
                                             }}required id="change-amount-a" className="border rounded-md px-2 max-w-20" type="number" disabled={infoWarehouse.nameWarehouse === "almacen 1" ? disabled : disabledB}/>
                                             
@@ -241,8 +256,9 @@ export const AddProduct = ({products})=>{
                    </span>
                     
                     <div className='flex justify-end gap-3 mt-2'>
-                        <button 
-                            onClick={() => {
+                        <button type='button'
+                            onClick={(e) => {
+                                e.preventDefault()
                                 setIsOpen(false)
                                 setErrorMesage('')
                                 setDisabled(true)
