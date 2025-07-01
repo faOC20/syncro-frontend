@@ -246,12 +246,12 @@ const handleSubmit = async (e:any) => {
         
         <div class = 'flex flex-col gap-1 items-end'>
             <span id='bs-products' class='text-4xl font-bold text-theme-light-blue text-end'>
-                ${(parseFloat(data.initial)*dolar).toFixed(2)} Bs
+                ${new Intl.NumberFormat('de-DE').format(parseFloat((parseFloat(data.initial) * dolar).toFixed(2)))} Bs
             </span>
             
             <span id='dolar-products' class='text-2xl font-bold text-gray-700 flex justify-end gap-1'>
                 <span>
-                    ${data.initial} $
+                    ${new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(parseFloat(data.initial))} $
                 </span>
             </span>
            
@@ -264,13 +264,13 @@ const handleSubmit = async (e:any) => {
         
         <div class = 'flex flex-col gap-1 justify-end'>
             <span id='bs-products' class='text-4xl font-bold text-end text-theme-light-blue'>
-                ${(parseFloat(data.total)*dolar).toFixed(2)} Bs
+            ${new Intl.NumberFormat('de-DE').format(parseFloat((parseFloat(data.total) * dolar).toFixed(2)))} Bs
             </span>
 
             <span id='dolar-products' class='text-2xl font-bold text-gray-700 flex justify-end gap-1'>
             
                 <span>
-                    ${data.total} $
+                    ${new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(parseFloat(data.total))} $
                 </span>
             
             </span>
@@ -398,18 +398,58 @@ if (paymentsCheckboxes){
 
                 const {total} = getToSubmit()
 
-                productDolar.innerText = `${ (total -  (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?(parseFloat(method.paymentAmount)):((parseFloat(method.paymentAmount))/dolar)),0))).toFixed(2)} $`
+                productDolar.innerText = `${new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+                    parseFloat(
+                      (total - payments.reduce((acc, method) =>
+                        acc + (
+                          method.paymentId == '3' || method.paymentId == '6'
+                            ? parseFloat(method.paymentAmount)
+                            : parseFloat(method.paymentAmount) / dolar
+                        ), 0)
+                    ).toFixed(2)
+                  ))} $`;
+                  
 
-                productBs.innerText = `${((parseFloat(total)*dolar) - (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?((parseFloat(method.paymentAmount))*dolar):(parseFloat(method.paymentAmount))),0))).toFixed(2)} bs`
+                  productBs.innerText = `${new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+                    parseFloat(
+                      ((parseFloat(total) * dolar) - payments.reduce((acc, method) =>
+                        acc + (
+                          method.paymentId == '3' || method.paymentId == '6'
+                            ? parseFloat(method.paymentAmount) * dolar
+                            : parseFloat(method.paymentAmount)
+                        ), 0)
+                    ).toFixed(2)
+                  ))} Bs`;
+                  
                 
 
             }
 
             else{
                 const {initial} = getToSubmit()
-                productDolar.innerText = `${ (initial -  (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?(parseFloat(method.paymentAmount)):((parseFloat(method.paymentAmount))/dolar)),0))).toFixed(2)} $`
+                productDolar.innerText = `${new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+                    parseFloat(
+                      (initial - payments.reduce((acc, method) =>
+                        acc + (
+                          method.paymentId === '3' || method.paymentId === '6'
+                            ? parseFloat(method.paymentAmount)
+                            : parseFloat(method.paymentAmount) / dolar
+                        ), 0)
+                    ).toFixed(2)
+                  ))} $`;
+                  
 
-                productBs.innerText = `${((parseFloat(initial)*dolar) - (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?((parseFloat(method.paymentAmount))*dolar):(parseFloat(method.paymentAmount))),0))).toFixed(2)} bs`
+                  productBs.innerText = `${new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
+                    parseFloat(
+                      ((parseFloat(initial) * dolar) - payments.reduce((acc, method) =>
+                        acc + (
+                          method.paymentId === '3' || method.paymentId === '6'
+                            ? parseFloat(method.paymentAmount) * dolar
+                            : parseFloat(method.paymentAmount)
+                        ), 0)
+                    ).toFixed(2)
+                  ))} Bs`;
+                  
             }
             
             
