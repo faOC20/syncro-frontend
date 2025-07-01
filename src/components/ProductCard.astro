@@ -9,14 +9,25 @@ import Ventana from '@icons/ventana.svg'
 import Washer from '@icons/washer.svg'
 import type { Product } from "./operationPage/OperationInfo.astro"
 import Varios from '@icons/varios.svg'
+import Tv from '@icons/tv.svg'
+import Colchones from '@icons/colchon.svg'
+import Laptop from '@icons/laptop.svg'
+import Nevera from '@icons/nevera.svg'
 
 
 const ProductImg = {
     'AA split': Split,
     'AA de ventana': Ventana,
     'Cocinas':Kitchen,
-    'Refrigeradores':Freezer,
+    'Refrigeradores': Nevera,
     'Lavadoras': Washer,
+    'Muebleria': Bed,
+    'Audio': Speaker,
+    'Linea menor': Varios,
+    'Televisores': Tv,
+    'Colchones': Colchones,
+    'Computacion': Laptop,
+    'Congeladores': Freezer
 }
 
 interface Props {
@@ -29,7 +40,7 @@ const ProductImgComponent = ProductImg[product.name_category]
 ---
 
 <button data-product={JSON.stringify(product)} class="product-card h-fit max-w-50 min-w-50 border-3 border-[#E0E0E0] px-3 pt-5 pb-3 shadow-md flex flex-col gap-3 rounded-lg text-sm cursor-pointer">
-    <div class="w-2/3 h-20 self-center  bg-theme-light-blue flex justify-center items-center rounded-lg">
+    <div class="w-2/3 h-20 self-center p-2  bg-theme-light-blue flex justify-center items-center rounded-lg">
         <div class="size-full text-white">
             {
                 ProductImgComponent?(

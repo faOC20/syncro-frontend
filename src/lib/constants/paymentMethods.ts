@@ -7,10 +7,9 @@ import Zelle from '@icons/paymentMethods/zelle.svg'
 
 export const PAYMENTS_METHODS  = [
     {
-        id:'1',
-        payment_method_name: 'transferencia',
-        icon: Transferencia
-        
+        id:'4',
+        payment_method_name: 'tarjeta',
+        icon: PuntoVenta
         
     },
     {
@@ -28,18 +27,23 @@ export const PAYMENTS_METHODS  = [
         
     },
     {
-        id:'4',
-        payment_method_name: 'tarjeta',
-        icon: PuntoVenta
-        
-    },
-    {
         id:'5',
         payment_method_name: 'pago-movil',
         icon: PagoMovil
         
         
     },
+    {
+        id:'1',
+        payment_method_name: 'transferencia',
+        icon: Transferencia
+        
+        
+    },
+    
+    
+    
+   
     {
         id:'6',
         payment_method_name: 'zelle',

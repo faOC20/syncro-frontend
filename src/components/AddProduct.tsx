@@ -1,7 +1,7 @@
 
 // import { selectProductsHandler } from '@lib/selectProductsHandler.ts'
 import { sendNewOperation } from '@lib/sendOperation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useProductsStore } from 'src/stores/productsStore'
 import Dialog from '@mui/material/Dialog';
 import { stockCheck } from '@lib/stockCheck';
@@ -198,17 +198,17 @@ export const AddProduct = ({products})=>{
                                 <label className='text-theme-black font-bold'>Cantidad</label>
                                 
                             </div>
-                            <span id="add-product" className=" flex flex-col gap-3">
+                            <span id="add-product" className=" flex flex-col gap-2">
                                 {
                                     infoWarehouses?.map(infoWarehouse => (
                                         <div className="flex gap-3">
-                                            <label className='flex gap-2 items-center'>
+                                            <label className='flex gap-2 items-center border px-2 py-1 border-gray-200 bg-gray-100 rounded-md cursor-pointer hover:bg-gray-200'>
                                                 {infoWarehouse.nameWarehouse}
                                             <input onChange={(e)=>{
                                                 
                                                 infoWarehouse.disableFunction(!e.target.checked)
                                                 if (!e.target.checked) {
-                                                    infoWarehouse.changeAmountFunction(''); // Reinicia a 0 si se desmarca
+                                                    infoWarehouse.changeAmountFunction(0); // Reinicia a 0 si se desmarca
                                                 }
                                                 
                                             }} type="checkbox"/>
@@ -226,7 +226,7 @@ export const AddProduct = ({products})=>{
                             </span>
                         </div>
 
-                    <div className='flex flex-col gap-2'>
+                    <div className='flex flex-col gap-2 mt-5'>
                         <label htmlFor="price" className="text-sm font-medium">Precio de venta (por unidad)</label>
                         <input 
                             step="any"
@@ -239,17 +239,6 @@ export const AddProduct = ({products})=>{
                         />
                     </div>
                     
-                    {/* <div className='flex flex-col gap-2'>
-                        <label htmlFor="serial" className="text-sm font-medium">Número de Serie</label>
-                        <input 
-                            required
-                            onChange={(e)=>{setSerial(e.target.value)}}
-                            type="text" 
-                            id="serial" 
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
-                            placeholder="Ingrese el número de serie"
-                        />
-                    </div> */}
 
                    <span className='w-full h-5 text-red-600'>
                         {errorMessage}

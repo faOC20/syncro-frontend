@@ -4,19 +4,30 @@ import { newOperation } from "./newOperation";
 import { useProductsStore } from "src/stores/productsStore";
 
 
-const confirmDialog = document.getElementById('check-info') as HTMLDialogElement
+const confirmSection = document.getElementById('check-info') as HTMLDivElement
 const dialog = document.getElementById('additional-info-dialog') as HTMLDialogElement;
-const confirmProducts = document.getElementById('confirm-products') as HTMLDivElement
+const confirmProducts = document.getElementById('confirmProducts') as HTMLTableElement
 const customerInfo = document.getElementById('customer-info') as HTMLDivElement
 const confirmTotal = document.getElementById('confirm-total') as HTMLDivElement
 const saveConfirmedInfoButton = document.getElementById('save-confirmed-info') as HTMLButtonElement
 const errorFormInfo = document.getElementById('error-form-info');
+
+const cancelConfirm = document.getElementById('cancel-confirm') as HTMLButtonElement
+
+
 
 let toSubmit = null
 
 const getToSubmit = ()=>{
     return toSubmit
 }
+
+cancelConfirm.addEventListener('click', ()=>{
+    confirmSection.classList.add('hidden')
+    form.classList.remove('hidden')
+
+
+})
 
 const setToSubmit = (data)=>{
     toSubmit = data
@@ -47,14 +58,15 @@ const saveAditionalInfo = (data) => {
         const customerData = isChecked.data
         
         customerInfo.innerHTML = `
-            <b class='text-sm text-theme-light-blue'>
-                ${customerData.name}
-            </b>
-            <span class = 'text-sm'>
-                ${customerData.dni}
-            </span>
-        `
-        confirmDialog.showModal();
+       <span>
+           <span class='text-gray-500'>Cliente: </span>${customerData.name}
+        </span>
+        <span>
+            <span class='text-gray-500'>Cédula: </span> ${customerData.dni}
+        </span>
+    `
+        confirmSection.classList.remove('hidden');
+        form.classList.add('hidden')
     }
       
     };
@@ -115,11 +127,17 @@ const confirmPayments = document.querySelectorAll('.payment-confirm')
 
 
 const handleSubmit = async (e:any) => {
-
+    
+    e.preventDefault(); 
+    console.log('a')
+    
+    if(isSubmitting) return
+    isSubmitting = true
     payments = []
+    console.log('a')
     inputsPayments.forEach((input)=>{
         
-            input.removeAttribute('disabled')
+            input.setAttribute('disabled', '')
             input.value = ''
         
     })
@@ -132,16 +150,23 @@ const handleSubmit = async (e:any) => {
     paymentsCheckboxes.forEach((checkbox)=>{
         
             checkbox.removeAttribute('disabled')
+            checkbox.checked = false;
+
         
     })
 
-    e.preventDefault(); 
-    if(isSubmitting) return
-
-    isSubmitting = true
-    const {dolar, cartProducts} = useProductsStore.getState()
     
-    // const confirmProducts = document.getElementById('confirm-products') as HTMLDivElement
+   
+
+   
+    const {dolar, cartProducts} = useProductsStore.getState()
+
+    if (cartProducts.length < 1){
+        
+        isSubmitting = false
+        return
+    }
+    
     confirmProducts.innerHTML = ''
     
 
@@ -180,46 +205,56 @@ const handleSubmit = async (e:any) => {
     
     
     else{
+        console.log('ALOOOO')
         const customerData = isCustomer.data
         console.log(customerInfo)
-        confirmDialog.showModal();
+        confirmSection.classList.remove('hidden');
+        form.classList.add('hidden')
 
     customerInfo.innerHTML = `
-        <b class='text-sm text-theme-light-blue'>
-            ${customerData.name}
-        </b>
-        <span class = 'text-sm'>
-            ${customerData.dni}
+        <span>
+           <span class='text-gray-500'>Cliente: </span>${customerData.name}
+        </span>
+        <span>
+            <span class='text-gray-500'>Cédula: </span> ${customerData.dni}
         </span>
     `
     }
     
-    console.log(cartProducts.length)
     cartProducts.forEach(product => {
-        
-        const productContainer = document.createElement('div')
-        productContainer.innerHTML = `
-            <div class = 'flex flex-col text-sm border-b gap-2 pb-3'>
-                <b class='text-theme-light-blue '>
-                    ${product.name_product}
-                </b>
-                <span class=''>
-                    cantidad: ${product.quantity}
-                </span>
-                <span>
-                    precio de venta por unidad: ${product.salePrice}
-                </span>
-            </div>
-        `      
-        confirmProducts.appendChild(productContainer)
-    });
+        const row = document.createElement('tr');
+        row.className = 'border border-gray-100';
+      
+        row.innerHTML = `
+          <td class="text-theme-light-blue text-start p-1 font-bold">
+            ${product.name_product}
+          </td>
+          <td class='p-1 text-center'>
+            ${product.quantity}
+          </td>
+          <td class='p-1 text-end'>
+            ${product.salePrice}
+          </td>
+        `;
+      
+        confirmProducts.appendChild(row);
+      });
+      
 
     if (isCashea){
         confirmTotal.innerHTML = `
         
-        <div class = 'flex flex-col'>
-            <span id='dolar-products' class='font-medium text-theme-black flex gap-1'><span>${data.initial}$</span>× ${dolar.toFixed(2)}</span>
-            <span id='bs-products' class='font-bold text-theme-light-blue'>${(parseFloat(data.initial)*dolar).toFixed(2)}Bs</span>
+        <div class = 'flex flex-col gap-1 items-end'>
+            <span id='bs-products' class='text-4xl font-bold text-theme-light-blue text-end'>
+                ${(parseFloat(data.initial)*dolar).toFixed(2)} Bs
+            </span>
+            
+            <span id='dolar-products' class='text-2xl font-bold text-gray-700 flex justify-end gap-1'>
+                <span>
+                    ${data.initial} $
+                </span>
+            </span>
+           
         </div>
     `
     }
@@ -227,9 +262,19 @@ const handleSubmit = async (e:any) => {
     else{
         confirmTotal.innerHTML = `
         
-        <div class = 'flex flex-col'>
-            <span id='dolar-products' class='font-medium text-theme-black flex gap-1'><span>${data.total}$</span>× ${dolar.toFixed(2)}</span>
-            <span id='bs-products' class='font-bold text-theme-light-blue'>${(parseFloat(data.total)*dolar).toFixed(2)}Bs</span>
+        <div class = 'flex flex-col gap-1 justify-end'>
+            <span id='bs-products' class='text-4xl font-bold text-end text-theme-light-blue'>
+                ${(parseFloat(data.total)*dolar).toFixed(2)} Bs
+            </span>
+
+            <span id='dolar-products' class='text-2xl font-bold text-gray-700 flex justify-end gap-1'>
+            
+                <span>
+                    ${data.total} $
+                </span>
+            
+            </span>
+            
         </div>
     `
     }
@@ -313,15 +358,30 @@ const paymentsCheckboxes = document.querySelectorAll('.payment-method')
 if (paymentsCheckboxes){
     paymentsCheckboxes.forEach((checkbox)=>{
         const container = checkbox.closest('.payment-container'); // ancestro común
-        const inputPayment = container?.querySelector('.payment-amount'); 
-        const confirmPayment = container?.querySelector('.payment-confirm')
+        const inputPayment = container?.querySelector('.payment-amount') as HTMLInputElement; 
+        // const confirmPayment = container?.querySelector('.payment-confirm')
+
+        checkbox.addEventListener('change', (e)=>{
+            if(e.target.checked){
+                inputPayment.removeAttribute('disabled')
+                inputPayment.focus()
+               
+            }
+            else{
+                inputPayment.value = ''
+                inputPayment.setAttribute('disabled', '')
+            }
+        })
+
+
         
-        confirmPayment?.addEventListener('click', (e)=>{
-            e.preventDefault()
+        inputPayment?.addEventListener('keydown', (e)=>{
+            
+            if (e.key == 'Enter'){
+                
+            const {dolar} = useProductsStore.getState()
 
-            const {dolar, cartProducts} = useProductsStore.getState()
-
-            if(inputPayment?.value == '0' || inputPayment?.value.trim() == ''){
+            if(e.target.value == '0' || e.target?.value.trim() == ''){
                 console.log('digite la cantidad')
                 return
             }
@@ -338,18 +398,18 @@ if (paymentsCheckboxes){
 
                 const {total} = getToSubmit()
 
-                productDolar.innerText = `${ (total -  (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?(parseFloat(method.paymentAmount)):((parseFloat(method.paymentAmount))/dolar)),0))).toFixed(2)}x ${dolar}`
+                productDolar.innerText = `${ (total -  (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?(parseFloat(method.paymentAmount)):((parseFloat(method.paymentAmount))/dolar)),0))).toFixed(2)} $`
 
-                productBs.innerText = `${((parseFloat(total)*dolar) - (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?((parseFloat(method.paymentAmount))*dolar):(parseFloat(method.paymentAmount))),0))).toFixed(2)}bs`
+                productBs.innerText = `${((parseFloat(total)*dolar) - (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?((parseFloat(method.paymentAmount))*dolar):(parseFloat(method.paymentAmount))),0))).toFixed(2)} bs`
                 
 
             }
 
             else{
                 const {initial} = getToSubmit()
-                productDolar.innerText = `${ (initial -  (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?(parseFloat(method.paymentAmount)):((parseFloat(method.paymentAmount))/dolar)),0))).toFixed(2)}x ${dolar}`
+                productDolar.innerText = `${ (initial -  (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?(parseFloat(method.paymentAmount)):((parseFloat(method.paymentAmount))/dolar)),0))).toFixed(2)} $`
 
-                productBs.innerText = `${((parseFloat(initial)*dolar) - (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?((parseFloat(method.paymentAmount))*dolar):(parseFloat(method.paymentAmount))),0))).toFixed(2)}bs`
+                productBs.innerText = `${((parseFloat(initial)*dolar) - (payments.reduce((acc, method)=>acc+(method.paymentId=='3' || method.paymentId=='6'?((parseFloat(method.paymentAmount))*dolar):(parseFloat(method.paymentAmount))),0))).toFixed(2)} bs`
             }
             
             
@@ -358,20 +418,12 @@ if (paymentsCheckboxes){
             inputPayment?.setAttribute('disabled', '')
             confirmPayment?.classList.add('hidden')
             console.log(payments)
+            }
+            
             
         })
 
-        checkbox.addEventListener('change', (e)=>{
-            if(e.target.checked){
-                
-                inputPayment.focus()
-                inputPayment?.removeAttribute('disabled')
-            }
-            else{
-                inputPayment.value = ''
-                inputPayment?.setAttribute('disabled', '')
-            }
-        })
+        
     })
 }
 

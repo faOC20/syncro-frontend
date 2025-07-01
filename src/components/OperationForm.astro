@@ -14,9 +14,107 @@ interface Props{
 const {products} = Astro.props
 ---
 
-<Sections style="w-full h-full">
+<Sections style="w-full h-full relative">
+  <div id="check-info" class="hidden rounded-lg h-full w-full  bg-white z-200">
+    <Bookmark>
+        Confirmar Operación
+    </Bookmark>
+
+    <span id="error-form-info" class="flex items-center mb-3 h-3 w-full text-red-600">
     
-    <form id="operation-form" class="relative flex flex-col h-full gap-4">
+    </span>
+
+    <div class="flex flex-col gap-2">
+      <div class="flex justify-between">
+        <div   
+              id="customer-info" 
+              class="bg-gray-100 rounded-md border border-gray-200 flex flex-col gap-2 text-lg font-black text-gray-700 mb-2 py-2 pl-2  w-2/3"
+          >
+            
+        </div>
+        <div>
+          
+          <div id="confirm-total" class="block font-black">
+            
+          </div>
+      </div>
+      </div>
+        
+
+        <div class="min-h-32 max-h-32 overflow-y-auto">
+          <table class="w-full text-sm p-2 border border-gray-100">
+            <thead>
+              <tr>
+                <th class="text-start p-1 bg-gray-100">Producto</th>
+                <th class="text-center p-1 bg-gray-100">Cantidad</th>
+                <th class="text-end p-1 bg-gray-100">Precio Unidad</th>
+              </tr>
+            </thead>
+            <tbody id="confirmProducts"></tbody>
+          </table>
+          
+        </div>
+
+        
+        <div class="flex flex-col items-end justify-center">
+          
+
+          <div class="flex gap-4 flex-wrap">
+            {
+              PAYMENTS_METHODS.map(({id, payment_method_name, icon: Icon})=>(
+                <div class="payment-container flex gap-3 text-xs pr-2 items-center rounded-md border border-gray-200 overflow-hidden">
+                  <label class="flex justify-center gap-1 cursor-pointer p-2 border hover:bg-gray-200 bg-gray-100 border-gray-200">
+                    <input class="payment-method" type="checkbox" id={`${id}-${payment_method_name}`}>
+                    <div class="size-14 text-theme-ocean-blue">
+                        <Icon/>
+                    </div>
+                    
+                  </label>
+                  
+                  
+                  <input class="payment-amount border border-gray-500 rounded-md py-1 px-2 w-20" type="number">
+
+                </div>
+              ))
+            }
+          </div>
+          
+          <div>
+          
+          
+            <input 
+            placeholder="Número de orden"
+            type="number" 
+            id="orden_number" 
+            class="w-full self-end px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
+          >
+          
+        </div>
+      </div>
+        
+        
+    </div>
+
+    <div class="flex justify-end space-x-3 mt-6">
+        <button 
+            id="cancel-confirm"
+            onclick="document.getElementById('check-info').classList.add('hidden')"
+            type="button" 
+            class="px-4 py-2  rounded-md border hover:bg-gray-50"
+        >
+            Cancelar
+        </button>
+        <button 
+            id="save-confirmed-info"
+            type="button" 
+            class="px-4 py-2 bg-theme-ocean-blue text-white rounded-md hover:bg-opacity-90"
+        >
+            Confirmar
+        </button>
+    </div>
+</div>
+    
+    <form id="operation-form" class="flex flex-col w-full h-full gap-4">
 
       <!-- <div class="absolute top-0 left-0 z-[-10] h-full w-full rotate-180 transform bg-[radial-gradient(100%_120%_at_80%_50%,hsla(0,0%,0%,0)_0,rgba(0,85,179,.1)_100%)]"></div> -->
       
@@ -78,91 +176,7 @@ const {products} = Astro.props
         </dialog>
 
 
-        <dialog id="check-info" class="rounded-lg shadow-xl w-full max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">¿Está seguro de confirmar la orden?</h3>
-
-          <span id="error-form-info" class="flex items-center mb-3 h-3 w-full text-red-600">
-          
-          </span>
-
-          <div class="flex flex-col gap-5">
-            <div>
-              <label for="customer-info" class="block text-md font-medium underline underline-offset-4 mb-2">Cliente</label>
-              <div  
-                    id="customer-info" 
-                    class="flex mb-4 gap-3"
-                >
-
-              </div>
-            </div>
-              <div>
-                <label for="confirm-total" class="block text-md font-medium underline underline-offset-4 mb-2">Monto total</label>
-                <div id="confirm-total" class="text-md">
-
-                </div>
-            </div>
-
-              <div>
-                  <label for="confirm-products" class="block text-md font-medium underline underline-offset-4 mb-2">Productos</label>
-                  <div id="confirm-products" class="flex flex-col gap-2">
-
-                  </div>
-              </div>
-
-              <div>
-                <label for="orden_number" class="block text-sm font-medium  mb-1">Número de orden</label>
-                <input 
-                  type="number" 
-                  id="orden_number" 
-                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-theme-ocean-blue"
-                >
-              </div>
-              <div>
-                <label for="metodo" class="block text-sm font-medium  mb-5">Método de pago</label>
-
-                <div class="flex justify-between gap-y-8 flex-wrap">
-                  {
-                    PAYMENTS_METHODS.map(({id, payment_method_name, icon: Icon})=>(
-                      <div class="payment-container max-w-40 grid grid-cols-3 gap-1 text-xs items-center justify-between">
-                        <div class="col-span-2 flex justify-center gap-2">
-                          <input class="payment-method" type="checkbox" id={`${id}-${payment_method_name}`}>
-                          <div class="size-12 text-theme-ocean-blue">
-                              <Icon/>
-                          </div>
-                          
-                        </div>
-                        
-                        
-                        <input disabled class="payment-amount border border-gray-500 rounded-md py-1 px-2" type="number">
-
-                        <button type="button" class="payment-confirm border rounded-md cursor-pointer mt-1 px-2 py-1 col-span-3 justify-center">añadir</button>
-                      </div>
-                    ))
-                  }
-                </div>
-    
-            </div>
-              
-              
-          </div>
-
-          <div class="flex justify-end space-x-3 mt-6">
-              <button 
-                  onclick="document.getElementById('check-info').close()"
-                  type="button" 
-                  class="px-4 py-2  rounded-md border hover:bg-gray-50"
-              >
-                  Cancelar
-              </button>
-              <button 
-                  id="save-confirmed-info"
-                  type="button" 
-                  class="px-4 py-2 bg-theme-ocean-blue text-white rounded-md hover:bg-opacity-90"
-              >
-                  Confirmar
-              </button>
-          </div>
-      </dialog>
+      
     
        
       
