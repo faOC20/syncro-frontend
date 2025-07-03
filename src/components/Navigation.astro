@@ -5,6 +5,7 @@ import SummaryIcon from '@icons/summary.svg'
 import HomeIcon from '@icons/home.svg'
 import { Image } from 'astro:assets'
 import LogOutIcon from '@icons/logout.svg'
+import CashoutIcon from '@icons/cashout.svg'
 
 const currentYear = new Date().getFullYear();
 ---
@@ -71,6 +72,16 @@ const currentYear = new Date().getFullYear();
                         De contado
                     </a>
                 </li>
+            </li>
+
+            <li>
+                
+                <a  class="flex items-center gap-2" href="/cashout">
+                    <div class="size-8">
+                        <CashoutIcon/>
+                    </div>
+                    Cierre de caja
+                </a>
             </li>
 
             <li>

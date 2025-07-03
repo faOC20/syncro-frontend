@@ -1,0 +1,72 @@
+---
+import Bookmark from "@components/decoration/Bookmark.astro";
+import Layout from "@layouts/Layout.astro";
+import Sections from "@layouts/Sections.astro";
+import ReactVirtualizedTable from '@components/OperationsTable';
+import {PaymentsTable} from '@components/cashoutPage/PaymentsTable'
+import DonutChart from "@components/cashoutPage/Statistics";
+import {DateSelected} from "@components/cashoutPage/DateSelected"
+
+
+---
+<Layout style="">
+    <div class="cashout-page-container w-full h-full mt-8 mx-[3rem] gap-[3rem]">
+        <div id="payments">
+            <Sections style="h-full">
+                <Bookmark>
+                    Cierre del día
+                    <DateSelected client:visible/>
+                </Bookmark>
+    
+                <div class="flex items-center w-full h-full">
+                    <PaymentsTable client:visible/>
+                </div>
+    
+            </Sections> 
+        </div>
+
+        <div id="grafos">
+            <Sections style="h-full">
+                <div class="w-full h-full">
+                    <DonutChart client:visible/>
+                </div>
+            </Sections>
+        </div>
+
+        <div id="orders">
+            <ReactVirtualizedTable client:visible/>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .cashout-page-container{
+        display: grid;
+        grid-template-areas: 
+        "payments payments grafo"
+        "operations operations operations"
+        "operations operations operations"
+        ;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 18rem 18rem auto;
+    }
+
+    #payments{
+        width: 100%;
+        height: 100%;
+        grid-area: payments;
+    }
+
+    #grafos{
+        width: 100%;
+        height: 100%;
+        grid-area: grafo;
+    }
+
+    #orders{
+        width: 100%;
+        height: 100%;
+        grid-area: operations;
+    }
+
+</style>

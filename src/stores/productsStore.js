@@ -11,3 +11,4 @@ export const useProductsStore = create((set) => ({
         set({dolar:price})
     }
 }))
+

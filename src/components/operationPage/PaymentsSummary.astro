@@ -1,0 +1,58 @@
+---
+import Bookmark from "@components/decoration/Bookmark.astro";
+import Sections from "@layouts/Sections.astro";
+import { BACK_API } from "astro:env/client";
+import { date } from "astro:schema";
+
+interface Props {
+    id: any  
+    cookie: any
+}
+
+const {id, cookie} = Astro.props
+
+const response = await fetch(`${BACK_API}/api/payments`, {
+    method: 'POST',
+    headers: {
+        'Content-Type':'application/json',
+        Cookie: cookie
+    },
+    body: JSON.stringify(id)
+})
+
+const json = await response.json()
+
+if (json.status == 'failed'){
+    return Astro.redirect('/')
+}
+
+const {data} = json
+
+console.log(data)
+---
+
+{
+    data?(
+    <Sections style="max-h-fit">
+    <Bookmark>
+        Forma de pago
+    </Bookmark>
+    <div class="mt-5 flex flex-col gap-3">
+        {
+            data.map((payment)=>(
+                <div id="metodo-pago" class="text-end flex justify-between items-center font-semibold bg-gray-50 p-2 rounded-md">
+                    {payment.payment_method_name}
+                    <span class="text-lg text-theme-ocean-blue font-bold flex gap-1">
+                        {new Intl.NumberFormat('de-DE').format((payment.amount).toFixed(2))}
+                        <span>
+                            {payment.id_payment_method == 3 || payment.id_payment_method == 6? ('$'):('Bs')}
+                        </span>
+                    </span>
+                </div>
+            ))
+        }
+    </div>
+</Sections>
+    ):('')
+}
+

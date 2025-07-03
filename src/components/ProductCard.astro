@@ -2,7 +2,6 @@
 import Bed from "@icons/bed.svg"
 import Freezer from '@icons/freezer.svg'
 import Kitchen from '@icons/kitchen.svg'
-import Microwave from '@icons/microwave.svg'
 import Speaker from '@icons/speaker.svg'
 import Split from '@icons/split.svg'
 import Ventana from '@icons/ventana.svg'
@@ -39,7 +38,7 @@ const ProductImgComponent = ProductImg[product.name_category]
 
 ---
 
-<button data-product={JSON.stringify(product)} class="product-card h-fit max-w-50 min-w-50 border-3 border-[#E0E0E0] px-3 pt-5 pb-3 shadow-md flex flex-col gap-3 rounded-lg text-sm cursor-pointer">
+<button data-product={JSON.stringify(product)} class="product-card h-75 max-w-50 min-w-50 border-3 border-[#E0E0E0] px-3 pt-5 pb-3 shadow-md flex flex-col gap-3 rounded-lg text-sm cursor-pointer">
     <div class="w-2/3 h-20 self-center p-2  bg-theme-light-blue flex justify-center items-center rounded-lg">
         <div class="size-full text-white">
             {

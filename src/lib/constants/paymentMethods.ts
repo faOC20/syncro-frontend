@@ -4,6 +4,7 @@ import PagoMovil from '@icons/paymentMethods/pagomovil.svg'
 import PuntoVenta from '@icons/paymentMethods/puntodeventa.svg'
 import Transferencia from '@icons/paymentMethods/transferencia.svg'
 import Zelle from '@icons/paymentMethods/zelle.svg'
+import Biopago from '@icons/paymentMethods/biopago.svg'
 
 export const PAYMENTS_METHODS  = [
     {
@@ -26,6 +27,14 @@ export const PAYMENTS_METHODS  = [
         
         
     },
+
+    {
+        id:'7',
+        payment_method_name: 'Biopago',
+        icon: Biopago
+        
+    },
+    
     {
         id:'5',
         payment_method_name: 'pago-movil',
@@ -50,4 +59,6 @@ export const PAYMENTS_METHODS  = [
         icon: Zelle
         
     },
+
+    
 ]

@@ -9,6 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { format } from 'date-fns';
 import { operationDateFilter } from '@lib/operationDateFilter';
+import { useDateStore } from 'src/stores/dateStore';
 
 
 
@@ -21,7 +22,7 @@ const columns = [
   { id: 'name', label: 'Cliente', minWidth: 150 },
   { id: 'dni', label: 'Cédula', minWidth: 120 },
   { id: 'products', label: 'Producto/s', minWidth: 150 },
-  { id: 'operation_amount', label: 'Monto', minWidth: 120 },
+  { id: 'operation_amount', label: 'Monto ($)', minWidth: 120 },
   { id: 'state', label: 'Estado', minWidth: 120 },
   {id:'is_cashea', label: 'Tipo', minWidth: 120}
 ];
@@ -31,11 +32,14 @@ const columns = [
 
 export default function OperationsTable() {
 
+  const {date, updateDate} = useDateStore()
+
   const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0]);
   const [filteredRows, setRows] = useState([]); // Inicializado como array vacío
   const [isLoading, setIsLoading] = useState(true); // Estado para manejar carga
 
   useEffect(() => {
+    updateDate(currentDate)
     const filterData = async () => {
       setIsLoading(true);
       try {

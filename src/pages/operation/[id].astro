@@ -7,6 +7,7 @@ import { getOperation } from '@lib/getOperation'
 import { getInstallments } from '@lib/getInstallments'
 import { fetchAuth } from '@lib/fetchAuth'
 import { BACK_API } from 'astro:env/client'
+import PaymentsSummary from '@components/operationPage/PaymentsSummary.astro'
 
 export interface Installment {
   change_date: string | null
@@ -47,12 +48,15 @@ console.log(installments)
 ---
 
 <Layout style='flex justify-center'>
-    <div id="operation-page" class="flex flex-col justify-center xl:flex-row mt-8 gap-[3rem] xl:gap-0 px-[3rem]">
+    <div id="operation-page" class="flex flex-col justify-center xl:flex-row mt-8 gap-[3rem] xl:gap-[3rem] px-[3rem]">
       <div class="flex w-full flex-col gap-[3rem] h-fit items-center">
         <OperationInfo creationDate={creationDate} customerName={customerName}, amount={amount} products={products} state={state} orderNumber={orderNumber}/>
         <Installments installments={installments} orderNumber={id}/>
     </div>
-    <ProductsSummary products={products}/>
+    <div class="flex flex-col gap-[3rem]">
+      <ProductsSummary products={products}/>
+      <PaymentsSummary id={id} cookie={cookie}/>
+    </div>
     </div>
 </Layout>
 
