@@ -213,9 +213,9 @@ export const AddProduct = ({products})=>{
                                                 
                                             }} type="checkbox"/>
                                             </label>
-                                            <input defaultValue="" onChange={(e)=>{
+                                            <input min={1} defaultValue="" onChange={(e)=>{
                                                 infoWarehouse.changeAmountFunction(e.target.value)
-                                            }}required id="change-amount-a" className="border rounded-md px-2 max-w-20" type="number" disabled={infoWarehouse.nameWarehouse === "almacen 1" ? disabled : disabledB}/>
+                                            }}required className="border rounded-md px-2 max-w-20" type="number" disabled={infoWarehouse.nameWarehouse === "almacen 1" ? disabled : disabledB}/>
                                             
                                             <label>
                                                 ({infoWarehouse.amount} und. restantes)

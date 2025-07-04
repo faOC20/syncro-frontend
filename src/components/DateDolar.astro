@@ -6,7 +6,7 @@ import RefreshIcon from '@icons/RefreshIcon.svg'
     <strong id="live-date">
 
     </strong>
-    <div class="flex  items-center">
+    <div class="flex items-center">
         <span class="hidden md:block">
             Dólar BCV: &nbsp;
         </span>
@@ -19,8 +19,38 @@ import RefreshIcon from '@icons/RefreshIcon.svg'
         <button id="sync-dolar-button" class="size-8 ml-3 p-1 rounded-full border font-semibold hover:opacity-60 transition-opacity cursor-pointer">
             <RefreshIcon/>
         </button>
+
+       
     </div>
 
+    <button id="set-dolar" class="px-3 py-2 scheme-dark text-theme-light-gray bg-theme-black rounded-lg shadow-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all duration-300 ease-in-out hover:bg-blue-700 cursor-pointer font-medium text-sm">
+        Cambiar dolar
+    </button>
+
+    <dialog id="set-dolar-dialog" class=" mx-auto my-auto h-fit">
+        <form class="flex flex-col size-full justify-center items-center">
+          
+            <div class="flex flex-col gap-8  p-10">
+                
+                <div class="flex flex-col">
+                    <div id="error-dolar" class="w-full h-8 text-red-600">
+                        
+                    </div>
+                    <label for="dolar-input" class="text-theme-light-blue text-lg">Inserte la tasa</label>
+                    <input name="dolarRate" id="dolar-input" class="border rounded-sm p-3" required type="number" step="any">
+                </div>
+                <div class="flex justify-center gap-3">
+                    <button type="button" onclick="document.getElementById('set-dolar-dialog').close()" class="border p-2 rounded-md bg-theme-ocean-blue text-white">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="border p-2 rounded-md bg-theme-ocean-blue text-white">
+                        Cambiar
+                    </button>
+                </div>
+            </div>
+            
+        </form>
+    </dialog>
     
 </div>
 
@@ -56,5 +86,50 @@ import RefreshIcon from '@icons/RefreshIcon.svg'
     const syncButton = document.getElementById('sync-dolar-button')
     syncButton?.addEventListener('click', ()=>{
         manualRateSync()
+    })
+</script>
+
+<script>
+    import { successAlert } from "@lib/sweetAlert"
+    import { useProductsStore } from "src/stores/productsStore"
+    const dolarDialog = document.getElementById('set-dolar-dialog') as HTMLDialogElement
+    const dolarButton = document.getElementById('set-dolar') as HTMLButtonElement
+    const errorDolar = document.getElementById('error-dolar') as HTMLDivElement
+    
+    const sendNewDolar = async (dolarRate, date)=>{
+        
+        const {updateDolar} = useProductsStore.getState()
+        const response = await fetch(`http://localhost:5000/api/set-manual-dolar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({...dolarRate, date:date})
+        })
+        const json = await response.json()
+        if(json.status == 'success'){
+            dolarDialog.close()
+            typeof(`manualmente: ${json.data}`)
+            updateDolar(json.data)
+            successAlert(json.message)
+            window.location.reload()
+        }
+
+        if(json.status == 'invalid_rate'){
+            errorDolar.innerText = json.message
+        }
+    }
+
+    dolarButton.addEventListener('click',()=>{
+        errorDolar.innerText = ''
+        dolarDialog.showModal()
+    })
+
+    dolarDialog.addEventListener('submit', (e)=>{
+        e.preventDefault()
+        const data = Object.fromEntries(new FormData(e.target as HTMLFormElement));
+        const date = new Date().toLocaleDateString('es-VE')
+        sendNewDolar(data, date)
     })
 </script>

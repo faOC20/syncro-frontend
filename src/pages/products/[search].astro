@@ -196,10 +196,11 @@ else {
                     <TrashIcon/>
                 </button>
             </div>
-            
-            <p id="change-product-error" class="h-3 w-full mt-1 mb-5 text-sm text-red-600">
+
+            <div id="error-change-product" class="h-5 w-full text-red-600">
                 
-            </p>
+            </div>
+            
             <div class="flex flex-col mt-3">
                 
                 <div class="flex flex-col gap-5">
@@ -378,7 +379,7 @@ else {
                                   <input type="checkbox" name="useWarehouseA" />
                                   Almacén 1
                                 </label>
-                                <input required class="border rounded-md px-2 max-w-20" type="number" name="amountA" disabled />
+                                <input min="1" required class="border rounded-md px-2 max-w-20" type="number" name="amountA" disabled />
                             </div>
                         
                               <!-- Almacén B -->
@@ -387,7 +388,7 @@ else {
                                   <input type="checkbox" name="useWarehouseB" />
                                   Almacén 2
                                 </label>
-                                <input required class="max-w-20 px-2 border rounded-md" type="number" name="amountB" disabled />
+                                <input min="1" required class="max-w-20 px-2 border rounded-md" type="number" name="amountB" disabled />
                             </div>
                         </span>
                     </div>

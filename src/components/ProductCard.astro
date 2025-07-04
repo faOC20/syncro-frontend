@@ -140,6 +140,8 @@ import type { Product } from "./operationPage/OperationInfo.astro"
     const confirmDeleteDialog = document.getElementById('confirm-delete-dialog') as HTMLDialogElement
     const confirmDeleteButton = document.getElementById('confirm-delete-button') as HTMLButtonElement
 
+    const errorChangeProduct = document.getElementById('error-change-product')
+
     const getSelectedProduct = ()=>{
         return selectedProduct
     }
@@ -211,8 +213,11 @@ import type { Product } from "./operationPage/OperationInfo.astro"
 
 
     const sendData = ()=>{
+
+        const amountA = getAAmount()
+        const amountB = getBAmount()
         
-       if (getName() || getCode() || getCost() || getAAmount() || getBAmount() || getCategory() || getColor()){
+       if (getName() || getCode() || getCost() || amountA || amountB || getCategory() || getColor()){
             
             const data = {
                 code: getSelectedProduct()?.code_product,
@@ -229,17 +234,19 @@ import type { Product } from "./operationPage/OperationInfo.astro"
         }
 
         else{
-            // productError.innerText = 'No hay cambios'
-            console.log('no tengo nada que actualizar ps')
+            errorChangeProduct.innerText = 'No hay cambios'
         }
 
     }
     
 
     const showProductModal = (productData: Product)=>{
+        errorChangeProduct.innerText = ''
+        warehouseAInput.value = ''
+        warehouseBInput.value = ''
         productInfoDialog.showModal()
         
-
+        console.log(productData)
         productData.warehouses.forEach(product => {
             if (product.name_warehouse == 'almacen 1'){
                 warehouseAInput.value = product.amount.toString()

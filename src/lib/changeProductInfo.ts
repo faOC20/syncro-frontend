@@ -2,7 +2,7 @@ import { BACK_API } from "astro:env/client"
 import { successAlert } from "./sweetAlert"
 
 const productInfoDialog = document.getElementById('product-info-dialog') as HTMLDialogElement
-const errorChangeProduct = document.getElementById('change-product-error') as HTMLParagraphElement
+const errorChangeProduct = document.getElementById('error-change-product') as HTMLDivElement
 
 // export interface ChangeData {
 //     name: string | null,
