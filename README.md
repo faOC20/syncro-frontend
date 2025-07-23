@@ -1,48 +1,31 @@
-# Astro Starter Kit: Basics
+# Syncro (working title)
 
-```sh
-pnpm create astro@latest -- --template basics
-```
+**Vendata** is a lightweight, fast, and intuitive inventory management system designed to streamline your business operations. It helps you track product stock, monitor sales to clients, manage cash registers, and generate insightful daily, monthly, and annual reports—all with clarity and control.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## Features
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- **Inventory tracking** – Keep products organized and updated.
+- **Sales management** – Register sales with client details.
+- **Cash register closure** – Reconcile daily income with ease.
+- **Daily/monthly/yearly summaries** – Visualize business performance.
+- **Clean and minimalist interface** – Designed for speed and usability.
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+## Tech Stack
 
-## 🚀 Project Structure
+- **Frontend:** JavaScript / Astro / React
+- **Backend:** Python / Node.js
+- **Database:** PostgreSQL / SQLite
+- **Containerization:** Docker
 
-Inside of your Astro project, you'll see the following folders and files:
+## Use Cases
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+Ideal for:
+- Local shops and small businesses
+- Freelancers and solo entrepreneurs
+- Teams that value clarity and efficiency
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Why Syncro?
 
-## 🧞 Commands
+This system focuses on what matters most—*fast access to data, clean workflows, and actionable insights*. Whether you're reconciling your register or reviewing a year's worth of transactions, Vendata makes it simple.
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+---
