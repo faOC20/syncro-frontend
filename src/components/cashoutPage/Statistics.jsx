@@ -39,7 +39,7 @@ const DonutChart = () => {
     let dolar = null
     const getDolar = async()=>{
       dolar = await getDatedDolar(date)
-
+      console.log(`dolar de hoy: ${dolar}`)
       if(!dolar){
         dolar = currentDolar
       }

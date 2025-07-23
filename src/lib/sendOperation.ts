@@ -456,7 +456,7 @@ if (paymentsCheckboxes){
 
             checkbox.setAttribute('disabled', '')
             inputPayment?.setAttribute('disabled', '')
-            confirmPayment?.classList.add('hidden')
+            // confirmPayment?.classList.add('hidden')
             console.log(payments)
             }
             

@@ -60,6 +60,7 @@ import RefreshIcon from '@icons/RefreshIcon.svg'
 
     async function updateDolarRate() {
         try {
+            console.log('entra aqui siempre??')
             const {dolar_rate, last_update} = await fetchBcvRate()
             const dolar = document.getElementById("dolar-bcv")
             const date = document.getElementById("live-date")
@@ -95,6 +96,7 @@ import RefreshIcon from '@icons/RefreshIcon.svg'
     const dolarDialog = document.getElementById('set-dolar-dialog') as HTMLDialogElement
     const dolarButton = document.getElementById('set-dolar') as HTMLButtonElement
     const errorDolar = document.getElementById('error-dolar') as HTMLDivElement
+    const dolar = document.getElementById("dolar-bcv")
     
     const sendNewDolar = async (dolarRate, date)=>{
         
@@ -109,10 +111,11 @@ import RefreshIcon from '@icons/RefreshIcon.svg'
         })
         const json = await response.json()
         if(json.status == 'success'){
+            console.log(json.data)
             dolarDialog.close()
-            typeof(`manualmente: ${json.data}`)
-            updateDolar(json.data)
-            successAlert(json.message)
+            // dolar.innerText = json.data 
+            // updateDolar(json.data)
+            await successAlert(json.message)
             window.location.reload()
         }
 
