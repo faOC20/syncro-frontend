@@ -34,14 +34,19 @@ This system focuses on what matters most—*fast access to data, clean workflows
 ## Web preview
 ![Syncro Home page](src/images/syncro-screenshot.avif)
 > Syncro app - Home page.
+
 ![Syncro Sale option](src/images/syncro-sale.avif)
 > Syncro app - Sale option.
+
 ![Syncro Operation page](src/images/syncro-operation.avif)
 > Syncro app - Operation page.
+
 ![Syncro Summary page](src/images/syncro-summary.avif)
 > Syncro app - Summary page.
+
 ![Syncro Cashout page](src/images/syncro-cashout.avif)
 > Syncro app - Cashout page.
+
 ![Syncro Products page](src/images/syncro-products.avif)
 > Syncro app - Products page.
 ---
