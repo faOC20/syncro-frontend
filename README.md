@@ -2,7 +2,7 @@
 
 **Syncro** is a lightweight, fast, and intuitive inventory management system designed to streamline your business operations. It helps you track product stock, monitor sales to clients, manage cash registers, and generate insightful daily, monthly, and annual reports—all with clarity and control.
 
-![Syncro mockup](@images/syncro-mockup.avif)
+![Syncro mockup](src/images/syncro-mockup.avif)
 
 ## Features
 
@@ -32,16 +32,16 @@ Ideal for:
 This system focuses on what matters most—*fast access to data, clean workflows, and actionable insights*. Whether you're reconciling your register or reviewing a year's worth of transactions, Vendata makes it simple.
 
 ## Web preview
-![Syncro Home page](@images/syncro-screenshot.avif)
+![Syncro Home page](src/images/syncro-screenshot.avif)
 > Syncro app - Home page.
-![Syncro Sale option](@images/syncro-sale.avif)
+![Syncro Sale option](src/images/syncro-sale.avif)
 > Syncro app - Sale option.
-![Syncro Operation page](@images/syncro-operation.avif)
+![Syncro Operation page](src/images/syncro-operation.avif)
 > Syncro app - Operation page.
-![Syncro Summary page](@images/syncro-summary.avif)
+![Syncro Summary page](src/images/syncro-summary.avif)
 > Syncro app - Summary page.
-![Syncro Cashout page](@images/syncro-cashout.avif)
+![Syncro Cashout page](src/images/syncro-cashout.avif)
 > Syncro app - Cashout page.
-![Syncro Products page](@images/syncro-products.avif)
+![Syncro Products page](src/images/syncro-products.avif)
 > Syncro app - Products page.
 ---
