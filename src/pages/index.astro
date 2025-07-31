@@ -9,6 +9,8 @@ import {BACK_API } from 'astro:env/client';
 import {fetchAuth} from '@lib/fetchAuth'
 
 
+
+
 const cookie = Astro.request.headers.get('cookie') || '';
 
 const res = await fetchAuth(`${BACK_API}/api/get-products`, {
@@ -125,4 +127,5 @@ const { data: products = [] } = await res.json();
     }
 
 </style>
+
 

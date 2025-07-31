@@ -126,7 +126,7 @@ export default function OperationsTable() {
 
                           const opTypes = {
                             1: '/cashea-logo.avif',
-                            0: '/milenium-logo.avif'
+                            0: '/cash-check.avif'
                           }
 
                           const value = row[column.id];

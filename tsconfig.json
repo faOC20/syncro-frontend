@@ -28,6 +28,12 @@
       "@context/*": [
         "src/context/*"
       ],
+      "@stores/*": [
+        "src/stores/*"
+      ],
+      "@images/*": [
+        "src/images/*"
+      ],
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react"

@@ -1,9 +1,12 @@
-# Syncro (working title)
+# Syncro
 
-**Vendata** is a lightweight, fast, and intuitive inventory management system designed to streamline your business operations. It helps you track product stock, monitor sales to clients, manage cash registers, and generate insightful daily, monthly, and annual reports—all with clarity and control.
+**Syncro** is a lightweight, fast, and intuitive inventory management system designed to streamline your business operations. It helps you track product stock, monitor sales to clients, manage cash registers, and generate insightful daily, monthly, and annual reports—all with clarity and control.
+
+![Syncro mockup](@images/syncro-mockup.avif)
 
 ## Features
 
+- **Cashea installments tracking** - Gives you full control over your customers, payment installments—track, manage, and visualize every quota with precision. 
 - **Inventory tracking** – Keep products organized and updated.
 - **Sales management** – Register sales with client details.
 - **Cash register closure** – Reconcile daily income with ease.
@@ -13,9 +16,9 @@
 ## Tech Stack
 
 - **Frontend:** JavaScript / Astro / React
-- **Backend:** Python / Node.js
-- **Database:** PostgreSQL / SQLite
-- **Containerization:** Docker
+- **Backend:** Python / Flask / Flask-login
+- **Database:** PostgreSQL / PGadmin
+- **Containerization:** Docker 
 
 ## Use Cases
 
@@ -28,4 +31,17 @@ Ideal for:
 
 This system focuses on what matters most—*fast access to data, clean workflows, and actionable insights*. Whether you're reconciling your register or reviewing a year's worth of transactions, Vendata makes it simple.
 
+## Web preview
+![Syncro Home page](@images/syncro-screenshot.avif)
+> Syncro app - Home page.
+![Syncro Sale option](@images/syncro-sale.avif)
+> Syncro app - Sale option.
+![Syncro Operation page](@images/syncro-operation.avif)
+> Syncro app - Operation page.
+![Syncro Summary page](@images/syncro-summary.avif)
+> Syncro app - Summary page.
+![Syncro Cashout page](@images/syncro-cashout.avif)
+> Syncro app - Cashout page.
+![Syncro Products page](@images/syncro-products.avif)
+> Syncro app - Products page.
 ---

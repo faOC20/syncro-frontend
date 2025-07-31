@@ -83,7 +83,7 @@ useEffect(() => {
                                     
                                     <div className='flex gap-5 justify-end w-full'>
                                     <h3 class="text-xs text-gray-600">{notification.type} cuota de la orden <span className='text-theme-light-blue text-center'>#{notification.order_number}</span> </h3>
-                                    <p class="flex text-xs min-w-[80px] justify-center text-red-800 grow">{notification.date_to_pay}</p>
+                                    <p class="flex text-xs min-w-[80px] justify-end text-red-800 grow">{notification.date_to_pay}</p>
                                     </div>
                                 </div>
                             </a>

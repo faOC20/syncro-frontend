@@ -1,5 +1,5 @@
 ---
-import MileniumLogo from '../assets/logos/milenium.svg'
+import SyncroLogo from '../assets/logos/syncro.svg'
 import PackageIcon from '@icons/package.svg'
 import SummaryIcon from '@icons/summary.svg'
 import HomeIcon from '@icons/home.svg'
@@ -10,52 +10,52 @@ import CashoutIcon from '@icons/cashout.svg'
 const currentYear = new Date().getFullYear();
 ---
 <nav class="relative text-theme-light-gray">
-   <div class="flex flex-col pl-10 py-5   gap-10  h-fit fixed">
-    <a href="/" class="flex gap-8">
-        <picture class="h-12">
-            <MileniumLogo/>
+   <div class="flex flex-col pl-10 py-15  gap-8 w-[200px] xl:w-[280px] h-full fixed">
+    <a href="/" class="flex items-center justify-start">
+        <picture class="h-7 text-theme-light-gray">
+            <SyncroLogo/>
         </picture>
         
     </a>
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-4">
         <span class="text-xs text-theme-light-gray/70">NAVEGACIÓN</span>
         <hr>
         <ul class="flex flex-col gap-5">
 
-            <li>
+            <li class="optionNav hover:bg-theme-light-gray/20 rounded transition-colors ease-in-out">
                 
-                <a  class="flex items-center gap-2" href={`/`}>
-                    <div class="size-8">
+                <a  class="p-2 flex items-center gap-2" href="/">
+                    <div class="size-5">
                         <HomeIcon/>
                     </div>
                     Inicio
                 </a>
             </li>
             
-            <li>
+            <li class="optionNav hover:bg-theme-light-gray/20 rounded transition-colors ease-in-out">
                 
-                <a  class="flex items-center gap-2" href="/products/all">
-                    <div class="size-8">
+                <a  class="p-2 flex items-center gap-2" href="/products/all">
+                    <div class="size-5">
                         <PackageIcon/>
                     </div>
                     Productos
                 </a>
             </li>
 
-            <li>
+            <li class="optionNav hover:bg-theme-light-gray/20 rounded transition-colors ease-in-out">
                 
-                <a  class="flex items-center gap-2" href={`/revenue/1-${currentYear}`}>
-                    <div class="size-8">
+                <a  class="p-2 flex items-center gap-2" href={`/revenue/1-${currentYear}`}>
+                    <div class="size-5">
                         <SummaryIcon/>
                     </div>
                     Resumen
                 </a>
 
-                <li class="flex ml-8">
+                <li class="optionNav flex ml-8 hover:bg-theme-light-gray/20 rounded transition-colors ease-in-out">
                 
-                    <a  class="self-end flex items-center text-xs gap-2" href={`/revenue/1-${currentYear}`}>
+                    <a  class="p-2 self-end flex items-center text-xs gap-2" href={`/revenue/1-${currentYear}`}>
                         <div class="size-5 rounded-sm overflow-hidden">
-                            <div class="size-5  rounded-sm overflow-hidden">
+                            <div class="size-4  rounded-sm overflow-hidden">
                                 <img src="/cashea-logo.avif" alt="logo cashea">
                             </div>
                         </div>
@@ -63,31 +63,31 @@ const currentYear = new Date().getFullYear();
                     </a>
                 </li>
     
-                <li class="flex ml-8">
+                <li class="optionNav flex ml-8 hover:bg-theme-light-gray/20 rounded transition-colors ease-in-out">
                     
-                    <a  class="self-end flex items-center text-xs gap-2" href={`/revenue/0-${currentYear}`}>
-                        <div class="size-5  rounded-sm overflow-hidden">
-                            <img src="/milenium-logo.avif" alt="logo milenium mania">
+                    <a  class="p-2 w-full self-end flex items-center text-xs gap-2" href={`/revenue/0-${currentYear}`}>
+                        <div class="size-4  rounded-sm overflow-hidden">
+                            <img src="/cash-check.avif" alt="logo milenium mania">
                         </div>
                         De contado
                     </a>
                 </li>
             </li>
 
-            <li>
+            <li class="optionNav hover:bg-theme-light-gray/20 rounded transition-colors ease-in-out">
                 
-                <a  class="flex items-center gap-2" href="/cashout">
-                    <div class="size-8">
+                <a  class="p-2 flex items-center gap-2" href="/cashout">
+                    <div class="size-5">
                         <CashoutIcon/>
                     </div>
                     Cierre de caja
                 </a>
             </li>
 
-            <li>
+            <li class=" hover:bg-theme-light-gray/20 rounded transition-colors ease-in-out">
                 
-                <a class="log-out flex items-center gap-2 cursor-pointer">
-                    <div class="size-8">
+                <a class="p-2 log-out flex items-center gap-2 cursor-pointer">
+                    <div class="size-5">
                         <LogOutIcon/>
                     </div>
                     Cerrar Sesión
@@ -127,3 +127,37 @@ const currentYear = new Date().getFullYear();
         logout.addEventListener('click', logOut)
     })
 </script>
+
+
+<!-- <script>
+
+import {useNavStore} from '@stores/navOptionStore.js'
+const navOptions = document.querySelectorAll('.optionNav')
+        
+
+navOptions.forEach((option, index)=>{
+       console.log(option)
+    })
+
+export const optionNav = ()=>{
+    const {selectedOption, setSelectedOption} = useNavStore.getState()
+    
+    // navOptions.forEach((option, index)=>{
+    //     option.addEventListener('click', (e)=>{
+    //         setSelectedOption(index)
+    //     })
+    // })
+    
+    navOptions.forEach((option, index)=>{
+        if (selectedOption!==null && index === selectedOption){
+            option.classList.add('bg-theme-light-gray/20')
+        }
+    })
+}   
+    optionNav()
+    
+   
+
+    
+
+</script> -->
